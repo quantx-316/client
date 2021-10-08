@@ -7,6 +7,9 @@ There IS hot reloading for the client with docker-compose.
 - Netlify 
   - https://quantx-algo.netlify.app/ (quantx taken)
 
+- Monaco Editor (https://microsoft.github.io/monaco-editor/)
+- TradingView (https://www.tradingview.com/HTML5-stock-forex-bitcoin-charting-library/)
+
 ## SETUP 
 
 yarn start
