@@ -1,11 +1,12 @@
 import React, { Fragment } from 'react'
 import { useHistory } from 'react-router-dom'
+import Base from './Base';
 
 export const About: React.FC = () => {
   const history = useHistory()
 
   return (
-    <Fragment>
+    <Base>
       <h1>About</h1>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas
@@ -21,6 +22,6 @@ export const About: React.FC = () => {
       >
         Go back
       </button>
-    </Fragment>
+    </Base>
   )
 }
