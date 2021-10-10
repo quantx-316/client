@@ -1,12 +1,26 @@
 import React from 'react'
 import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Container from 'react-bootstrap/Container';
+import {Navbar, Alignment, Button} from '@blueprintjs/core';
 
 const ComposedNavbar: React.FC = () => (
-  <Navbar 
-    className="navbar-dark bg-black"
-  >
+  <Navbar className="bp3-dark">
+    <Navbar.Group align={Alignment.LEFT}>  
+      <Navbar.Heading>
+        <h2>
+          Quantx
+        </h2>
+      </Navbar.Heading>
+    </Navbar.Group>
+    <Navbar.Group align={Alignment.RIGHT}>
+      <Button className="bp3-minimal" icon="home" text="Home" />
+      <Button className="bp3-minimal" icon="social-media" text="Social" />
+      <Button className="bp3-minimal" icon="document" text="Files" />
+      <Navbar.Divider /> 
+      <Button className="bp3-minimal" icon="user" />
+      <Button className="bp3-minimal" icon="notifications" />
+      <Button className="bp3-minimal" icon="cog" />
+    </Navbar.Group>
+{/* 
     <Container>
       <div> 
         <Navbar.Brand href="#home">
@@ -28,7 +42,7 @@ const ComposedNavbar: React.FC = () => (
           </Navbar.Text>
         </Navbar.Collapse>
       </div>
-    </Container>
+    </Container> */}
   </Navbar>
 )
 

@@ -15,7 +15,7 @@ const Base: React.FC = ({children}) => {
                 }}
                 className="full"
             >
-                <Sidebar/>
+                {/* <Sidebar/> */}
                 <div
                     style={{
                         margin: "10px"
