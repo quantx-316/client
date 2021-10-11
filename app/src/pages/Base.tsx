@@ -1,6 +1,5 @@
 import React from 'react'
 import Navbar from '../components/Navbar';
-import Sidebar from '../components/Sidebar';
 
 const Base: React.FC = ({children}) => {
     return (
@@ -15,7 +14,6 @@ const Base: React.FC = ({children}) => {
                 }}
                 className="full"
             >
-                {/* <Sidebar/> */}
                 <div
                     style={{
                         margin: "10px",

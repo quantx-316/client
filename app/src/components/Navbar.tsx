@@ -22,6 +22,7 @@ const ComposedNavbar: React.FC = () => {
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
         <Button className="bp3-minimal" icon="home" text="Home" />
+        <Button className="bp3-minimal" icon="chart" text="Stock" onClick={() => handleOnClick("/stock-view")} />
         <Button className="bp3-minimal" icon="social-media" text="Social" />
         <Button className="bp3-minimal" icon="document" text="Files" onClick={() => handleOnClick("/files")}/>
         <Navbar.Divider /> 
