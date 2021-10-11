@@ -32,6 +32,12 @@ code {
   width: 100%;
 }
 
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .navbar {
   padding-top: 0 !important;
   padding-bottom: 0 !important;

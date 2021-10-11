@@ -1,5 +1,6 @@
 import React from 'react'
 import Navbar from '../components/Navbar';
+import FadeIn from 'react-fade-in';
 
 const Base: React.FC = ({children}) => {
     return (
@@ -21,7 +22,11 @@ const Base: React.FC = ({children}) => {
                         height: "100%",
                     }}
                 >
-                    {children}
+                    <FadeIn
+                        transitionDuration={600}
+                    >
+                        {children}
+                    </FadeIn>
                 </div>
             </div>      
             
