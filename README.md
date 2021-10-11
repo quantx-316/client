@@ -24,3 +24,12 @@ yarn test
 yarn eject
   Removes this tool and copies build dependencies, configuration files
   and scripts into the app directory. If you do this, you can’t go back!
+
+## TODO
+1. Landing.tsx page 
+2. Home.tsx page (files.tsx page)
+  - New strategy
+  - Executing backtests
+  - Executed backtests 
+4. Social.tsx page (Competition creation, Leaderboard)
+5. Profile page / Notifications / Settings 
