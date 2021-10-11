@@ -5,9 +5,7 @@ import Base from './Base';
 const StockView: React.FC = () => {
 
     return (
-        <Base>
-            <TVChartContainer />
-        </Base>
+        <TVChartContainer />
     )
 
 }

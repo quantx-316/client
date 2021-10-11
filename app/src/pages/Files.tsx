@@ -3,9 +3,9 @@ import Base from './Base';
 
 const Files: React.FC = () => {
     return (
-        <Base>
+        <div>
             
-        </Base>
+        </div>
     )
 }
 

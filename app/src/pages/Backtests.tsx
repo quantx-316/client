@@ -4,9 +4,9 @@ import Base from './Base';
 
 const Backtests: React.FC = () => {
     return (
-        <Base>
+        <div>
             <h1>BACKTESTS</h1>
-        </Base>
+        </div>
     )
 }
 

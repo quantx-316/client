@@ -6,7 +6,7 @@ export const About: React.FC = () => {
   const history = useHistory()
 
   return (
-    <Base>
+    <div>
       <h1>About</h1>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas
@@ -22,6 +22,6 @@ export const About: React.FC = () => {
       >
         Go back
       </button>
-    </Base>
+    </div>
   )
 }

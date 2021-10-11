@@ -7,16 +7,57 @@ import Algorithms from './pages/Algorithms';
 import Backtests from './pages/Backtests';
 import Files from './pages/Files';
 import StockView from './pages/StockView';
+import Base from './pages/Base';
 
 const App: React.FC = () => {
   return (
     <HashRouter>
       <Switch>
-        <Route path="/" component={Home} exact />
-        <Route path="/about" component={About} />
-        <Route path="/files" component={Files} />
-        <Route path="/backtests" component={Backtests} />
-        <Route path="/stock-view" component={StockView} />
+        <Route 
+          path="/" 
+          exact 
+          render={() => (
+            <Base>
+              <Home />
+            </Base>
+          )}
+        />
+        <Route 
+          path="/about" 
+          exact 
+          render={() => (
+            <Base>
+              <About />
+            </Base>
+          )}
+        />
+        <Route 
+          path="/files" 
+          exact 
+          render={() => (
+            <Base>
+              <Files />
+            </Base>
+          )}
+        />
+        <Route 
+          path="/backtests" 
+          exact 
+          render={() => (
+            <Base>
+              <Backtests />
+            </Base>
+          )}
+        />
+        <Route 
+          path="/stock-view" 
+          exact 
+          render={() => (
+            <Base>
+              <StockView />
+            </Base>
+          )}
+        />
       </Switch>
     </HashRouter>
   )
