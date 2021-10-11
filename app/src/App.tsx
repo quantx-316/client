@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { HashRouter, Switch, Route } from 'react-router-dom'
 
 import { About } from './pages/About'
 import { Home } from './pages/Home'
@@ -10,7 +10,7 @@ import StockView from './pages/StockView';
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Switch>
         <Route path="/" component={Home} exact />
         <Route path="/about" component={About} />
@@ -18,7 +18,7 @@ const App: React.FC = () => {
         <Route path="/backtests" component={Backtests} />
         <Route path="/stock-view" component={StockView} />
       </Switch>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
