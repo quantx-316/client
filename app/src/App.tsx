@@ -6,6 +6,7 @@ import { Home } from './pages/Home'
 import Algorithms from './pages/Algorithms';
 import Backtests from './pages/Backtests';
 import Files from './pages/Files';
+import StockView from './pages/StockView';
 
 const App: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const App: React.FC = () => {
         <Route path="/about" component={About} />
         <Route path="/files" component={Files} />
         <Route path="/backtests" component={Backtests} />
+        <Route path="/stock-view" component={StockView} />
       </Switch>
     </BrowserRouter>
   )
