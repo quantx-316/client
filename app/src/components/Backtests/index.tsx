@@ -1,17 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import { Button, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch } from "@blueprintjs/core";
+import { Button, Card, Classes, ButtonGroup, Elevation, Tag, H1, H5, Label, Slider, Switch } from "@blueprintjs/core";
 import { Icon, Intent, TreeNodeInfo, Tree } from "@blueprintjs/core";
 import { cloneDeep } from "lodash-es";
 import { Classes as Popover2Classes, ContextMenu2, Tooltip2 } from "@blueprintjs/popover2";
 // real ones will have created, edited_at
-const testAlgos = [
+const backTests = [
     {
         "id": 1,
-        "title": "Great algo",
+        "title": "great backtest",
+        "status": "Completed",
+        "created": "10-12-2021"
     },
     {
         "id": 2,
-        "title": "Another great algo",
+        "title": "another great backtest",
+        "status": "Failed",
+        "created": "10-12-2021"
     }
 ]
 
@@ -98,7 +102,8 @@ const BackTests: React.FC = () => {
         <Card
             style={{
                 minWidth: "500px",
-                minHeight: "300px",
+                minHeight: "400px",
+                maxHeight: "400px",                
                 display: "flex",
                 justifyContent: "flex-start",
                 alignContent: "center",
@@ -129,40 +134,66 @@ const BackTests: React.FC = () => {
                 {/*</Button>*/}
             </div>
 
-            <Tree
-                contents={nodes}
-                onNodeClick={handleNodeClick}
-                onNodeCollapse={handleNodeCollapse}
-                onNodeExpand={handleNodeExpand}
-                className={Classes.ELEVATION_0}
-            />
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignContent: "center",
+                    gap: "10px"
+                }}
+            >
+                {
+                    backTests.map((backTestInfo) => {
 
-            <ButtonGroup>
-                <Button
-                    className={Classes.BUTTON}
-                    icon={"edit"}
-                >
-                    Edit
-                </Button>
-                <Button
-                    className={Classes.BUTTON}
-                    icon={"trash"}
-                >
-                    Delete
-                </Button>
-                <Button
-                    className={Classes.BUTTON}
-                    icon={"new-link"}
-                >
-                    New
-                </Button>
-            </ButtonGroup>
+                        return (
+                            <div
+                                key={backTestInfo['id']}
+                                style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignContent: "center",
+                                    justifyContent: "flex-start",
+                                }}
+                            >
 
-            {/*{*/}
-            {/*    testAlgos.map((testAlgo) => {*/}
-            {/*    })  */}
-            {/*}*/}
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        gap: "10px"
+                                    }}
+                                >
+                                    <h5
+                                        style={{
+                                            padding: "0 !important",
+                                            margin: "0 !important",
+                                            marginBottom: "0 !important",
+                                        }}
+                                    >
+                                        {backTestInfo['title']}
+                                    </h5>
 
+                                    <Tag
+                                        intent={"success"}
+                                        round={true}
+                                        minimal={true}
+                                    >
+                                        Completed
+                                    </Tag>
+                                </div>
+
+                                <div>
+                                    {"Created: " + backTestInfo['created']}
+                                </div>
+
+                            </div>
+                        )
+
+                    })
+                }
+
+            </div>
         </Card>
     )
 }
@@ -174,7 +205,7 @@ const INITIAL_STATE: TreeNodeInfo[] = [
     {
         id: 0,
         icon: "document",
-        label: "Item 0"
+        label: "Item 1"
     },
     {
         id: 1,

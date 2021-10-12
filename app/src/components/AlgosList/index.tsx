@@ -98,7 +98,8 @@ const AlgosList: React.FC = () => {
         <Card
             style={{
                 minWidth: "500px",
-                minHeight: "200px",
+                minHeight: "400px",
+                maxHeight: "400px",
                 display: "flex",
                 justifyContent: "flex-start",
                 alignContent: "center",
