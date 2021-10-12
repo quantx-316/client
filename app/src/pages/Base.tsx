@@ -13,21 +13,9 @@ const Base: React.FC = ({children}) => {
                     display: 'flex',
                     gap: "10px"
                 }}
-                className="full"
+                className="full centered"
             >
-                <div
-                    style={{
-                        margin: "10px",
-                        width: "100%",
-                        height: "100%",
-                    }}
-                >
-                    <FadeIn
-                        transitionDuration={600}
-                    >
-                        {children}
-                    </FadeIn>
-                </div>
+                {children}
             </div>      
             
         </div>
