@@ -1,85 +1,219 @@
-import React, { useState } from 'react';
-import AceEditor from 'react-ace';
+import React, { useState } from 'react'
+import AceEditor from 'react-ace'
+import { Select, ItemRenderer } from '@blueprintjs/select'
 
-import "ace-builds/src-noconflict/mode-jsx";
-import "ace-builds/src-min-noconflict/ext-searchbox";
-import "ace-builds/src-min-noconflict/ext-language_tools";
+import { Button, Icon, MenuItem } from '@blueprintjs/core'
+
+import 'ace-builds/src-noconflict/mode-jsx'
+import 'ace-builds/src-min-noconflict/ext-searchbox'
+import 'ace-builds/src-min-noconflict/ext-language_tools'
 
 const themes = [
-  "monokai",
-  "github",
-  "tomorrow",
-  "kuroir",
-  "twilight",
-  "xcode",
-  "textmate",
-  "solarized_dark",
-  "solarized_light",
-  "terminal"
-];
+  'monokai',
+  'github',
+  'tomorrow',
+  'kuroir',
+  'twilight',
+  'xcode',
+  'textmate',
+  'solarized_dark',
+  'solarized_light',
+  'terminal',
+]
 
-themes.forEach(theme => require(`ace-builds/src-noconflict/theme-${theme}`));
+const fontsize = [14, 16, 18, 20, 24, 28, 32, 40]
 
-require('ace-builds/src-noconflict/mode-python');
-require('ace-builds/src-noconflict/snippets/python');
+const tabsize = [2, 4, 6]
+
+const WIDTH = '800px'
+
+themes.forEach((theme) => require(`ace-builds/src-noconflict/theme-${theme}`))
+
+require('ace-builds/src-noconflict/mode-python')
+require('ace-builds/src-noconflict/snippets/python')
 
 const Editor: React.FC = () => {
-
   const defaultValue = `def helloworld():
     print('hello world')
   `
 
   const [editorState, setEditorState] = useState({
     value: defaultValue,
-    fontSize: 14, 
-    theme: "solarized_dark",
+    fontSize: 14,
+    theme: 'solarized_dark',
     tabSize: 4,
-  });
+  })
 
   const onEditorChange = (newValue: string) => {
     setEditorState({
       ...editorState,
       value: newValue,
     })
-  };
+  }
 
-  const onFontSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFontSizeChange = (
+    item: any,
+    event?: React.SyntheticEvent<HTMLElement, Event> | undefined
+  ) => {
     setEditorState({
       ...editorState,
-      fontSize: parseInt(e.target.value, 14)
-    });
-  }
-
-  const onThemeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditorState({
-      ...editorState, 
-      theme: e.target.value,
+      fontSize: item,
     })
   }
 
-  const onTabSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const renderFontSize: ItemRenderer<number> = (
+    fontsize,
+    { handleClick, modifiers }
+  ) => {
+    if (!modifiers.matchesPredicate) {
+      return null
+    }
+    return (
+      <MenuItem
+        active={modifiers.active}
+        key={fontsize}
+        onClick={handleClick}
+        text={fontsize}
+      />
+    )
+  }
+
+  const onThemeChange = (
+    item: any,
+    event?: React.SyntheticEvent<HTMLElement, Event> | undefined
+  ) => {
     setEditorState({
-      ...editorState, 
-      tabSize: parseInt(e.target.value, 4)
+      ...editorState,
+      theme: item,
     })
   }
+
+  const renderTheme: ItemRenderer<string> = (
+    theme,
+    { handleClick, modifiers }
+  ) => {
+    if (!modifiers.matchesPredicate) {
+      return null
+    }
+    return (
+      <MenuItem
+        active={modifiers.active}
+        key={theme}
+        onClick={handleClick}
+        text={theme}
+      />
+    )
+  }
+
+  const onTabSizeChange = (
+    item: any,
+    event?: React.SyntheticEvent<HTMLElement, Event> | undefined
+  ) => {
+    setEditorState({
+      ...editorState,
+      tabSize: item,
+    })
+  }
+
+  const handleClickRun = () => {}
 
   return (
-    <div>
-      <AceEditor
-        mode="python"
-        theme={editorState.theme}
-        value={editorState.value}
-        onChange={onEditorChange}
-        setOptions={{
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
-          tabSize: editorState.tabSize 
-        }}
-      />
+    <div style={{}}>
+      <div style={{ width: WIDTH }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: '15px',
+          }}
+        >
+          <div style={{ display: 'flex' }}>
+            <label>Theme: &nbsp;</label>
+            <p>
+              <span>
+                <Select
+                  items={themes}
+                  itemRenderer={renderTheme}
+                  activeItem={editorState.theme}
+                  onItemSelect={onThemeChange}
+                  filterable={false}
+                >
+                  <Button
+                    text={editorState.theme}
+                    rightIcon="double-caret-vertical"
+                  />
+                </Select>
+              </span>
+            </p>
+          </div>
 
+          <div style={{ display: 'flex' }}>
+            <label>Font Size: &nbsp;</label>
+            <p>
+              <span>
+                <Select
+                  items={fontsize}
+                  itemRenderer={renderFontSize}
+                  activeItem={editorState.fontSize}
+                  onItemSelect={onFontSizeChange}
+                  filterable={false}
+                >
+                  <Button
+                    text={editorState.fontSize}
+                    rightIcon="double-caret-vertical"
+                  />
+                </Select>
+              </span>
+            </p>
+          </div>
+
+          <div style={{ display: 'flex' }}>
+            <label>Tab Size: &nbsp;</label>
+            <p>
+              <span>
+ 
+                <Select
+                  items={tabsize}
+                  itemRenderer={renderFontSize}
+                  activeItem={editorState.tabSize}
+                  onItemSelect={onTabSizeChange}
+                  filterable={false}
+                >
+                  <Button
+                    text={editorState.tabSize}
+                    rightIcon="double-caret-vertical"
+                  />
+                </Select>
+              </span>
+            </p>
+          </div>
+        </div>
+        <div>
+          <AceEditor
+            mode="python"
+            theme={editorState.theme}
+            fontSize={editorState.fontSize}
+            value={editorState.value}
+            onChange={onEditorChange}
+            width={WIDTH}
+            setOptions={{
+              enableBasicAutocompletion: true,
+              enableLiveAutocompletion: true,
+              tabSize: editorState.tabSize,
+            }}
+          />
+        </div>
+        <div style={{ textAlign: 'right', marginTop: '30px' }}>
+          <Button
+            rightIcon="arrow-right"
+            intent="success"
+            text="Run"
+            onClick={handleClickRun}
+            large={true}
+          />
+        </div>
+      </div>
     </div>
   )
 }
 
-export default Editor;
+export default Editor

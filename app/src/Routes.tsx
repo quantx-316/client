@@ -3,6 +3,7 @@ import { HashRouter, Switch, Route } from 'react-router-dom'
 
 import { About } from './pages/About'
 import { Home } from './pages/Home'
+import Algorithms from "./pages/Algorithms";
 import Backtests from './pages/Backtests';
 import Files from './pages/Files';
 import StockView from './pages/StockView';
@@ -64,6 +65,15 @@ const Routes: React.FC = () => {
           render={() => (
             <Base>
               <StockView />
+            </Base>
+          )}
+        />
+        <Route 
+          path="/algorithms" 
+          exact 
+          render={() => (
+            <Base>
+              <Algorithms />
             </Base>
           )}
         />
