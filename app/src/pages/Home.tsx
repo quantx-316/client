@@ -1,6 +1,7 @@
 import React from 'react';
 import AlgosList from '../components/AlgosList';
 import Backtests from '../components/Backtests';
+import HomeHeader from '../components/HomeHeader';
 
 export const Home: React.FC = () => {
 
@@ -12,15 +13,15 @@ export const Home: React.FC = () => {
             }}
         >
             <div
-                className="full centered-top-col"
+                className="full-height almost-full-width centered-top-col"
             >
                 <div
                     className="navbar-like"
                 >
-                    
+                    <HomeHeader />
                 </div>
                 <div
-                    className="full spaced-row"
+                    className="full separated-row"
                 >
                     <AlgosList />
 

@@ -7,6 +7,14 @@
 
 html {
   height: 100vh;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+html::-webkit-scrollbar { /* WebKit */
+  width: 0;
+  height: 0;
 }
 
 body {
@@ -31,6 +39,14 @@ code {
 .full {
   height: 100%;
   width: 100%;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.almost-full-width {
+  width: 80%;
 }
 
 .almost-full {
@@ -145,8 +161,12 @@ code {
 .bp3-tree {
     min-height: 50% !important;
     max-height: 50% !important;
-    overflow-y: auto !important;
+    overflow-y: auto;
 }
+
+::-webkit-scrollbar {
+  display: none !important;
+} 
 
 .bp3-card {
   max-height: 500px !important;
