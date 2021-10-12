@@ -122,12 +122,13 @@ const AlgosList: React.FC = () => {
                     <a href="#" style={{textDecoration: "none", color: "inherit"}}>Algorithms</a>
                 </H1>
 
-                {/*<Button*/}
-                {/*    className={Classes.BUTTON}*/}
-                {/*    minimal={true}*/}
-                {/*>*/}
-                {/*    New Algo*/}
-                {/*</Button>*/}
+                <Button
+                    className={Classes.BUTTON}
+                    icon={"new-link"}
+                    intent={"success"}
+                >
+                    New
+                </Button>
             </div>
             
             <Tree
@@ -150,12 +151,6 @@ const AlgosList: React.FC = () => {
                     icon={"trash"}
                 >
                     Delete
-                </Button>
-                <Button
-                    className={Classes.BUTTON}
-                    icon={"new-link"}
-                >
-                    New
                 </Button>
             </ButtonGroup>
             
