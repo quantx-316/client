@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Classes, ButtonGroup, Elevation, H1, H3, H5, Label, Slider, Switch } from "@blueprintjs/core";
+import { Button, Card, Icon, IconSize, ButtonGroup, Elevation, H1, H3, H4, H5, Label, Slider, Switch } from "@blueprintjs/core";
 
 const HomeHeader: React.FC = () => {
 
@@ -38,9 +38,25 @@ const HomeHeader: React.FC = () => {
                     <H3>
                         Ranking
                     </H3>
-                    <p>
-                        Increased by 5 from last week.
-                    </p>
+                    <div
+                        style={{
+                            display: "flex",
+                            alignContent: "center",
+                            gap: "5px",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <H4>6</H4>
+                        <Icon icon={"chevron-up"} intent={"success"} size={IconSize.LARGE}/>
+                        {/* intent=danger for decrease, chevron-down for decrease*/}
+                    </div>
+                    <span
+                        style={{
+                            fontSize: "10px"
+                        }}
+                    >
+                        Weekly Change
+                    </span>
                 </div>
                 <div
                     className="centered-top-col"
@@ -48,19 +64,51 @@ const HomeHeader: React.FC = () => {
                     <H3>
                         Submissions
                     </H3>
-                    <p>
-                        Submitted 6 more than last week.
-                    </p>
+                    <div
+                        style={{
+                            display: "flex",
+                            alignContent: "center",
+                            gap: "5px",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <H4>6</H4>
+                        <Icon icon={"chevron-down"} intent={"danger"} size={IconSize.LARGE}/>
+                        {/* intent=danger for decrease, chevron-down for decrease*/}
+                    </div>
+                    <span
+                        style={{
+                            fontSize: "10px"
+                        }}
+                    >
+                        Weekly Change
+                    </span>
                 </div>
                 <div
                     className="centered-top-col"
                 >
                     <H3>
-                        Alerts
+                        Competitions
                     </H3>
-                    <p>
-                        AAPL increased by 5% from last week.
-                    </p>
+                    <div
+                        style={{
+                            display: "flex",
+                            alignContent: "center",
+                            gap: "5px",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <H4>3</H4>
+                        <Icon icon={"chevron-up"} intent={"success"} size={IconSize.LARGE}/>
+                        {/* intent=danger for decrease, chevron-down for decrease*/}
+                    </div>
+                    <span
+                        style={{
+                            fontSize: "10px"
+                        }}
+                    >
+                        Weekly Change
+                    </span>
                 </div>
             </div>  
         </Card>
