@@ -148,6 +148,12 @@ const AlgosList: React.FC = () => {
                 </Button>
                 <Button
                     className={Classes.BUTTON}
+                    icon={"eye-open"}
+                >
+                    View
+                </Button>
+                <Button
+                    className={Classes.BUTTON}
                     icon={"trash"}
                 >
                     Delete
