@@ -9,11 +9,14 @@ export const Home: React.FC = () => {
         <div
             className="full centered-top-col"
             style={{
-                padding: "5%"
+                padding: "50px"
             }}
         >
             <div
                 className="full-height almost-full-width centered-top-col"
+                style={{
+                    gap: "10px"
+                }}
             >
                 <div
                     className="navbar-like"
