@@ -1,11 +1,20 @@
 @import "~normalize.css";
 @import "~@blueprintjs/core/lib/css/blueprint.css";
 @import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+@import "~@blueprintjs/popover2/lib/css/blueprint-popover2.css";
 @import 'react-pro-sidebar/dist/css/styles.css';
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
 html {
   height: 100vh;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+html::-webkit-scrollbar { /* WebKit */
+  width: 0;
+  height: 0;
 }
 
 body {
@@ -32,10 +41,59 @@ code {
   width: 100%;
 }
 
+.full-height {
+  height: 100%;
+}
+
+.almost-full-width {
+  width: 80%;
+}
+
+.almost-full {
+  height: 75%;
+  width: 80%;
+}
+
+.navbar-like {
+  height: 30%;
+  width: 100%;
+}
+
+.padded {
+  padding: 10px;
+}
+
+.margined {
+  margin: 10px;
+}
+
+.spaced-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.separated-row {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+}
+
+.centered-top-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  align-items: center;
+}
+
 .centered {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.outlined {
+  border: 2px solid #d9e1eb;
 }
 
 .navbar {
@@ -94,6 +152,26 @@ code {
   border: 1px solid #d9e1eb;
 }
 
+/* CODE TAB */
+
+.bp3-tab-list > div {
+  font-size: 20px !important;
+}
+
+.bp3-tree {
+    min-height: 50% !important;
+    max-height: 50% !important;
+    overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+  display: none !important;
+} 
+
+/* .bp3-card {
+  max-height: 500px !important;
+
+} */
 
 /* FOR STOCK VIEW */
 .App {

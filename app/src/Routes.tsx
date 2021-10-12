@@ -7,7 +7,7 @@ import Backtests from './pages/Backtests';
 import Files from './pages/Files';
 import StockView from './pages/StockView';
 import Base from './pages/Base';
-import Loading from './pages/Loading';
+import Landing from './pages/Landing';
 
 const Routes: React.FC = () => {
   return (
@@ -18,7 +18,7 @@ const Routes: React.FC = () => {
           exact 
           render={() => (
             <Base>
-              <Loading />
+              <Landing />
             </Base>
           )}
         />
