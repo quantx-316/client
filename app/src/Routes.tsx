@@ -8,6 +8,7 @@ import Files from './pages/Files';
 import StockView from './pages/StockView';
 import Base from './pages/Base';
 import Landing from './pages/Landing';
+import Algorithms from "./pages/Algorithms";
 
 const Routes: React.FC = () => {
   return (
@@ -64,6 +65,15 @@ const Routes: React.FC = () => {
           render={() => (
             <Base>
               <StockView />
+            </Base>
+          )}
+        />
+        <Route 
+          path="/algorithms" 
+          exact 
+          render={() => (
+            <Base>
+              <Algorithms />
             </Base>
           )}
         />

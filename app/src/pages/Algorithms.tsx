@@ -5,6 +5,9 @@ import Base from './Base';
 const Algorithms: React.FC = () => {
     return (
         <div>
+            <h1>
+                Editor
+            </h1>
             <Editor />
         </div>
     )
