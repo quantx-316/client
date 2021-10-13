@@ -96,9 +96,13 @@ const TVChartContainer = () => {
 
 	return (
 		<div
-			id={ props.containerId }
-			className={ 'TVChartContainer' }
-		/>
+			className="full"
+		>
+			<div
+				id={ props.containerId }
+				className={ 'TVChartContainer' }
+			/>
+		</div>
 	)
 }
 

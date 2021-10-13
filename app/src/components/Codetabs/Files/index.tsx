@@ -1,10 +1,12 @@
 import React from 'react';
 
-const Loading = () => {
+const Files: React.FC = () => {
+
     return (
         <div>
+            
         </div>
     )
 }
 
-export default Loading;
+export default Files;

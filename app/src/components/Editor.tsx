@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import AceEditor from 'react-ace'
 import { Select, ItemRenderer } from '@blueprintjs/select'
 
-import { Button, Icon, MenuItem } from '@blueprintjs/core'
+import { Button, EditableText, MenuItem } from '@blueprintjs/core'
 
 import 'ace-builds/src-noconflict/mode-jsx'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
@@ -43,6 +43,10 @@ const Editor: React.FC = () => {
     theme: 'solarized_dark',
     tabSize: 4,
   })
+
+  const [title, setTitle] = useState('')
+  
+  const [isSaved, setIsSaved] = useState(false)
 
   const onEditorChange = (newValue: string) => {
     setEditorState({
@@ -117,6 +121,15 @@ const Editor: React.FC = () => {
 
   const handleClickRun = () => {}
 
+  const handleClickSave = () => {
+    setIsSaved(true)
+    //after clicking save button
+  }
+
+  const handleTitleChange = (_title: string) => {
+    setTitle(_title)
+  }
+
   return (
     <div style={{}}>
       <div style={{ width: WIDTH }}>
@@ -140,6 +153,7 @@ const Editor: React.FC = () => {
                   <Button
                     text={editorState.theme}
                     rightIcon="double-caret-vertical"
+                    outlined={true}
                   />
                 </Select>
               </span>
@@ -160,6 +174,7 @@ const Editor: React.FC = () => {
                   <Button
                     text={editorState.fontSize}
                     rightIcon="double-caret-vertical"
+                    outlined={true}
                   />
                 </Select>
               </span>
@@ -170,7 +185,6 @@ const Editor: React.FC = () => {
             <label>Tab Size: &nbsp;</label>
             <p>
               <span>
- 
                 <Select
                   items={tabsize}
                   itemRenderer={renderFontSize}
@@ -181,11 +195,22 @@ const Editor: React.FC = () => {
                   <Button
                     text={editorState.tabSize}
                     rightIcon="double-caret-vertical"
+                    outlined={true}
                   />
                 </Select>
               </span>
             </p>
           </div>
+          <div style={{ textAlign: 'right' }}>
+            
+          </div>
+        </div>
+        <div
+          style={{
+            marginBottom: '25px'
+          }}
+        ><label>Title: &nbsp;</label>
+          <EditableText placeholder="Enter the title of code" alwaysRenderInput={true} selectAllOnFocus={false} maxLength={100} onChange={e => handleTitleChange(e)}/>
         </div>
         <div>
           <AceEditor
@@ -202,13 +227,23 @@ const Editor: React.FC = () => {
             }}
           />
         </div>
-        <div style={{ textAlign: 'right', marginTop: '30px' }}>
+        <div style={{ display: 'flex', justifyContent: 'end', marginTop: '25px' }}>
+          <div style={{marginRight: '10px'}}>
+            <Button
+                rightIcon="saved"
+                text="Save"
+                onClick={handleClickSave}
+                large={true}
+                outlined={true}
+            />
+          </div>
           <Button
             rightIcon="arrow-right"
             intent="success"
             text="Run"
             onClick={handleClickRun}
             large={true}
+            outlined={true}
           />
         </div>
       </div>

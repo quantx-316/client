@@ -3,12 +3,12 @@ import { HashRouter, Switch, Route } from 'react-router-dom'
 
 import { About } from './pages/About'
 import { Home } from './pages/Home'
-import Algorithms from "./pages/Algorithms";
 import Backtests from './pages/Backtests';
 import Files from './pages/Files';
 import StockView from './pages/StockView';
 import Base from './pages/Base';
-import Loading from './pages/Loading';
+import Landing from './pages/Landing';
+import Algorithms from "./pages/Algorithms";
 
 const Routes: React.FC = () => {
   return (
@@ -19,7 +19,7 @@ const Routes: React.FC = () => {
           exact 
           render={() => (
             <Base>
-              <Loading />
+              <Landing />
             </Base>
           )}
         />
