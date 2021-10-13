@@ -3,7 +3,7 @@ import AceEditor from 'react-ace'
 import { Select, ItemRenderer } from '@blueprintjs/select'
 
 import { Button, EditableText, MenuItem } from '@blueprintjs/core'
-
+import { Classes, Popover2 } from "@blueprintjs/popover2";
 import 'ace-builds/src-noconflict/mode-jsx'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
 import 'ace-builds/src-min-noconflict/ext-language_tools'
@@ -42,11 +42,10 @@ const Editor: React.FC = () => {
     fontSize: 14,
     theme: 'solarized_dark',
     tabSize: 4,
+    title: ''
   })
 
-  const [title, setTitle] = useState('')
-  
-  const [isSaved, setIsSaved] = useState(false)
+  // const [title, setTitle] = useState('')
 
   const onEditorChange = (newValue: string) => {
     setEditorState({
@@ -119,16 +118,20 @@ const Editor: React.FC = () => {
     })
   }
 
+  const handleTitleChange = (_title: string) => {
+    setEditorState({
+      ...editorState,
+      title: _title,
+    })
+  }
+
   const handleClickRun = () => {}
 
   const handleClickSave = () => {
-    setIsSaved(true)
     //after clicking save button
   }
 
-  const handleTitleChange = (_title: string) => {
-    setTitle(_title)
-  }
+
 
   return (
     <div style={{}}>
@@ -229,13 +232,19 @@ const Editor: React.FC = () => {
         </div>
         <div style={{ display: 'flex', justifyContent: 'end', marginTop: '25px' }}>
           <div style={{marginRight: '10px'}}>
-            <Button
+            
+            <Popover2 interactionKind="click" popoverClassName={Classes.POPOVER2_CONTENT_SIZING} enforceFocus={false}
+                placement="bottom-end" content={
+                <h5>Saved!</h5>
+            } >
+              <Button
                 rightIcon="saved"
                 text="Save"
                 onClick={handleClickSave}
                 large={true}
                 outlined={true}
-            />
+            /> 
+              </Popover2>
           </div>
           <Button
             rightIcon="arrow-right"
