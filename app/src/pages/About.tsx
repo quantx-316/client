@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import { useHistory } from 'react-router-dom'
 import Base from './Base';
+import authService from '../services/authService';
 
 export const About: React.FC = () => {
   const history = useHistory()
@@ -18,9 +19,17 @@ export const About: React.FC = () => {
         type="button"
         className="btn"
         cy-data="go-back-button"
-        onClick={() => history.push('/')}
+        onClick={() => authService.login("random@gmail.com", "test")}
       >
-        Go back
+        Test login
+      </button>
+      <button
+        type="button"
+        className="btn"
+        cy-data="go-back-button"
+        onClick={() => authService.register("random@gmail.com", "random", "test")}
+      >
+        Test register
       </button>
     </div>
   )
