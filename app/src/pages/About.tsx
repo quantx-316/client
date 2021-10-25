@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import { useHistory } from 'react-router-dom'
 import Base from './Base';
 import authService from '../services/authService';
+import userService from '../services/userService';
 
 export const About: React.FC = () => {
   const history = useHistory()
@@ -30,6 +31,22 @@ export const About: React.FC = () => {
         onClick={() => authService.register("random@gmail.com", "random", "test")}
       >
         Test register
+      </button>
+      <button
+        type="button"
+        className="btn"
+        cy-data="go-back-button"
+        onClick={() => userService.getCurrentUser()}
+      >
+        Test current user  
+      </button>
+      <button
+        type="button"
+        className="btn"
+        cy-data="go-back-button"
+        onClick={() => userService.getUser("random")}
+      >
+        Test get user  
       </button>
     </div>
   )

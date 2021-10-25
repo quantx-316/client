@@ -25,16 +25,19 @@ class authService {
 
     const query = querystring.stringify(data);
 
-    const res = await axios.post(tokenURL, query, config)
+    const res = await axios.post(tokenURL, query, config);
 
-    if (res.status === 200) {
+    //@ts-ignore
+    const accessToken = res.data.access_token;
+    console.log(accessToken);
+    
+    localStorage.setItem("user", JSON.stringify(accessToken));
 
-    }
-
+    return res; 
   }
 
   static async logout() {
-
+    localStorage.removeItem("user");
   }
 
   static async register(email: string, username: string, password: string) {
@@ -53,37 +56,15 @@ class authService {
       password: password,
     }
 
-    const res = await axios.post(userURL, data, config);
+      const res = await axios.post(userURL, data, config);
 
-    console.log(res);
-
+      return res; 
   }
 
-
-  // login (email: string, password: string, user_id: number) {
-  //   return axios
-  //     .get(API_URL + `/users/${user_id}`, { data: { email, password }})
-  //     .then((response: AxiosResponse) => {
-  //       const { data }: any = response
-  //       if (data.accessToken) {
-  //         localStorage.setItem("user", JSON.stringify(data));
-  //       }
-
-  //       return response.data;
-  //     });
-  // }
-
-  // logout() {
-  //   localStorage.removeItem("user");
-  // }
-
-  // register(email:string, password: string) {
-  //   return axios.post(API_URL + "/users/", {
-  //     email,
-  //     password,
-  //   });
-  // }
-
+  static async test() {
+    const res = await axios.post("localhost:29134");
+    console.log(res);
+  }
 
 }
 
