@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import Base from './Base';
 import authService from '../services/authService';
@@ -6,6 +6,25 @@ import userService from '../services/userService';
 
 export const About: React.FC = () => {
   const history = useHistory()
+
+  const [user, setUser] = useState({});
+
+  const onGetCurrUser = async () => {
+    const res = await userService.getCurrentUser();
+    console.log(res);
+    //@ts-ignore
+    setUser(res && res.data ? res.data : {});
+  }
+
+  const onUpdateUser = async () => {
+    const newUser = {
+      ...user, 
+      firstname: "Bob",
+    }
+    //@ts-ignore
+    const res = await userService.updateUser(newUser);
+    console.log(res);
+  }
 
   return (
     <div>
@@ -36,9 +55,9 @@ export const About: React.FC = () => {
         type="button"
         className="btn"
         cy-data="go-back-button"
-        onClick={() => userService.getCurrentUser()}
+        onClick={() => onGetCurrUser()}
       >
-        Test current user  
+        Test get current user  
       </button>
       <button
         type="button"
@@ -47,6 +66,15 @@ export const About: React.FC = () => {
         onClick={() => userService.getUser("random")}
       >
         Test get user  
+      </button>
+
+      <button
+        type="button"
+        className="btn"
+        cy-data="go-back-button"
+        onClick={() => onUpdateUser()}
+      >
+        Test on update user 
       </button>
     </div>
   )
