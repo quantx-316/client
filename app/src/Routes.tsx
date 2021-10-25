@@ -9,6 +9,10 @@ import StockView from './pages/StockView';
 import Base from './pages/Base';
 import Landing from './pages/Landing';
 import Algorithms from "./pages/Algorithms";
+import Profile from './pages/Profile';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Social from './pages/Social';
 
 const Routes: React.FC = () => {
   return (
@@ -74,6 +78,42 @@ const Routes: React.FC = () => {
           render={() => (
             <Base>
               <Algorithms />
+            </Base>
+          )}
+        />
+        <Route 
+          path="/login" 
+          exact 
+          render={() => (
+            <Base>
+              <Login />
+            </Base>
+          )}
+        />
+        <Route 
+          path="/register" 
+          exact 
+          render={() => (
+            <Base>
+              <Register />
+            </Base>
+          )}
+        />
+        <Route 
+          path="/profile" 
+          exact 
+          render={() => (
+            <Base>
+              <Profile />
+            </Base>
+          )}
+        />
+        <Route 
+          path="/social" 
+          exact 
+          render={() => (
+            <Base>
+              <Social />
             </Base>
           )}
         />

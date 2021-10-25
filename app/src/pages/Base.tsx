@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from '../components/Navbar';
 import FadeIn from 'react-fade-in';
+import SingleNotif from '../components/SingleNotif';
 
 const Base: React.FC = ({children}) => {
     return (
@@ -17,6 +18,8 @@ const Base: React.FC = ({children}) => {
             >
                 {children}
             </div>      
+
+            <SingleNotif />
             
         </div>
     )
