@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import Base from './Base';
 import authService from '../services/authService';
 import userService from '../services/userService';
+import algoService from '../services/algoService';
 
 export const About: React.FC = () => {
   const history = useHistory()
@@ -11,7 +12,6 @@ export const About: React.FC = () => {
 
   const onGetCurrUser = async () => {
     const res = await userService.getCurrentUser();
-    console.log(res);
     //@ts-ignore
     setUser(res && res.data ? res.data : {});
   }
@@ -23,7 +23,6 @@ export const About: React.FC = () => {
     }
     //@ts-ignore
     const res = await userService.updateUser(newUser);
-    console.log(res);
   }
 
   return (
@@ -75,6 +74,14 @@ export const About: React.FC = () => {
         onClick={() => onUpdateUser()}
       >
         Test on update user 
+      </button>
+      <button
+        type="button"
+        className="btn"
+        cy-data="go-back-button"
+        onClick={() => userService.getUsers()}
+      >
+        Test get users
       </button>
     </div>
   )
