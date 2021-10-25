@@ -7,7 +7,7 @@ import userService from '../services/userService';
 import algoService from '../services/algoService';
 import {register, login, logout} from '../features/actions/auth';
 
-export const About: React.FC = () => {
+const Dev: React.FC = () => {
   const history = useHistory()
 
   const dispatch = useDispatch();
@@ -36,10 +36,12 @@ export const About: React.FC = () => {
 
   const onLogin = () => {
     dispatch(login("random@gmail.com", "test"));
+    history.push("/home");
   }
 
   const onLogout = () => {
     dispatch(logout());
+    history.push("/");
   }
 
   return (
@@ -96,10 +98,12 @@ export const About: React.FC = () => {
         type="button"
         className="btn"
         cy-data="go-back-button"
-        onClick={() => userService.getUsers()}
+        onClick={() => onLogout()}
       >
-        Test get users
+        Test logout
       </button>
     </div>
   )
 }
+
+export default Dev; 

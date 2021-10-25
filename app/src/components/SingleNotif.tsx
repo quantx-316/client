@@ -45,35 +45,12 @@ const InitNotification = () => {
         return "Fatal Error";
     }
 
-    useEffect(() => {
-        notifActionHandler.handleNotifVisibility(true);
-    }, [])
-
     const handleClose = () => {
         notifActionHandler.handleNotifVisibility(false);
-      };
+    };
 
     return (
-        // <div className={classes.bannerSuperCont}>
-        //     {
-        //         visibility && 
-        //         <FadeNotif 
-        //             status={status}
-        //             title={title}
-        //             onCloseNotif={hideNotification}
-        //             message={getMessage()}
-        //         />  
-        //     }
-        // </div>
         <div>
-            {/* <Snackbar
-            //@ts-ignore
-            anchorOrigin={{ vertical, horizontal }}
-            open={true}
-            onClose={handleClose}
-            message="I love snacks"
-            key={vertical + horizontal}
-            /> */}
 
             <Snackbar
                 //@ts-ignore

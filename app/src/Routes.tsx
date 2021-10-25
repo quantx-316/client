@@ -1,7 +1,7 @@
 import React from 'react'
 import { HashRouter, Switch, Route } from 'react-router-dom'
-
-import { About } from './pages/About'
+import {useSelector} from "react-redux";
+import Dev from './pages/Dev'
 import { Home } from './pages/Home'
 import Backtests from './pages/Backtests';
 import Files from './pages/Files';
@@ -10,11 +10,16 @@ import Base from './pages/Base';
 import Landing from './pages/Landing';
 import Algorithms from "./pages/Algorithms";
 import Profile from './pages/Profile';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import Auth from './pages/Auth';
 import Social from './pages/Social';
 
-const Routes: React.FC = () => {
+import ProtectedRoute from './components/ProtectedRoute';
+
+const Routes: React.FC = () => {  
+
+  //@ts-ignore 
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
   return (
     <HashRouter>
       <Switch>
@@ -27,7 +32,7 @@ const Routes: React.FC = () => {
             </Base>
           )}
         />
-        <Route 
+        <ProtectedRoute 
           path="/home" 
           exact 
           render={() => (
@@ -37,15 +42,15 @@ const Routes: React.FC = () => {
           )}
         />
         <Route 
-          path="/about" 
+          path="/dev" 
           exact 
           render={() => (
             <Base>
-              <About />
+              <Dev />
             </Base>
           )}
         />
-        <Route 
+        <ProtectedRoute 
           path="/files" 
           exact 
           render={() => (
@@ -54,7 +59,7 @@ const Routes: React.FC = () => {
             </Base>
           )}
         />
-        <Route 
+        <ProtectedRoute 
           path="/backtests" 
           exact 
           render={() => (
@@ -63,7 +68,7 @@ const Routes: React.FC = () => {
             </Base>
           )}
         />
-        <Route 
+        <ProtectedRoute 
           path="/stock-view" 
           exact 
           render={() => (
@@ -72,7 +77,7 @@ const Routes: React.FC = () => {
             </Base>
           )}
         />
-        <Route 
+        <ProtectedRoute 
           path="/algorithms" 
           exact 
           render={() => (
@@ -82,24 +87,15 @@ const Routes: React.FC = () => {
           )}
         />
         <Route 
-          path="/login" 
+          path="/auth" 
           exact 
           render={() => (
             <Base>
-              <Login />
+              <Auth />
             </Base>
           )}
         />
-        <Route 
-          path="/register" 
-          exact 
-          render={() => (
-            <Base>
-              <Register />
-            </Base>
-          )}
-        />
-        <Route 
+        <ProtectedRoute 
           path="/profile" 
           exact 
           render={() => (
@@ -108,9 +104,11 @@ const Routes: React.FC = () => {
             </Base>
           )}
         />
-        <Route 
+
+        <ProtectedRoute 
           path="/social" 
           exact 
+          isAuthenticated={isLoggedIn}
           render={() => (
             <Base>
               <Social />

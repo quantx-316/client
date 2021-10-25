@@ -25,9 +25,6 @@ export const login = (email: string, password: string) => (dispatch: any) => {
                 console.log(error);
             }
 
-            console.log(access);
-            console.log(user);
-
             if (!access || !user) {
                 return Promise.reject();
             }
@@ -40,6 +37,10 @@ export const login = (email: string, password: string) => (dispatch: any) => {
                     access: access, 
                 }
             })
+
+            const notifActionHandler = new notifsActionsHandler(dispatch);
+
+            notifActionHandler.showSuccessNotif("Successfully logged in!");
 
             return Promise.resolve();
         },
@@ -77,7 +78,7 @@ export const register = (username: string, email: string, password: string) => (
                 type: REGISTER_SUCCESS, 
             })
 
-            notifActionHandler.showSuccessNotif("Successfully registered");
+            notifActionHandler.showSuccessNotif("Successfully registered!");
 
             return Promise.resolve();
         },
