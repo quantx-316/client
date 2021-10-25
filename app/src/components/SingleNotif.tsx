@@ -58,12 +58,24 @@ const InitNotification = () => {
                 open={visibility}
                 onClose={handleClose}
             >
-                <Alert
-                    onClose={handleClose}
-                    severity="success"
-                >
-                    {msg}
-                </Alert>
+                {
+                    status === "success" ? 
+                    <Alert
+                        onClose={handleClose}
+                        severity="success"
+                    >
+                        {msg}
+                    </Alert>
+
+                    :
+
+                    <Alert
+                        onClose={handleClose}
+                        severity="error"
+                    >
+                        {msg}
+                    </Alert>
+                }
             </Snackbar>
         </div>
     )

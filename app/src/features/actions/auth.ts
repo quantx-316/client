@@ -1,5 +1,6 @@
 import authService from "../../services/authService";
-import notifsActionsHandler from "./notifs";
+import {dispatchErrorMsg, dispatchSuccessMsg} from '../utils/notifs';
+import {getErrorMsg} from '../utils/other';
 import {
     REGISTER_SUCCESS,
     REGISTER_FAIL,
@@ -38,28 +39,21 @@ export const login = (email: string, password: string) => (dispatch: any) => {
                 }
             })
 
-            const notifActionHandler = new notifsActionsHandler(dispatch);
-
-            notifActionHandler.showSuccessNotif("Successfully logged in!");
+            dispatchSuccessMsg(dispatch, "Successfully logged in!");
 
             return Promise.resolve();
         },
         (error) => {
-            let msg = (error.response &&
-                error.response.data &&
-                error.response.data.message) ||
-              error.message ||
-              error.toString();
 
-              dispatch({
-                  type: LOGIN_FAIL, 
-              })
+            const msg = getErrorMsg(error);
 
-              const notifActionHandler = new notifsActionsHandler(dispatch);
+            dispatch({
+                type: LOGIN_FAIL, 
+            })
 
-              notifActionHandler.showErrorNotif(msg);
+            dispatchErrorMsg(dispatch, msg);
 
-              return Promise.reject();
+            return Promise.reject();
         }
     )
 
@@ -72,32 +66,24 @@ export const register = (username: string, email: string, password: string) => (
 
         (response) => {
 
-            const notifActionHandler = new notifsActionsHandler(dispatch);
-
             dispatch({
                 type: REGISTER_SUCCESS, 
             })
 
-            notifActionHandler.showSuccessNotif("Successfully registered!");
+            dispatchSuccessMsg(dispatch, "Successfully registered!");
 
             return Promise.resolve();
         },
         (error) => {
-            let msg = (error.response &&
-                error.response.data &&
-                error.response.data.message) ||
-              error.message ||
-              error.toString();
+            const msg = getErrorMsg(error);
 
-              const notifActionHandler = new notifsActionsHandler(dispatch);
+            dispatch({
+                type: REGISTER_FAIL, 
+            })
 
-              dispatch({
-                  type: REGISTER_FAIL, 
-              })
+            dispatchErrorMsg(dispatch, msg);
 
-              notifActionHandler.showErrorNotif(msg);
-
-              return Promise.reject();
+            return Promise.reject();
         }
 
     )

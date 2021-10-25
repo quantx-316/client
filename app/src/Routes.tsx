@@ -35,6 +35,7 @@ const Routes: React.FC = () => {
         <ProtectedRoute 
           path="/home" 
           exact 
+          isAuthenticated={isLoggedIn}
           render={() => (
             <Base>
               <Home />
@@ -53,6 +54,7 @@ const Routes: React.FC = () => {
         <ProtectedRoute 
           path="/files" 
           exact 
+          isAuthenticated={isLoggedIn}
           render={() => (
             <Base>
               <Files />
@@ -62,6 +64,7 @@ const Routes: React.FC = () => {
         <ProtectedRoute 
           path="/backtests" 
           exact 
+          isAuthenticated={isLoggedIn}
           render={() => (
             <Base>
               <Backtests />
@@ -71,6 +74,7 @@ const Routes: React.FC = () => {
         <ProtectedRoute 
           path="/stock-view" 
           exact 
+          isAuthenticated={isLoggedIn}
           render={() => (
             <Base>
               <StockView />
@@ -80,6 +84,7 @@ const Routes: React.FC = () => {
         <ProtectedRoute 
           path="/algorithms" 
           exact 
+          isAuthenticated={isLoggedIn}
           render={() => (
             <Base>
               <Algorithms />
@@ -98,6 +103,7 @@ const Routes: React.FC = () => {
         <ProtectedRoute 
           path="/profile" 
           exact 
+          isAuthenticated={isLoggedIn}
           render={() => (
             <Base>
               <Profile />
