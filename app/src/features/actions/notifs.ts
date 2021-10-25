@@ -21,10 +21,6 @@ export default class notifsActionsHandler {
         return this.getAttrFromSingleNotifState(notifState, 'visibility');
     }
 
-    getSingleNotifTitle(notifState: NotifState) {
-        return this.getAttrFromSingleNotifState(notifState, 'title');
-    }
-
     getAttrFromSingleNotifState(notifState: NotifState, attr: string) {
         const singleNotifState = notifState.singleNotif;
         return singleNotifState.hasOwnProperty(attr) ? singleNotifState[attr] : null;
@@ -38,21 +34,17 @@ export default class notifsActionsHandler {
         return singleNotif.msg;
     }
 
-    getNotifTitle(singleNotif: SingleNotifState) {
-        return singleNotif.title;
-    }
-
     getNotifList(notifState: NotifState) {
         const listNotifState = notifState.listNotif;
         return listNotifState;
     }
 
-    showSuccessNotif(title: string, msg: string) {
-        this.handleDispatchAllNotif("success", title, msg);
+    showSuccessNotif(msg: string) {
+        this.handleDispatchAllNotif("success", msg);
     }
 
-    showErrorNotif(title: string, msg: string) {
-        this.handleDispatchAllNotif("error", title, msg);
+    showErrorNotif(msg: string) {
+        this.handleDispatchAllNotif("error", msg);
     }
 
     clearNotifs() {
@@ -65,13 +57,12 @@ export default class notifsActionsHandler {
         })
     }
 
-    handleDispatchAllNotif(status: string, title: string, msg: string) {
+    handleDispatchAllNotif(status: string, msg: string) {
 
-        this.handleDispatchAddListNotif(status, title, msg);
+        this.handleDispatchAddListNotif(status, msg);
 
         let singleNotifState: SingleNotifState = {
             status: status, 
-            title: title,
             msg: msg, 
             visibility: true, 
         }
@@ -82,16 +73,15 @@ export default class notifsActionsHandler {
         })
     }
 
-    addNotifToList(status: string, title: string, msg: string) {
-        this.handleDispatchAddListNotif(status, title, msg);
+    addNotifToList(status: string, msg: string) {
+        this.handleDispatchAddListNotif(status, msg);
     }
 
-    handleDispatchAddListNotif(status: string, title: string, msg: string) {
+    handleDispatchAddListNotif(status: string, msg: string) {
         const currDate = new Date().toLocaleString();
 
         let singleNotifState: SingleNotifState = {
             status: status,
-            title: title,
             msg: msg,
             visibility: true 
         }

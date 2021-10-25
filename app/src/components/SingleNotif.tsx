@@ -31,7 +31,6 @@ const InitNotification = () => {
     const msg = notifActionHandler.getSingleNotifMsg(notif);
     const status = notifActionHandler.getSingleNotifStatus(notif);
     const visibility = notifActionHandler.getSingleNotifVisiblity(notif);
-    const title = notifActionHandler.getSingleNotifTitle(notif);
 
     const hideNotification = () => {
         notifActionHandler.hideNotification();

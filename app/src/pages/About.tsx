@@ -1,28 +1,45 @@
 import React, { Fragment, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import {useDispatch, useSelector} from 'react-redux';
 import Base from './Base';
 import authService from '../services/authService';
 import userService from '../services/userService';
 import algoService from '../services/algoService';
+import {register, login, logout} from '../features/actions/auth';
 
 export const About: React.FC = () => {
   const history = useHistory()
 
-  const [user, setUser] = useState({});
+  const dispatch = useDispatch();
 
   const onGetCurrUser = async () => {
     const res = await userService.getCurrentUser();
     //@ts-ignore
-    setUser(res && res.data ? res.data : {});
+    console.log(res);
   }
 
+  //@ts-ignore
+  const user = useSelector(state => state.auth.user);
+
   const onUpdateUser = async () => {
-    const newUser = {
+      const newUser = {
       ...user, 
       firstname: "Bob",
     }
     //@ts-ignore
     const res = await userService.updateUser(newUser);
+  }
+
+  const onRegister = () => {
+    dispatch(register("random", "random@gmail.com", "test"));
+  }
+
+  const onLogin = () => {
+    dispatch(login("random@gmail.com", "test"));
+  }
+
+  const onLogout = () => {
+    dispatch(logout());
   }
 
   return (
@@ -38,7 +55,7 @@ export const About: React.FC = () => {
         type="button"
         className="btn"
         cy-data="go-back-button"
-        onClick={() => authService.login("random@gmail.com", "test")}
+        onClick={() => onLogin()}
       >
         Test login
       </button>
@@ -46,7 +63,7 @@ export const About: React.FC = () => {
         type="button"
         className="btn"
         cy-data="go-back-button"
-        onClick={() => authService.register("random@gmail.com", "random", "test")}
+        onClick={() => onRegister()}
       >
         Test register
       </button>

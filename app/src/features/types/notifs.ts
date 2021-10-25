@@ -7,7 +7,6 @@ export interface NotifState {
 export interface SingleNotifState {
     [index: string]: any,
     status: string, 
-    title: string,
     msg: string, 
     visibility: boolean,
 }

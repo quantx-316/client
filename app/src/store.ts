@@ -1,4 +1,4 @@
-import { createStore } from 'redux'
+import { applyMiddleware, createStore } from 'redux'
 import { devToolsEnhancer } from 'redux-devtools-extension'
 // import { CounterReducer } from './features/counter'
 import  rootReducer  from './features/reducers'
@@ -7,10 +7,15 @@ import  rootReducer  from './features/reducers'
 //   count: CounterReducer,
 //   auth: combineReducer
 // })
+import { composeWithDevTools } from 'redux-devtools-extension'
+import thunk from "redux-thunk";
+
+const middleware = [thunk];
 
 const store = createStore(
   rootReducer,
-  /* preloadedState, */ devToolsEnhancer({})
+  composeWithDevTools(applyMiddleware(...middleware))
+  // /* preloadedState, */ devToolsEnhancer({})
 )
 
 export default store

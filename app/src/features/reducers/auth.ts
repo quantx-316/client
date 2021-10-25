@@ -4,15 +4,29 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-} from "../actions/actionTypes";
+} from "../types/auth";
 
-import { AuthTypes } from "../actions/actionTypes";
+import { AuthTypes } from "../types/auth";
 
-const user = JSON.parse(localStorage.getItem("user") || '{}');
+let user, access; 
 
-const initialState = user
-  ? { isLoggedIn: true, user }
-  : { isLoggedIn: false, user: null };
+try {
+  user = JSON.parse(localStorage.getItem("user") || '{}');
+} catch (error) {
+  localStorage.removeItem("user");
+  user = null;
+}
+
+try {
+  access = JSON.parse(localStorage.getItem("token") || "");
+} catch (error) {
+  localStorage.removeItem("access");
+  access = null; 
+}
+
+const initialState = user && access && access !== ""
+  ? { isLoggedIn: true, user: user, access: access}
+  : { isLoggedIn: false, user: null, access: null};
 
 export default function (state = initialState, action: AuthTypes) {
 
@@ -31,7 +45,10 @@ export default function (state = initialState, action: AuthTypes) {
       return {
         ...state,
         isLoggedIn: true,
-        user: action.payload,
+        //@ts-ignore
+        user: action.payload.user,
+        //@ts-ignore 
+        access: action.payload.access, 
       };
     case LOGIN_FAIL:
       return {

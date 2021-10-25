@@ -7,7 +7,7 @@ const querystring = require('querystring');
 
 class authService {
 
-  static async login(email: string, password: string) {
+  static login(email: string, password: string) {
     const headers = {
       'accept': 'application/json',
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -25,22 +25,31 @@ class authService {
 
     const query = querystring.stringify(data);
 
-    const res = await axios.post(tokenURL, query, config);
+    return axios
+            .post(tokenURL, query, config)
+            .then((res) => {
 
-    //@ts-ignore
-    const accessToken = res.data.access_token;
-    console.log(accessToken);
-    
-    localStorage.setItem("user", JSON.stringify(accessToken));
+              console.log('res');
+              console.log(res);
 
-    return res; 
+              //@ts-ignore
+              if (res.data.access_token) {
+                //@ts-ignore 
+                localStorage.setItem("access", JSON.stringify(res.data.access_token));
+                //@ts-ignore
+                localStorage.setItem("user", JSON.stringify(res.data.user));
+              }
+
+              return res.data;
+            });
   }
 
-  static async logout() {
+  static logout() {
+    localStorage.removeItem("access");
     localStorage.removeItem("user");
   }
 
-  static async register(email: string, username: string, password: string) {
+  static register(email: string, username: string, password: string) {
     const headers = {
       'accept': 'application/json',
       "Content-Type": "application/json",
@@ -56,9 +65,7 @@ class authService {
       password: password,
     }
 
-      const res = await axios.post(userURL, data, config);
-
-      return res; 
+    return axios.post(userURL, data, config);
   }
 
   static async test() {

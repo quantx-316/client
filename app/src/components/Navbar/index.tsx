@@ -33,7 +33,6 @@ const ComposedNavbar: React.FC = () => {
         <Button className="bp3-minimal" icon="chart" text="Stock" onClick={() => handleOnClick("/stock-view")} />
         {/* <Button className="bp3-minimal" icon="document" text="Files" onClick={() => handleOnClick("/files")}/> */}
         <Button className="bp3-minimal" icon="social-media" text="Social" onClick={() => handleOnClick("/social")} />
-        <Button className="bp3-minimal" icon="code" text="Algorithms" onClick={() => handleOnClick("/algorithms")} />
 
         <Navbar.Divider /> 
         <UserDropdown />

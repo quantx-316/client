@@ -1,6 +1,6 @@
 export function authHeader() {
 
-    const accessToken = localStorage.getItem('user') ?? '{}';
+    const accessToken = localStorage.getItem('access') ?? '';
     let user;
     try {
         user = JSON.parse(accessToken);
@@ -8,7 +8,7 @@ export function authHeader() {
             "Authorization": "Bearer " + user
         }
     } catch(error) {
-        localStorage.setItem('user', '{}');
+        localStorage.removeItem('access');
         return {};
     }
 
