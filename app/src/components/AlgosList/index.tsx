@@ -112,14 +112,19 @@ const AlgosList: React.FC = () => {
     }
 
     const onEditClick = () => {
-        console.log("edit click");
-        console.log(selectedInfo);
-        history.push({
-            pathname: "/editor",
-            state: {
-                algo: selectedInfo,
-            }
-        });
+
+        //@ts-ignore 
+        if (selectedInfo && selectedInfo.id) {
+            history.push({
+                pathname: "/editor",
+                state: {
+                    algo: selectedInfo,
+                }
+            });
+            return 
+        } 
+
+        dispatchErrorMsg(redDispatch, "Invalid selected information");
     }
 
     const onDeleteClick = () => {
