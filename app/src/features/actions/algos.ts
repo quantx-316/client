@@ -12,9 +12,9 @@ import {
     Algo,
 } from '../types/algos';
 import {dispatchErrorMsg, dispatchSuccessMsg} from '../utils/notifs';
-import { getErrorMsg } from "../utils/other";
+import { getErrorMsg, handleError } from "../utils/other";
 
-export const createAlgo = (algo: AlgoSubmit) => (dispatch: any) => {
+export const createAlgo = (algo: AlgoSubmit, createAlgoCallback: any) => (dispatch: any) => {
 
     return algoService.createAlgo(algo).then(
         (res) => {
@@ -23,11 +23,15 @@ export const createAlgo = (algo: AlgoSubmit) => (dispatch: any) => {
                 payload: res.data, 
             })
 
+            createAlgoCallback(res.data);
+
             dispatchSuccessMsg(dispatch, "Placeholder algo create success msg")
 
         },
         (error) => {
             const msg = getErrorMsg(error);
+
+            handleError(error, dispatch);
 
             dispatch({
                 type: ALGO_CREATE_FAIL
@@ -39,7 +43,7 @@ export const createAlgo = (algo: AlgoSubmit) => (dispatch: any) => {
 
 }
 
-export const updateAlgo = (newAlgo: Algo) => (dispatch: any) => {
+export const updateAlgo = (newAlgo: Algo, updateAlgoCallback: any) => (dispatch: any) => {
 
     return algoService.updateAlgo(newAlgo).then(
         (res) => {
@@ -48,11 +52,14 @@ export const updateAlgo = (newAlgo: Algo) => (dispatch: any) => {
                 payload: res.data,
             })
 
+            updateAlgoCallback(res.data);
+
             dispatchSuccessMsg(dispatch, "Placeholder algo update success msg");
 
         },
         (error) => {
             const msg = getErrorMsg(error);
+            handleError(error, dispatch);
 
             dispatch({
                 type: ALGO_FETCH_FAIL
@@ -68,6 +75,8 @@ export const deleteAlgo = (algoID: number) => (dispatch: any) => {
 
     return algoService.deleteAlgo(algoID).then(
         (res) => {
+
+            
             dispatch({
                 type: ALGO_DELETE_SUCCESS, 
                 payload: algoID,
@@ -77,9 +86,10 @@ export const deleteAlgo = (algoID: number) => (dispatch: any) => {
         },
         (error) => {
             const msg = getErrorMsg(error);
+            handleError(error, dispatch);
 
             dispatch({
-                type: ALGO_FETCH_FAIL
+                type: ALGO_DELETE_FAIL
             })
 
             dispatchErrorMsg(dispatch, msg);
@@ -103,6 +113,7 @@ export const fetchAlgos = () => (dispatch: any) => {
         },
         (error) => {
             const msg = getErrorMsg(error);
+            handleError(error, dispatch);
 
             dispatch({
                 type: ALGO_FETCH_FAIL

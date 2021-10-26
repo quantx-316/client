@@ -13,13 +13,20 @@ let user, access;
 try {
   user = JSON.parse(localStorage.getItem("user") || '{}');
 } catch (error) {
+  console.log('user');
+  console.log(error);
+  console.log(user);
   localStorage.removeItem("user");
   user = null;
 }
 
 try {
-  access = JSON.parse(localStorage.getItem("token") || "");
+  access = JSON.parse(localStorage.getItem("access") || "");
 } catch (error) {
+  console.log('access');
+  console.log(localStorage.getItem('access'));
+  console.log(error);
+  console.log(access);
   localStorage.removeItem("access");
   access = null; 
 }
