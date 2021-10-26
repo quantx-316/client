@@ -15,6 +15,8 @@ export interface AlgoSubmit {
 export interface Algo {
     id: number, 
     owner: number, 
+    title: string, 
+    code: string, 
     created: string, 
     edited_at: string, 
 }
