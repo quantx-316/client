@@ -8,7 +8,7 @@ import Files from './pages/Files';
 import StockView from './pages/StockView';
 import Base from './pages/Base';
 import Landing from './pages/Landing';
-import Algorithms from "./pages/Algorithms";
+import Editor from "./pages/Editor";
 import Profile from './pages/Profile';
 import Auth from './pages/Auth';
 import Social from './pages/Social';
@@ -82,12 +82,12 @@ const Routes: React.FC = () => {
           )}
         />
         <ProtectedRoute 
-          path="/algorithms" 
+          path="/editor" 
           exact 
           isAuthenticated={isLoggedIn}
           render={() => (
             <Base>
-              <Algorithms />
+              <Editor />
             </Base>
           )}
         />

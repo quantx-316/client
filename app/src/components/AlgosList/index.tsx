@@ -6,6 +6,7 @@ import { Classes as Popover2Classes, ContextMenu2, Tooltip2 } from "@blueprintjs
 import {useSelector, useDispatch} from 'react-redux';
 import {Algo} from '../../features/types/algos';
 import {fetchAlgos} from '../../features/actions/algos';
+import {useHistory} from 'react-router-dom';
 
 type NodePath = number[];
 
@@ -55,6 +56,8 @@ function treeExampleReducer(state: any, action: TreeAction) {
 
 const AlgosList: React.FC = () => {
 
+    const history = useHistory();
+
     const [nodes, dispatch] = React.useReducer(treeExampleReducer, []);
 
     //@ts-ignore 
@@ -86,6 +89,10 @@ const AlgosList: React.FC = () => {
         },
         [],
     );
+
+    const onNewClick = () => {
+        history.push("editor");
+    }
 
     return (
         <Card
@@ -119,6 +126,7 @@ const AlgosList: React.FC = () => {
                     className={Classes.BUTTON}
                     icon={"new-link"}
                     intent={"success"}
+                    onClick={() => onNewClick()}
                 >
                     New
                 </Button>
@@ -130,26 +138,46 @@ const AlgosList: React.FC = () => {
                 className={Classes.ELEVATION_0}
             />
 
-            <ButtonGroup>
-                <Button
-                    className={Classes.BUTTON}
-                    icon={"edit"}
+            {
+                nodes.length === 0 && 
+                <div
+                    style={{
+                        height: "100%",
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignContent: "center",
+                    }}
                 >
-                    Edit
-                </Button>
-                <Button
-                    className={Classes.BUTTON}
-                    icon={"eye-open"}
-                >
-                    View
-                </Button>
-                <Button
-                    className={Classes.BUTTON}
-                    icon={"trash"}
-                >
-                    Delete
-                </Button>
-            </ButtonGroup>
+                    <h1>
+                        No Algos Found
+                    </h1>
+                </div>
+            }
+
+            {
+                nodes.length > 0 && 
+                <ButtonGroup>
+                    <Button
+                        className={Classes.BUTTON}
+                        icon={"edit"}
+                    >
+                        Edit
+                    </Button>
+                    <Button
+                        className={Classes.BUTTON}
+                        icon={"eye-open"}
+                    >
+                        View
+                    </Button>
+                    <Button
+                        className={Classes.BUTTON}
+                        icon={"trash"}
+                    >
+                        Delete
+                    </Button>
+                </ButtonGroup>
+            }
 
         </Card>
     )

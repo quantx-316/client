@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import AceEditor from 'react-ace'
 import { Select, ItemRenderer } from '@blueprintjs/select'
-
+import {useDispatch, useSelector} from 'react-redux';
+import {createAlgo, updateAlgo} from '../features/actions/algos';
 import { Button, EditableText, MenuItem } from '@blueprintjs/core'
 import { Classes, Popover2 } from "@blueprintjs/popover2";
 import 'ace-builds/src-noconflict/mode-jsx'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
 import 'ace-builds/src-min-noconflict/ext-language_tools'
+
+import {Algo} from '../features/types/algos';
 
 const themes = [
   'monokai',
@@ -32,25 +35,41 @@ themes.forEach((theme) => require(`ace-builds/src-noconflict/theme-${theme}`))
 require('ace-builds/src-noconflict/mode-python')
 require('ace-builds/src-noconflict/snippets/python')
 
-const Editor: React.FC = () => {
+type EditorProps = {
+  algo?: Algo
+}
+
+const Editor = (props: EditorProps) => {
   const defaultValue = `def helloworld():
     print('hello world')
   `
 
+  const dispatch = useDispatch();
+
+  //@ts-ignore 
+  const user = useSelector(state => state.auth.user);
+
+  const [isNewAlgo, setIsNewAlgo] = useState(props.algo ? false : true);
+
+  const [algoState, setAlgoState] = useState<Algo>({
+    id: -1, 
+    owner: -1, 
+    title: props.algo ? props.algo.title : '', 
+    code: props.algo ? props.algo.code : defaultValue, 
+    created: props.algo ? props.algo.created : '', 
+    edited_at: props.algo ? props.algo.edited_at : '', 
+  })
+
   const [editorState, setEditorState] = useState({
-    value: defaultValue,
     fontSize: 14,
     theme: 'solarized_dark',
     tabSize: 4,
-    title: ''
   })
 
-  // const [title, setTitle] = useState('')
-
   const onEditorChange = (newValue: string) => {
-    setEditorState({
-      ...editorState,
-      value: newValue,
+    setAlgoState({
+      ...algoState, 
+      code: newValue,
     })
   }
 
@@ -119,16 +138,36 @@ const Editor: React.FC = () => {
   }
 
   const handleTitleChange = (_title: string) => {
-    setEditorState({
-      ...editorState,
+    setAlgoState({
+      ...algoState, 
       title: _title,
     })
   }
 
   const handleClickRun = () => {}
 
+  const createAlgoCallBack = (algo: Algo) => {
+    setAlgoState(algo);
+    setIsNewAlgo(false);
+  }
+
+  const updateAlgoCallBack = (algo: Algo) => {
+    setAlgoState(algo);
+  }
+
   const handleClickSave = () => {
     //after clicking save button
+
+    if (isNewAlgo) {
+      dispatch(createAlgo({
+        title: algoState.title,
+        code: algoState.code,
+      }, createAlgoCallBack))
+    } else {
+      dispatch(updateAlgo(algoState, updateAlgoCallBack))
+    }
+
+
   }
 
 
@@ -213,14 +252,14 @@ const Editor: React.FC = () => {
             marginBottom: '25px'
           }}
         ><label>Title: &nbsp;</label>
-          <EditableText placeholder="Enter the title of code" alwaysRenderInput={true} selectAllOnFocus={false} maxLength={100} onChange={e => handleTitleChange(e)}/>
+          <EditableText placeholder="Enter the title of code" alwaysRenderInput={true} selectAllOnFocus={false} maxLength={100} onChange={e => handleTitleChange(e)} value={algoState.title}/>
         </div>
         <div>
           <AceEditor
             mode="python"
             theme={editorState.theme}
             fontSize={editorState.fontSize}
-            value={editorState.value}
+            value={algoState.code}
             onChange={onEditorChange}
             width={WIDTH}
             setOptions={{

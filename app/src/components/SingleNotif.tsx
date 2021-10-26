@@ -27,7 +27,6 @@ const InitNotification = () => {
 
     //@ts-ignore
     const notif = useSelector(state => state.notif); 
-    console.log(notif);
     const msg = notifActionHandler.getSingleNotifMsg(notif);
     const status = notifActionHandler.getSingleNotifStatus(notif);
     const visibility = notifActionHandler.getSingleNotifVisiblity(notif);
