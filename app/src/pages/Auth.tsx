@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import {useDispatch, useSelector} from 'react-redux';
 import {
   Tab,
   Tabs,
@@ -7,8 +9,12 @@ import {
   Button,
   FormGroup,
 } from '@blueprintjs/core'
+import {register, login, logout} from '../features/actions/auth';
+import {dispatchErrorMsg, dispatchSuccessMsg} from '../features/utils/notifs';
+import { Popover2, Tooltip2 } from "@blueprintjs/popover2";
 
 const Auth: React.FC = () => {
+
   return (
     <div>
       <Tabs id="Auth" renderActiveTabPanelOnly={false} large={true}>
@@ -20,6 +26,9 @@ const Auth: React.FC = () => {
 }
 
 const RegisterPanel: React.FC = () => {
+
+  const dispatch = useDispatch();
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
@@ -38,7 +47,30 @@ const RegisterPanel: React.FC = () => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
+    if (username && password && email) {
+      dispatch(register(username, email, password));
+      return;
+    } 
+
+    dispatchErrorMsg(dispatch, "Not all fields filled out");
   }
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const onLockClick = () => {
+    setShowPassword(showPassword => !showPassword);
+  }
+
+  const lockButton = (
+    <Tooltip2 content={`${showPassword ? "Hide" : "Show"} Password`} placement={"left"}>
+        <Button
+            icon={showPassword ? "unlock" : "lock"}
+            // intent={Intent.WARNING}
+            // minimal={true}
+            onClick={() => onLockClick()}
+        />
+    </Tooltip2>
+  );
 
   return (
     <div>
@@ -86,9 +118,10 @@ const RegisterPanel: React.FC = () => {
           <InputGroup
             large={true}
             placeholder="Enter your password..."
-            leftIcon="lock"
+            leftElement={lockButton}
             onChange={onChangePassword}
             value={password}
+            type={showPassword ? "text" : "password"}
           />
         </FormGroup>
 
@@ -109,6 +142,23 @@ const LoginPanel: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  const dispatch = useDispatch();
+
+  const history = useHistory();
+
+  //@ts-ignore 
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
+  // used in conjunction with isLoggedIn to redirect user after login/logout 
+  const [requestMade, setRequestMade] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn && requestMade) {
+      history.push("/home");
+    } else if (requestMade) {
+      setRequestMade(false);
+    }
+  }, [isLoggedIn])
 
   const onChangePassword = (e: React.FormEvent<HTMLInputElement>) => {
     setPassword(e.currentTarget.value)
@@ -121,7 +171,32 @@ const LoginPanel: React.FC = () => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
+
+    if (email && password) {
+      dispatch(login(email, password));
+      setRequestMade(true);
+      return;
+    }
+
+    dispatchErrorMsg(dispatch, "Not all fields filled out");
   }
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const onLockClick = () => {
+    setShowPassword(showPassword => !showPassword);
+  }
+
+  const lockButton = (
+    <Tooltip2 content={`${showPassword ? "Hide" : "Show"} Password`} placement={"left"}>
+        <Button
+            icon={showPassword ? "unlock" : "lock"}
+            // intent={Intent.WARNING}
+            // minimal={true}
+            onClick={() => onLockClick()}
+        />
+    </Tooltip2>
+);
 
   return (
     <>
@@ -152,9 +227,11 @@ const LoginPanel: React.FC = () => {
           <InputGroup
             large={true}
             placeholder="Enter your password..."
-            leftIcon="lock"
+            leftElement={lockButton}
             onChange={onChangePassword}
             value={password}
+            type={showPassword ? "text" : "password"}
+
           />
         </FormGroup>
 
