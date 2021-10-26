@@ -19,8 +19,8 @@ export const handleError = (error: any, dispatch: any) => {
         return 
     } 
 
-    if (error.response && error.response.status === 401) {
-        dispatch(logout());
-    }
+    // if (error.response && error.response.status === 401) {
+    //     dispatch(logout());
+    // }
 
 }

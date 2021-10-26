@@ -75,6 +75,8 @@ export const deleteAlgo = (algoID: number) => (dispatch: any) => {
 
     return algoService.deleteAlgo(algoID).then(
         (res) => {
+
+            
             dispatch({
                 type: ALGO_DELETE_SUCCESS, 
                 payload: algoID,
@@ -87,7 +89,7 @@ export const deleteAlgo = (algoID: number) => (dispatch: any) => {
             handleError(error, dispatch);
 
             dispatch({
-                type: ALGO_FETCH_FAIL
+                type: ALGO_DELETE_FAIL
             })
 
             dispatchErrorMsg(dispatch, msg);

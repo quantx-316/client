@@ -51,12 +51,17 @@ const Editor = (props: EditorProps) => {
 
   const [isNewAlgo, setIsNewAlgo] = useState(props.algo ? false : true);
 
-  const [algoState, setAlgoState] = useState<Algo>({
+  const [algoState, setAlgoState] = useState<Algo>(props.algo ?? 
+  {
     id: -1, 
     owner: -1, 
+    //@ts-ignore
     title: props.algo ? props.algo.title : '', 
+    //@ts-ignore
     code: props.algo ? props.algo.code : defaultValue, 
+    //@ts-ignore
     created: props.algo ? props.algo.created : '', 
+    //@ts-ignore
     edited_at: props.algo ? props.algo.edited_at : '', 
   })
 
@@ -157,6 +162,10 @@ const Editor = (props: EditorProps) => {
 
   const handleClickSave = () => {
     //after clicking save button
+
+    console.log('handle click save');
+    console.log(isNewAlgo);
+    console.log(algoState);
 
     if (isNewAlgo) {
       dispatch(createAlgo({

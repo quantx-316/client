@@ -5,8 +5,9 @@ import { cloneDeep } from "lodash-es";
 import { Classes as Popover2Classes, ContextMenu2, Tooltip2 } from "@blueprintjs/popover2";
 import {useSelector, useDispatch} from 'react-redux';
 import {Algo} from '../../features/types/algos';
-import {fetchAlgos} from '../../features/actions/algos';
+import {fetchAlgos, deleteAlgo} from '../../features/actions/algos';
 import {useHistory} from 'react-router-dom';
+import {dispatchErrorMsg} from '../../features/utils/notifs';
 
 type NodePath = number[];
 
@@ -30,33 +31,46 @@ function forNodeAtPath(nodes: TreeNodeInfo[], path: NodePath, callback: (node: T
     callback(Tree.nodeFromPath(path, nodes));
 }
 
-function treeExampleReducer(state: any, action: TreeAction) {
-    switch (action.type) {
-        case "DESELECT_ALL":
-            const newState1 = cloneDeep(state);
-            forEachNode(newState1, node => (node.isSelected = false));
-            return newState1;
-        case "SET_IS_SELECTED":
-            const newState2 = cloneDeep(state);
-            forNodeAtPath(newState2, action.payload.path, node => (node.isSelected = action.payload.isSelected));
-            return newState2;
-        case "FETCHED_NODES":
-            const newState3 = action.payload.map((obj) => (
-                {
-                    ...obj, 
-                    icon: "document",
-                    label: obj.title,
-                }
-            ))
-            return newState3;
-        default:
-            return state;
-    }
-}
-
 const AlgosList: React.FC = () => {
 
     const history = useHistory();
+
+    const [selectedInfo, setSelectedInfo] = useState(null);
+
+    function treeExampleReducer(state: any, action: TreeAction) {
+        switch (action.type) {
+            case "DESELECT_ALL":
+                const newState1 = cloneDeep(state);
+                forEachNode(newState1, node => {node.isSelected = false});
+                setSelectedInfo(null);
+                return newState1;
+            case "SET_IS_SELECTED":
+                const newState2 = cloneDeep(state);
+                forNodeAtPath(newState2, action.payload.path, node => {
+                    node.isSelected = action.payload.isSelected
+
+                    //@ts-ignore 
+                    if (action.payload.isSelected) {
+                        //@ts-ignore
+                        setSelectedInfo(node)
+                    } else {
+                        setSelectedInfo(null);
+                    }
+                });
+                return newState2;
+            case "FETCHED_NODES":
+                const newState3 = action.payload.map((obj) => (
+                    {
+                        ...obj, 
+                        icon: "document",
+                        label: obj.title,
+                    }
+                ))
+                return newState3;
+            default:
+                return state;
+        }
+    }
 
     const [nodes, dispatch] = React.useReducer(treeExampleReducer, []);
 
@@ -82,6 +96,7 @@ const AlgosList: React.FC = () => {
         (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
             const originallySelected = node.isSelected;
             dispatch({ type: "DESELECT_ALL" });
+            console.log(nodePath);
             dispatch({
                 payload: { path: nodePath, isSelected: originallySelected == null ? true : !originallySelected },
                 type: "SET_IS_SELECTED",
@@ -91,7 +106,31 @@ const AlgosList: React.FC = () => {
     );
 
     const onNewClick = () => {
-        history.push("editor");
+        history.push({
+            pathname: "/editor",
+        });
+    }
+
+    const onEditClick = () => {
+        console.log("edit click");
+        console.log(selectedInfo);
+        history.push({
+            pathname: "/editor",
+            state: {
+                algo: selectedInfo,
+            }
+        });
+    }
+
+    const onDeleteClick = () => {
+        //@ts-ignore
+        if (selectedInfo && selectedInfo.id) {
+            //@ts-ignore
+            redDispatch(deleteAlgo(selectedInfo.id))
+            return 
+        }
+
+        dispatchErrorMsg(redDispatch, "Invalid selected information");
     }
 
     return (
@@ -161,18 +200,14 @@ const AlgosList: React.FC = () => {
                     <Button
                         className={Classes.BUTTON}
                         icon={"edit"}
+                        onClick={() => onEditClick()}
                     >
                         Edit
                     </Button>
                     <Button
                         className={Classes.BUTTON}
-                        icon={"eye-open"}
-                    >
-                        View
-                    </Button>
-                    <Button
-                        className={Classes.BUTTON}
                         icon={"trash"}
+                        onClick={() => onDeleteClick()}
                     >
                         Delete
                     </Button>
