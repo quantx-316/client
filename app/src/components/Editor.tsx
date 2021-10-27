@@ -1,12 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import AceEditor from 'react-ace'
 import { Select, ItemRenderer } from '@blueprintjs/select'
-
+import {useDispatch, useSelector} from 'react-redux';
+import {createAlgo, updateAlgo} from '../features/actions/algos';
 import { Button, EditableText, MenuItem } from '@blueprintjs/core'
 import { Classes, Popover2 } from "@blueprintjs/popover2";
+import TimeSelectDialog from './TimeSelectDialog';
+import {fetchQuoteInterval} from '../features/actions/quotes';
+
 import 'ace-builds/src-noconflict/mode-jsx'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
 import 'ace-builds/src-min-noconflict/ext-language_tools'
+
+import {Algo} from '../features/types/algos';
 
 const themes = [
   'monokai',
@@ -32,25 +38,86 @@ themes.forEach((theme) => require(`ace-builds/src-noconflict/theme-${theme}`))
 require('ace-builds/src-noconflict/mode-python')
 require('ace-builds/src-noconflict/snippets/python')
 
-const Editor: React.FC = () => {
+type EditorProps = {
+  algo?: Algo
+}
+
+const Editor = (props: EditorProps) => {
+
   const defaultValue = `def helloworld():
     print('hello world')
   `
 
+  // also need dropdown for time interval 
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
+  const [minDate, setMinDate] = useState<Date | null>(null);
+  const [maxDate, setMaxDate] = useState<Date | null>(null);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(startDate);
+  }, [startDate])
+
+  useEffect(() => {
+    fetchQuoteInterval(dispatch, setMinDate, setMaxDate);
+  }, [])
+
+  const onStartDateChange = (date: Date) => {
+    setStartDate(date);
+  }
+
+  const onEndDateChange = (date: Date) => {
+    setEndDate(date);
+  }
+
+  const [startDateOpen, setStartDateOpen] = useState(false);
+  const [endDateOpen, setEndDateOpen] = useState(false);
+
+  const onStartDateClose = () => {
+    setStartDateOpen(false);
+  }
+  const onStartDateOpen = () => {
+    setStartDateOpen(true);
+  }
+  const onEndDateClose = () => {
+    setEndDateOpen(false);
+  }
+  const onEndDateOpen = () => {
+    setEndDateOpen(true);
+  }
+
+  //@ts-ignore 
+  const user = useSelector(state => state.auth.user);
+
+  const [isNewAlgo, setIsNewAlgo] = useState(props.algo ? false : true);
+
+  const [algoState, setAlgoState] = useState<Algo>(props.algo ?? 
+  {
+    id: -1, 
+    owner: -1, 
+    //@ts-ignore
+    title: props.algo ? props.algo.title : '', 
+    //@ts-ignore
+    code: props.algo ? props.algo.code : defaultValue, 
+    //@ts-ignore
+    created: props.algo ? props.algo.created : '', 
+    //@ts-ignore
+    edited_at: props.algo ? props.algo.edited_at : '', 
+  })
+
   const [editorState, setEditorState] = useState({
-    value: defaultValue,
     fontSize: 14,
     theme: 'solarized_dark',
     tabSize: 4,
-    title: ''
   })
 
-  // const [title, setTitle] = useState('')
-
   const onEditorChange = (newValue: string) => {
-    setEditorState({
-      ...editorState,
-      value: newValue,
+    setAlgoState({
+      ...algoState, 
+      code: newValue,
     })
   }
 
@@ -119,16 +186,40 @@ const Editor: React.FC = () => {
   }
 
   const handleTitleChange = (_title: string) => {
-    setEditorState({
-      ...editorState,
+    setAlgoState({
+      ...algoState, 
       title: _title,
     })
   }
 
   const handleClickRun = () => {}
 
+  const createAlgoCallBack = (algo: Algo) => {
+    setAlgoState(algo);
+    setIsNewAlgo(false);
+  }
+
+  const updateAlgoCallBack = (algo: Algo) => {
+    setAlgoState(algo);
+  }
+
   const handleClickSave = () => {
     //after clicking save button
+
+    console.log('handle click save');
+    console.log(isNewAlgo);
+    console.log(algoState);
+
+    if (isNewAlgo) {
+      dispatch(createAlgo({
+        title: algoState.title,
+        code: algoState.code,
+      }, createAlgoCallBack))
+    } else {
+      dispatch(updateAlgo(algoState, updateAlgoCallBack))
+    }
+
+
   }
 
 
@@ -213,14 +304,15 @@ const Editor: React.FC = () => {
             marginBottom: '25px'
           }}
         ><label>Title: &nbsp;</label>
-          <EditableText placeholder="Enter the title of code" alwaysRenderInput={true} selectAllOnFocus={false} maxLength={100} onChange={e => handleTitleChange(e)}/>
+          <EditableText placeholder="Enter the title of code" alwaysRenderInput={true} selectAllOnFocus={false} maxLength={100} onChange={e => handleTitleChange(e)} value={algoState.title}/>
         </div>
         <div>
           <AceEditor
             mode="python"
+            // readOnly={true}
             theme={editorState.theme}
             fontSize={editorState.fontSize}
-            value={editorState.value}
+            value={algoState.code}
             onChange={onEditorChange}
             width={WIDTH}
             setOptions={{
@@ -230,7 +322,21 @@ const Editor: React.FC = () => {
             }}
           />
         </div>
+      
         <div style={{ display: 'flex', justifyContent: 'end', marginTop: '25px' }}>
+
+          <Button
+            rightIcon="calendar"
+            text={startDate ? startDate.toString() : "No start date"}
+            onClick={() => onStartDateOpen()}
+            large={true}
+            outlined={true}
+          />
+          <Button
+            rightIcon="calendar"
+            text={endDate ? endDate.toString() : "No end date"}
+          />
+
           <div style={{marginRight: '10px'}}>
             
             <Popover2 interactionKind="click" popoverClassName={Classes.POPOVER2_CONTENT_SIZING} enforceFocus={false}
@@ -256,6 +362,17 @@ const Editor: React.FC = () => {
           />
         </div>
       </div>
+
+
+      <TimeSelectDialog 
+        isOpen={startDateOpen}
+        handleClose={onStartDateClose}
+        title={"Select start date"}
+        onDateChange={onStartDateChange}
+        minDate={minDate}
+        maxDate={maxDate}
+      />
+
     </div>
   )
 }

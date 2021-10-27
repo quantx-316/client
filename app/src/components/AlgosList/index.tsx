@@ -3,24 +3,18 @@ import { Button, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, S
 import { Icon, Intent, TreeNodeInfo, Tree } from "@blueprintjs/core";
 import { cloneDeep } from "lodash-es";
 import { Classes as Popover2Classes, ContextMenu2, Tooltip2 } from "@blueprintjs/popover2";
-// real ones will have created, edited_at
-const testAlgos = [
-    {
-        "id": 1,
-        "title": "Great algo",
-    },
-    {
-        "id": 2,
-        "title": "Another great algo",
-    }
-]
+import {useSelector, useDispatch} from 'react-redux';
+import {Algo} from '../../features/types/algos';
+import {fetchAlgos, deleteAlgo} from '../../features/actions/algos';
+import {useHistory} from 'react-router-dom';
+import {dispatchErrorMsg} from '../../features/utils/notifs';
 
 type NodePath = number[];
 
 type TreeAction =
-    | { type: "SET_IS_EXPANDED"; payload: { path: NodePath; isExpanded: boolean } }
-    | { type: "DESELECT_ALL" }
-    | { type: "SET_IS_SELECTED"; payload: { path: NodePath; isSelected: boolean } };
+    { type: "DESELECT_ALL" }
+    | { type: "SET_IS_SELECTED"; payload: { path: NodePath; isSelected: boolean } }
+    | { type: "FETCHED_NODES"; payload: Array<Algo>}
 
 function forEachNode(nodes: TreeNodeInfo[] | undefined, callback: (node: TreeNodeInfo) => void) {
     if (nodes === undefined) {
@@ -37,41 +31,72 @@ function forNodeAtPath(nodes: TreeNodeInfo[], path: NodePath, callback: (node: T
     callback(Tree.nodeFromPath(path, nodes));
 }
 
-function treeExampleReducer(state: TreeNodeInfo[], action: TreeAction) {
-    switch (action.type) {
-        case "DESELECT_ALL":
-            const newState1 = cloneDeep(state);
-            forEachNode(newState1, node => (node.isSelected = false));
-            return newState1;
-        case "SET_IS_EXPANDED":
-            const newState2 = cloneDeep(state);
-            forNodeAtPath(newState2, action.payload.path, node => (node.isExpanded = action.payload.isExpanded));
-            return newState2;
-        case "SET_IS_SELECTED":
-            const newState3 = cloneDeep(state);
-            forNodeAtPath(newState3, action.payload.path, node => (node.isSelected = action.payload.isSelected));
-            return newState3;
-        default:
-            return state;
-    }
-}
-
 const AlgosList: React.FC = () => {
 
-    const [algos, setAlgos] = useState([]);
+    const history = useHistory();
+
+    const [selectedInfo, setSelectedInfo] = useState(null);
+
+    function treeExampleReducer(state: any, action: TreeAction) {
+        switch (action.type) {
+            case "DESELECT_ALL":
+                const newState1 = cloneDeep(state);
+                forEachNode(newState1, node => {node.isSelected = false});
+                setSelectedInfo(null);
+                return newState1;
+            case "SET_IS_SELECTED":
+                const newState2 = cloneDeep(state);
+                forNodeAtPath(newState2, action.payload.path, node => {
+                    node.isSelected = action.payload.isSelected
+
+                    //@ts-ignore 
+                    if (action.payload.isSelected) {
+                        //@ts-ignore
+                        setSelectedInfo(node)
+                    } else {
+                        setSelectedInfo(null);
+                    }
+                });
+                return newState2;
+            case "FETCHED_NODES":
+                const newState3 = action.payload.map((obj) => (
+                    {
+                        ...obj, 
+                        icon: "document",
+                        label: obj.title,
+                    }
+                ))
+                return newState3;
+            default:
+                return state;
+        }
+    }
+
+    const [nodes, dispatch] = React.useReducer(treeExampleReducer, []);
+
+    //@ts-ignore 
+    const algos = useSelector(state => state.algos.algos);
+
+    const redDispatch = useDispatch();
 
     useEffect(() => {
-
+        console.log("fetch algos");
+        redDispatch(fetchAlgos());
     }, [])
 
-    const [nodes, dispatch] = React.useReducer(treeExampleReducer, INITIAL_STATE);
+    useEffect(() => {
+        console.log("new algos, dispatch");
+        dispatch({
+            type: "FETCHED_NODES",
+            payload: algos,
+        })
+    }, [algos])
 
     const handleNodeClick = React.useCallback(
         (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
             const originallySelected = node.isSelected;
-            if (!e.shiftKey) {
-                dispatch({ type: "DESELECT_ALL" });
-            }
+            dispatch({ type: "DESELECT_ALL" });
+            console.log(nodePath);
             dispatch({
                 payload: { path: nodePath, isSelected: originallySelected == null ? true : !originallySelected },
                 type: "SET_IS_SELECTED",
@@ -80,19 +105,38 @@ const AlgosList: React.FC = () => {
         [],
     );
 
-    const handleNodeCollapse = React.useCallback((_node: TreeNodeInfo, nodePath: NodePath) => {
-        dispatch({
-            payload: { path: nodePath, isExpanded: false },
-            type: "SET_IS_EXPANDED",
+    const onNewClick = () => {
+        history.push({
+            pathname: "/editor",
         });
-    }, []);
+    }
 
-    const handleNodeExpand = React.useCallback((_node: TreeNodeInfo, nodePath: NodePath) => {
-        dispatch({
-            payload: { path: nodePath, isExpanded: true },
-            type: "SET_IS_EXPANDED",
-        });
-    }, []);
+    const onEditClick = () => {
+
+        //@ts-ignore 
+        if (selectedInfo && selectedInfo.id) {
+            history.push({
+                pathname: "/editor",
+                state: {
+                    algo: selectedInfo,
+                }
+            });
+            return 
+        } 
+
+        dispatchErrorMsg(redDispatch, "Invalid selected information");
+    }
+
+    const onDeleteClick = () => {
+        //@ts-ignore
+        if (selectedInfo && selectedInfo.id) {
+            //@ts-ignore
+            redDispatch(deleteAlgo(selectedInfo.id))
+            return 
+        }
+
+        dispatchErrorMsg(redDispatch, "Invalid selected information");
+    }
 
     return (
         <Card
@@ -126,6 +170,7 @@ const AlgosList: React.FC = () => {
                     className={Classes.BUTTON}
                     icon={"new-link"}
                     intent={"success"}
+                    onClick={() => onNewClick()}
                 >
                     New
                 </Button>
@@ -134,120 +179,48 @@ const AlgosList: React.FC = () => {
             <Tree
                 contents={nodes}
                 onNodeClick={handleNodeClick}
-                onNodeCollapse={handleNodeCollapse}
-                onNodeExpand={handleNodeExpand}
                 className={Classes.ELEVATION_0}
             />
 
-            <ButtonGroup>
-                <Button
-                    className={Classes.BUTTON}
-                    icon={"edit"}
+            {
+                nodes.length === 0 && 
+                <div
+                    style={{
+                        height: "100%",
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignContent: "center",
+                    }}
                 >
-                    Edit
-                </Button>
-                <Button
-                    className={Classes.BUTTON}
-                    icon={"eye-open"}
-                >
-                    View
-                </Button>
-                <Button
-                    className={Classes.BUTTON}
-                    icon={"trash"}
-                >
-                    Delete
-                </Button>
-            </ButtonGroup>
-            
-            {/*{*/}
-            {/*    testAlgos.map((testAlgo) => {*/}
-            {/*    })  */}
-            {/*}*/}
+                    <h1>
+                        No Algos Found
+                    </h1>
+                </div>
+            }
+
+            {
+                nodes.length > 0 && 
+                <ButtonGroup>
+                    <Button
+                        className={Classes.BUTTON}
+                        icon={"edit"}
+                        onClick={() => onEditClick()}
+                    >
+                        Edit
+                    </Button>
+                    <Button
+                        className={Classes.BUTTON}
+                        icon={"trash"}
+                        onClick={() => onDeleteClick()}
+                    >
+                        Delete
+                    </Button>
+                </ButtonGroup>
+            }
 
         </Card>
     )
 }
-
-const contentSizing = { popoverProps: { popoverClassName: Popover2Classes.POPOVER2_CONTENT_SIZING } };
-
-/* tslint:disable:object-literal-sort-keys so childNodes can come last */
-const INITIAL_STATE: TreeNodeInfo[] = [
-    {
-        id: 0,
-        icon: "document",
-        label: "Item 0"
-    },
-    {
-        id: 1,
-        icon: "document",
-        label: "Item 1"
-    },
-    {
-        id: 2,
-        icon: "document",
-        label: "Item 2",
-    },
-    {
-        id: 3,
-        icon: "document",
-        label: "Item 0"
-    },
-    {
-        id: 4,
-        icon: "document",
-        label: "Item 1"
-    },
-    {
-        id: 5,
-        icon: "document",
-        label: "Item 2",
-    },
-    {
-        id: 6,
-        icon: "document",
-        label: "Item 0"
-    },
-    {
-        id: 7,
-        icon: "document",
-        label: "Item 1"
-    },
-    {
-        id: 8,
-        icon: "document",
-        label: "Item 2",
-    },
-    {
-        id: 9,
-        icon: "document",
-        label: "Item 0"
-    },
-    {
-        id: 10,
-        icon: "document",
-        label: "Item 1"
-    },
-    {
-        id: 11,
-        icon: "document",
-        label: "Item 11",
-    },
-    {
-        id: 12,
-        icon: "document",
-        label: "Item 0"
-    },
-    {
-        id: 13,
-        icon: "document",
-        label: "Item 1"
-    },
-    {
-        id: 14,
-        icon: "document",
-        label: "Item 11",
-    },
-];
 
 export default AlgosList; 

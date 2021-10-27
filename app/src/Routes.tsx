@@ -1,16 +1,25 @@
 import React from 'react'
 import { HashRouter, Switch, Route } from 'react-router-dom'
-
-import { About } from './pages/About'
+import {useSelector} from "react-redux";
+import Dev from './pages/Dev'
 import { Home } from './pages/Home'
 import Backtests from './pages/Backtests';
 import Files from './pages/Files';
 import StockView from './pages/StockView';
 import Base from './pages/Base';
 import Landing from './pages/Landing';
-import Algorithms from "./pages/Algorithms";
+import Editor from "./pages/Editor";
+import Profile from './pages/Profile';
+import Auth from './pages/Auth';
+import Social from './pages/Social';
 
-const Routes: React.FC = () => {
+import ProtectedRoute from './components/ProtectedRoute';
+
+const Routes: React.FC = () => {  
+
+  //@ts-ignore 
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
   return (
     <HashRouter>
       <Switch>
@@ -23,9 +32,10 @@ const Routes: React.FC = () => {
             </Base>
           )}
         />
-        <Route 
+        <ProtectedRoute 
           path="/home" 
           exact 
+          isAuthenticated={isLoggedIn}
           render={() => (
             <Base>
               <Home />
@@ -33,47 +43,81 @@ const Routes: React.FC = () => {
           )}
         />
         <Route 
-          path="/about" 
+          path="/dev" 
           exact 
           render={() => (
             <Base>
-              <About />
+              <Dev />
             </Base>
           )}
         />
-        <Route 
+        <ProtectedRoute 
           path="/files" 
           exact 
+          isAuthenticated={isLoggedIn}
           render={() => (
             <Base>
               <Files />
             </Base>
           )}
         />
-        <Route 
+        <ProtectedRoute 
           path="/backtests" 
           exact 
+          isAuthenticated={isLoggedIn}
           render={() => (
             <Base>
               <Backtests />
             </Base>
           )}
         />
-        <Route 
+        <ProtectedRoute 
           path="/stock-view" 
           exact 
+          isAuthenticated={isLoggedIn}
           render={() => (
             <Base>
               <StockView />
             </Base>
           )}
         />
+        <ProtectedRoute 
+          path="/editor" 
+          exact 
+          isAuthenticated={isLoggedIn}
+          render={() => (
+            <Base>
+              <Editor />
+            </Base>
+          )}
+        />
         <Route 
-          path="/algorithms" 
+          path="/auth" 
           exact 
           render={() => (
             <Base>
-              <Algorithms />
+              <Auth />
+            </Base>
+          )}
+        />
+        <ProtectedRoute 
+          path="/profile" 
+          exact 
+          isAuthenticated={isLoggedIn}
+          render={() => (
+            <Base>
+              <Profile />
+            </Base>
+          )}
+        />
+
+        <ProtectedRoute 
+          path="/social" 
+          exact 
+          isAuthenticated={isLoggedIn}
+          render={() => (
+            <Base>
+              <Social />
             </Base>
           )}
         />
