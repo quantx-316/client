@@ -2,6 +2,7 @@
 @import "~@blueprintjs/core/lib/css/blueprint.css";
 @import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
 @import "~@blueprintjs/popover2/lib/css/blueprint-popover2.css";
+@import "~@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 
 html {
   height: 100vh;
@@ -197,4 +198,11 @@ code {
 .App-title {
 	display: block;
 	font-size: 1.5em;
+}
+
+
+.bp3-datepicker {
+  display: flex;
+  justify-content: center;
+  align-content: center;
 }

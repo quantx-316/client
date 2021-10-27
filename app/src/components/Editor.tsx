@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import AceEditor from 'react-ace'
 import { Select, ItemRenderer } from '@blueprintjs/select'
 import {useDispatch, useSelector} from 'react-redux';
 import {createAlgo, updateAlgo} from '../features/actions/algos';
 import { Button, EditableText, MenuItem } from '@blueprintjs/core'
 import { Classes, Popover2 } from "@blueprintjs/popover2";
+import TimeSelectDialog from './TimeSelectDialog';
+import {fetchQuoteInterval} from '../features/actions/quotes';
+
 import 'ace-builds/src-noconflict/mode-jsx'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
 import 'ace-builds/src-min-noconflict/ext-language_tools'
@@ -40,11 +43,51 @@ type EditorProps = {
 }
 
 const Editor = (props: EditorProps) => {
+
   const defaultValue = `def helloworld():
     print('hello world')
   `
 
+  // also need dropdown for time interval 
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
+  const [minDate, setMinDate] = useState<Date | null>(null);
+  const [maxDate, setMaxDate] = useState<Date | null>(null);
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(startDate);
+  }, [startDate])
+
+  useEffect(() => {
+    fetchQuoteInterval(dispatch, setMinDate, setMaxDate);
+  }, [])
+
+  const onStartDateChange = (date: Date) => {
+    setStartDate(date);
+  }
+
+  const onEndDateChange = (date: Date) => {
+    setEndDate(date);
+  }
+
+  const [startDateOpen, setStartDateOpen] = useState(false);
+  const [endDateOpen, setEndDateOpen] = useState(false);
+
+  const onStartDateClose = () => {
+    setStartDateOpen(false);
+  }
+  const onStartDateOpen = () => {
+    setStartDateOpen(true);
+  }
+  const onEndDateClose = () => {
+    setEndDateOpen(false);
+  }
+  const onEndDateOpen = () => {
+    setEndDateOpen(true);
+  }
 
   //@ts-ignore 
   const user = useSelector(state => state.auth.user);
@@ -266,6 +309,7 @@ const Editor = (props: EditorProps) => {
         <div>
           <AceEditor
             mode="python"
+            // readOnly={true}
             theme={editorState.theme}
             fontSize={editorState.fontSize}
             value={algoState.code}
@@ -278,7 +322,21 @@ const Editor = (props: EditorProps) => {
             }}
           />
         </div>
+      
         <div style={{ display: 'flex', justifyContent: 'end', marginTop: '25px' }}>
+
+          <Button
+            rightIcon="calendar"
+            text={startDate ? startDate.toString() : "No start date"}
+            onClick={() => onStartDateOpen()}
+            large={true}
+            outlined={true}
+          />
+          <Button
+            rightIcon="calendar"
+            text={endDate ? endDate.toString() : "No end date"}
+          />
+
           <div style={{marginRight: '10px'}}>
             
             <Popover2 interactionKind="click" popoverClassName={Classes.POPOVER2_CONTENT_SIZING} enforceFocus={false}
@@ -304,6 +362,17 @@ const Editor = (props: EditorProps) => {
           />
         </div>
       </div>
+
+
+      <TimeSelectDialog 
+        isOpen={startDateOpen}
+        handleClose={onStartDateClose}
+        title={"Select start date"}
+        onDateChange={onStartDateChange}
+        minDate={minDate}
+        maxDate={maxDate}
+      />
+
     </div>
   )
 }
