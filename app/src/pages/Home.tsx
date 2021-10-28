@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { Button, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch } from "@blueprintjs/core";
+import { Button, Icon, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch } from "@blueprintjs/core";
 import {fetchAlgos, deleteAlgo, selectAlgo} from '../features/actions/algos';
 import {useSelector, useDispatch} from 'react-redux';
 import {useHistory} from 'react-router-dom';
@@ -16,6 +16,9 @@ export const Home: React.FC = () => {
     //@ts-ignore 
     const algos = useSelector(state => state.algos.algos);
 
+    //@ts-ignore 
+    const user = useSelector(state => state.auth.user);
+
     const onNewClick = () => {
         history.push({
             pathname: "/editor",
@@ -31,7 +34,7 @@ export const Home: React.FC = () => {
         <div
             className="full centered-top-col"
             style={{
-                padding: "50px"
+                padding: "10px"
             }}
         >
             <div
@@ -40,10 +43,31 @@ export const Home: React.FC = () => {
                     gap: "10px"
                 }}
             >
-                {/* <div
+                <div
                     className="navbar-like"
                 >
                     <HomeHeader />
+                </div>
+                
+                {/* <div
+                    style={{
+                        width: "100%"
+                    }}
+                >
+
+                    {
+                        user && user.username ? 
+                        <h1>
+                            Welcome back, '{user.username}'.
+                        </h1>
+
+                        :
+
+                        <h1>
+                            Please try logging in again.
+                        </h1>
+                    }
+
                 </div> */}
 
                 {
@@ -52,6 +76,19 @@ export const Home: React.FC = () => {
                         className="full separated-row"
                     >
                         <AlgosList />
+
+                        
+                        <div
+                            className="centered"
+                        >
+                        
+                            <Icon
+                                icon={"chevron-right"}
+                                size={100}
+                            />
+
+                        </div>
+
 
                         <Backtests />
                     </div>

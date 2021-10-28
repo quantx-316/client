@@ -13,7 +13,7 @@ import {
 import {dispatchErrorMsg, dispatchSuccessMsg} from '../utils/notifs';
 import { getErrorMsg, handleError, genericErrorHandler } from "../utils/other";
 
-export const createBacktest = (backtest: BacktestSubmit) => (dispatch: any) => {
+export const createBacktest = (backtest: BacktestSubmit, createBacktestCallback: any) => (dispatch: any) => {
 
     return backtestService.createBacktest(backtest).then(
         (res) => {
@@ -21,6 +21,8 @@ export const createBacktest = (backtest: BacktestSubmit) => (dispatch: any) => {
                 type: BACKTEST_CREATE_SUCCESS,
                 payload: res.data,
             })
+
+            createBacktestCallback();
 
         },
         (err) => {

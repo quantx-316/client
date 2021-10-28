@@ -8,7 +8,7 @@ import { Button, EditableText, MenuItem } from '@blueprintjs/core'
 import { Classes, Popover2 } from "@blueprintjs/popover2";
 import TimeSelectDialog from './TimeSelectDialog';
 import {fetchQuoteAllowedTimes, fetchQuoteIntervals} from '../features/actions/quotes';
-import { dispatchErrorMsg } from '../features/utils/notifs';
+import { dispatchErrorMsg, dispatchSuccessMsg } from '../features/utils/notifs';
 
 const moment = require('moment');
 
@@ -65,6 +65,20 @@ const Editor = (props: EditorProps) => {
   const [minDate, setMinDate] = useState<Date | null>(null);
   const [maxDate, setMaxDate] = useState<Date | null>(null);
 
+  const [runPopoverOpen, setRunPopoverOpen] = useState(false);
+
+  const clickRunCallback = () => {
+    setRunPopoverOpen(true);
+  }
+
+  useEffect(() => {
+    
+    const timer = setTimeout(() => {
+      setRunPopoverOpen(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [runPopoverOpen])
 
   const handleClickRun = () => {
     if (timeIntervals == null || minDate == null || maxDate == null) {
@@ -108,7 +122,7 @@ const Editor = (props: EditorProps) => {
       test_end: endTime,
     }
 
-    dispatch(createBacktest(submit));
+    dispatch(createBacktest(submit, clickRunCallback));
 
   }
 
@@ -176,9 +190,6 @@ const Editor = (props: EditorProps) => {
   const onEndDateOpen = () => {
     setEndDateOpen(true);
   }
-
-  //@ts-ignore 
-  const user = useSelector(state => state.auth.user);
 
   const [isNewAlgo, setIsNewAlgo] = useState(props.algo ? false : true);
 
@@ -501,7 +512,7 @@ const Editor = (props: EditorProps) => {
               <Popover2 
                 interactionKind="click" 
                 popoverClassName={Classes.POPOVER2_CONTENT_SIZING} 
-                enforceFocus={false}
+                enforceFocus={true}
                 placement="bottom-end" 
                 isOpen={popOverOpen}
                 content={
@@ -518,14 +529,25 @@ const Editor = (props: EditorProps) => {
                 </Popover2>
             </div>
             <div>
-              <Button
-                rightIcon="arrow-right"
-                intent="success"
-                text="Run"
-                onClick={handleClickRun}
-                large={true}
-                outlined={true}
-              />
+                <Popover2 
+                  interactionKind="click" 
+                  popoverClassName={Classes.POPOVER2_CONTENT_SIZING} 
+                  enforceFocus={true}
+                  placement="bottom-end" 
+                  isOpen={runPopoverOpen}
+                  content={
+                    <h5>Run started!</h5>
+                  } 
+                >
+                  <Button
+                    rightIcon="arrow-right"
+                    intent="success"
+                    text="Run"
+                    onClick={handleClickRun}
+                    large={true}
+                    outlined={true}
+                  />
+                </Popover2>
             </div>
 
           </div>

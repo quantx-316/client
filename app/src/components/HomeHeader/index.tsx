@@ -14,7 +14,7 @@ const HomeHeader: React.FC = () => {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                alignItems: "space-between"
+                alignItems: "space-between",
             }}
         >
             <div
