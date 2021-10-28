@@ -9,12 +9,10 @@ const Editor = () => {
     const location = useLocation();
 
     return (
-        <div>
             <CodeEditor 
                 //@ts-ignore
                 algo={location && location.state && location.state.algo ? location.state.algo : null}
             />
-        </div>
     )
 }
 

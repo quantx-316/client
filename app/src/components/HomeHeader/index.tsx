@@ -26,7 +26,7 @@ const HomeHeader: React.FC = () => {
                 }}
             >
                 <H1>
-                    <a href="#" style={{textDecoration: "none", color: "inherit"}}>Overview</a>
+                   Overview
                 </H1>
             </div>
             <div
