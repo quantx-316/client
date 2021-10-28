@@ -7,8 +7,7 @@ const HomeHeader: React.FC = () => {
     return (
         <Card
             className="full"
-            elevation={3}
-            interactive={true}
+            elevation={1}
             style={{
                 gap: "20px",
                 display: "flex",

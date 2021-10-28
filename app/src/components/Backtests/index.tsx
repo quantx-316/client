@@ -153,8 +153,7 @@ const Backtest: React.FC = () => {
                 flexDirection: "column",
                 gap: "10px"
             }}
-            elevation={3}
-            interactive={true}
+            elevation={1}
         >
             <div
                 style={{
