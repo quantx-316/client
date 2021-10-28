@@ -6,7 +6,7 @@ import {createAlgo, updateAlgo} from '../features/actions/algos';
 import { Button, EditableText, MenuItem } from '@blueprintjs/core'
 import { Classes, Popover2 } from "@blueprintjs/popover2";
 import TimeSelectDialog from './TimeSelectDialog';
-import {fetchQuoteInterval} from '../features/actions/quotes';
+import {fetchQuoteAllowedTimes, fetchQuoteIntervals} from '../features/actions/quotes';
 
 import 'ace-builds/src-noconflict/mode-jsx'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
@@ -49,6 +49,10 @@ const Editor = (props: EditorProps) => {
   `
 
   // also need dropdown for time interval 
+  const [timeIntervals, setTimeIntervals] = useState(null);
+  const [timeIntervalsArr, setTimeIntervalsArr] = useState([]);
+  const [selectTimeInterval, setSelectTimeInterval] = useState(null); 
+
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -57,12 +61,42 @@ const Editor = (props: EditorProps) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log(startDate);
-  }, [startDate])
+  const renderTimeInterval: ItemRenderer<string> = (
+    timeInterval,
+    { handleClick, modifiers }
+  ) => {
+    if (!modifiers.matchesPredicate) {
+      return null
+    }
+    return (
+      <MenuItem
+        active={modifiers.active}
+        key={timeInterval}
+        onClick={handleClick}
+        text={timeInterval}
+      />
+    )
+  }
+
+  const onTimeIntervalChange = (
+    item: any,
+    event?: React.SyntheticEvent<HTMLElement, Event> | undefined
+  ) => {
+    setSelectTimeInterval(item)
+  }
+
 
   useEffect(() => {
-    fetchQuoteInterval(dispatch, setMinDate, setMaxDate);
+    //@ts-ignore
+    setTimeIntervalsArr(Object.keys(timeIntervals ?? {}));
+  }, [timeIntervals])
+
+  useEffect(() => {
+    fetchQuoteIntervals(dispatch, setTimeIntervals);
+  }, [])
+
+  useEffect(() => {
+    fetchQuoteAllowedTimes(dispatch, setMinDate, setMaxDate);
   }, [])
 
   const onStartDateChange = (date: Date) => {
@@ -230,74 +264,103 @@ const Editor = (props: EditorProps) => {
         <div
           style={{
             display: 'flex',
-            gap: '15px',
+            width: '100%',
           }}
         >
-          <div style={{ display: 'flex' }}>
-            <label>Theme: &nbsp;</label>
-            <p>
-              <span>
-                <Select
-                  items={themes}
-                  itemRenderer={renderTheme}
-                  activeItem={editorState.theme}
-                  onItemSelect={onThemeChange}
-                  filterable={false}
-                >
-                  <Button
-                    text={editorState.theme}
-                    rightIcon="double-caret-vertical"
-                    outlined={true}
-                  />
-                </Select>
-              </span>
-            </p>
+          <div
+            style={{
+              display: 'flex',
+              gap: '15px',
+              width: '100%'
+            }}
+          >
+
+            <div style={{
+              display: "flex",
+              justifyContent: 'center',
+              alignContent: 'center',
+            }}
+            >
+              <label>Theme: &nbsp;</label>
+              <Select
+                items={themes}
+                itemRenderer={renderTheme}
+                activeItem={editorState.theme}
+                onItemSelect={onThemeChange}
+                filterable={false}
+              >
+                <Button
+                  text={editorState.theme}
+                  rightIcon="double-caret-vertical"
+                  outlined={true}
+                />
+              </Select>
+            </div>
+
+            <div style={{ display: 'flex' }}>
+              <label>Font Size: &nbsp;</label>
+              <Select
+                items={fontsize}
+                itemRenderer={renderFontSize}
+                activeItem={editorState.fontSize}
+                onItemSelect={onFontSizeChange}
+                filterable={false}
+              >
+                <Button
+                  text={editorState.fontSize}
+                  rightIcon="double-caret-vertical"
+                  outlined={true}
+                />
+              </Select>
+            </div>
+
+            <div style={{ display: 'flex' }}>
+              <label>Tab Size: &nbsp;</label>
+              <Select
+                items={tabsize}
+                itemRenderer={renderFontSize}
+                activeItem={editorState.tabSize}
+                onItemSelect={onTabSizeChange}
+                filterable={false}
+              >
+                <Button
+                  text={editorState.tabSize}
+                  rightIcon="double-caret-vertical"
+                  outlined={true}
+                />
+              </Select>
+            </div>
           </div>
 
-          <div style={{ display: 'flex' }}>
-            <label>Font Size: &nbsp;</label>
-            <p>
-              <span>
-                <Select
-                  items={fontsize}
-                  itemRenderer={renderFontSize}
-                  activeItem={editorState.fontSize}
-                  onItemSelect={onFontSizeChange}
-                  filterable={false}
-                >
-                  <Button
-                    text={editorState.fontSize}
-                    rightIcon="double-caret-vertical"
-                    outlined={true}
-                  />
-                </Select>
-              </span>
-            </p>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              width: "100%"
+            }}
+          >
+            <div style={{display: 'flex'}}>
+              <label>Time Interval: &nbsp;</label>
+                <p>
+                  <span>
+                    <Select
+                      items={timeIntervalsArr}
+                      itemRenderer={renderTimeInterval}
+                      activeItem={selectTimeInterval}
+                      onItemSelect={onTimeIntervalChange}
+                      filterable={false}
+                    >
+                      <Button
+                        text={selectTimeInterval ?? "None"}
+                        rightIcon="double-caret-vertical"
+                        outlined={true}
+                      />
+                    </Select>
+                  </span>
+                </p>          
+            </div>
           </div>
 
-          <div style={{ display: 'flex' }}>
-            <label>Tab Size: &nbsp;</label>
-            <p>
-              <span>
-                <Select
-                  items={tabsize}
-                  itemRenderer={renderFontSize}
-                  activeItem={editorState.tabSize}
-                  onItemSelect={onTabSizeChange}
-                  filterable={false}
-                >
-                  <Button
-                    text={editorState.tabSize}
-                    rightIcon="double-caret-vertical"
-                    outlined={true}
-                  />
-                </Select>
-              </span>
-            </p>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            
-          </div>
         </div>
         <div
           style={{
@@ -323,43 +386,70 @@ const Editor = (props: EditorProps) => {
           />
         </div>
       
-        <div style={{ display: 'flex', justifyContent: 'end', marginTop: '25px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '25px' }}>
 
-          <Button
-            rightIcon="calendar"
-            text={startDate ? startDate.toString() : "No start date"}
-            onClick={() => onStartDateOpen()}
-            large={true}
-            outlined={true}
-          />
-          <Button
-            rightIcon="calendar"
-            text={endDate ? endDate.toString() : "No end date"}
-          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              alignContent: "center",
+              gap: "10px"
+            }}
+          >
 
-          <div style={{marginRight: '10px'}}>
-            
-            <Popover2 interactionKind="click" popoverClassName={Classes.POPOVER2_CONTENT_SIZING} enforceFocus={false}
-                placement="bottom-end" content={
-                <h5>Saved!</h5>
-            } >
               <Button
-                rightIcon="saved"
-                text="Save"
-                onClick={handleClickSave}
+                rightIcon="calendar"
+                text={startDate ? startDate.toString() : "No start date"}
+                onClick={() => onStartDateOpen()}
+                outlined={true}
+              />
+
+
+              <Button
+                rightIcon="calendar"
+                text={endDate ? endDate.toString() : "No end date"}
+                onClick={() => onEndDateOpen()}
+                outlined={true} 
+              />
+
+
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "end",
+            }}
+          >
+            <div style={{marginRight: '10px'}}>
+              
+              <Popover2 interactionKind="click" popoverClassName={Classes.POPOVER2_CONTENT_SIZING} enforceFocus={false}
+                  placement="bottom-end" content={
+                  <h5>Saved!</h5>
+              } >
+                <Button
+                  rightIcon="saved"
+                  text="Save"
+                  onClick={handleClickSave}
+                  large={true}
+                  outlined={true}
+              /> 
+                </Popover2>
+            </div>
+            <div>
+              <Button
+                rightIcon="arrow-right"
+                intent="success"
+                text="Run"
+                onClick={handleClickRun}
                 large={true}
                 outlined={true}
-            /> 
-              </Popover2>
+              />
+            </div>
+
           </div>
-          <Button
-            rightIcon="arrow-right"
-            intent="success"
-            text="Run"
-            onClick={handleClickRun}
-            large={true}
-            outlined={true}
-          />
+
         </div>
       </div>
 
@@ -369,6 +459,15 @@ const Editor = (props: EditorProps) => {
         handleClose={onStartDateClose}
         title={"Select start date"}
         onDateChange={onStartDateChange}
+        minDate={minDate}
+        maxDate={maxDate}
+      />
+
+      <TimeSelectDialog 
+        isOpen={endDateOpen}
+        handleClose={onEndDateClose}
+        title={"Select end date"}
+        onDateChange={onEndDateChange}
         minDate={minDate}
         maxDate={maxDate}
       />

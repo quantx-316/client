@@ -2,20 +2,26 @@ import quoteService from "../../services/quoteService";
 import {dispatchErrorMsg, dispatchSuccessMsg} from '../utils/notifs';
 import {getErrorMsg} from '../utils/other';
 
-export const fetchQuoteInterval = (dispatch: any, minDateCallBack: any, maxDateCallBack: any) => {
+const moment = require('moment');
 
-    return quoteService.getInterval().then(
+export const fetchQuoteAllowedTimes = (dispatch: any, minDateCallBack: any, maxDateCallBack: any) => {
+
+    return quoteService.getAllowedTimes().then(
         (res) => {
 
             const data = res.data;
             //@ts-ignore
-            const minDate = data['min_time'];
+            let minDate = data['min_time'];
             //@ts-ignore
-            const maxDate = data['max_time'];
-            minDateCallBack(new Date(minDate));
-            maxDateCallBack(new Date(maxDate));
+            let maxDate = data['max_time'];
 
-            return Promise.resolve(res.data);
+            minDate = moment.utc(minDate).toDate();
+            maxDate = moment.utc(maxDate).toDate();
+
+            minDateCallBack(minDate);
+            maxDateCallBack(maxDate);
+
+            return Promise.resolve(data);
         },
         (error) => {
             const msg = getErrorMsg(error);
@@ -29,3 +35,27 @@ export const fetchQuoteInterval = (dispatch: any, minDateCallBack: any, maxDateC
     )
     
 }
+
+export const fetchQuoteIntervals = (dispatch: any, intervalsCallBack: any) => {
+
+    return quoteService.getIntervals().then(
+        (res) => {
+
+            const data = res.data;
+
+            intervalsCallBack(data);
+
+            return Promise.resolve(data);
+        },
+        (error) => {
+            const msg = getErrorMsg(error);
+
+            console.log(msg);
+
+            dispatchErrorMsg(dispatch, "Failed to fetch quote min/max times");
+
+            return Promise.reject();
+        }
+    )
+
+} 

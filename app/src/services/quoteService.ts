@@ -1,10 +1,14 @@
 import requests from '../features/utils/requests';
-import {quotesTimeURL} from '../constants'; 
+import {quotesTimeURL, quotesIntervalsURL} from '../constants'; 
 
 class quoteService {
 
-    static getInterval() {
+    static getAllowedTimes() {
         return requests.authGet(quotesTimeURL);
+    }
+
+    static getIntervals() {
+        return requests.authGet(quotesIntervalsURL);
     }
 
 }
