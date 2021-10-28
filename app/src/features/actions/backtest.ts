@@ -1,17 +1,15 @@
 import algoService from "../../services/algoService";
 import {
-    ALGO_CREATE_SUCCESS,
-    ALGO_CREATE_FAIL,
-    ALGO_SAVE_SUCCESS,
-    ALGO_SAVE_FAIL,
-    ALGO_DELETE_SUCCESS,
-    ALGO_DELETE_FAIL,
-    ALGO_FETCH_FAIL,
-    ALGO_FETCH_SUCCESS,
-    ALGO_SELECT,
-    AlgoSubmit,
-    Algo,
-} from '../types/algos';
+    Backtest,
+    BacktestSubmit,
+    BacktestTypes,
+    BACKTEST_CREATE_SUCCESS,
+    BACKTEST_CREATE_FAIL,
+    BACKTEST_DELETE_SUCCESS,
+    BACKTEST_DELETE_FAIL,
+    BACKTEST_FETCH_SUCCESS,
+    BACKTEST_FETCH_FAIL
+} from '../types/backtest';
 import {dispatchErrorMsg, dispatchSuccessMsg} from '../utils/notifs';
 import { getErrorMsg, handleError } from "../utils/other";
 

@@ -5,7 +5,7 @@ import { cloneDeep } from "lodash-es";
 import { Classes as Popover2Classes, ContextMenu2, Tooltip2 } from "@blueprintjs/popover2";
 import {useSelector, useDispatch} from 'react-redux';
 import {Algo} from '../../features/types/algos';
-import {fetchAlgos, deleteAlgo} from '../../features/actions/algos';
+import {fetchAlgos, deleteAlgo, selectAlgo} from '../../features/actions/algos';
 import {useHistory} from 'react-router-dom';
 import {dispatchErrorMsg} from '../../features/utils/notifs';
 
@@ -37,6 +37,13 @@ const AlgosList: React.FC = () => {
 
     const [selectedInfo, setSelectedInfo] = useState(null);
 
+    useEffect(() => {
+        console.log(selectedInfo);
+
+        //@ts-ignore
+        redDispatch(selectAlgo(selectedInfo ? selectedInfo.id : -1));
+    }, [selectedInfo])
+
     function treeExampleReducer(state: any, action: TreeAction) {
         switch (action.type) {
             case "DESELECT_ALL":
@@ -47,25 +54,35 @@ const AlgosList: React.FC = () => {
             case "SET_IS_SELECTED":
                 const newState2 = cloneDeep(state);
                 forNodeAtPath(newState2, action.payload.path, node => {
-                    node.isSelected = action.payload.isSelected
-
-                    //@ts-ignore 
                     if (action.payload.isSelected) {
                         //@ts-ignore
                         setSelectedInfo(node)
-                    } else {
-                        setSelectedInfo(null);
                     }
+
+                    node.isSelected = true
+
+                    // we will not allow deselection (so that backtest appears)
                 });
                 return newState2;
             case "FETCHED_NODES":
                 const newState3 = action.payload.map((obj) => (
                     {
                         ...obj, 
-                        icon: "document",
+                        icon: "code",
                         label: obj.title,
                     }
                 ))
+
+                if (newState3.length > 0) {
+                    newState3[0] = {
+                        ...newState3[0], 
+                        //@ts-ignore 
+                        isSelected: true,
+                    }
+                    //@ts-ignore
+                    setSelectedInfo(newState3[0])
+                }
+
                 return newState3;
             default:
                 return state;
@@ -74,18 +91,12 @@ const AlgosList: React.FC = () => {
 
     const [nodes, dispatch] = React.useReducer(treeExampleReducer, []);
 
-    //@ts-ignore 
+    //@ts-ignore
     const algos = useSelector(state => state.algos.algos);
-
+    
     const redDispatch = useDispatch();
 
     useEffect(() => {
-        console.log("fetch algos");
-        redDispatch(fetchAlgos());
-    }, [])
-
-    useEffect(() => {
-        console.log("new algos, dispatch");
         dispatch({
             type: "FETCHED_NODES",
             payload: algos,
@@ -96,7 +107,6 @@ const AlgosList: React.FC = () => {
         (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
             const originallySelected = node.isSelected;
             dispatch({ type: "DESELECT_ALL" });
-            console.log(nodePath);
             dispatch({
                 payload: { path: nodePath, isSelected: originallySelected == null ? true : !originallySelected },
                 type: "SET_IS_SELECTED",

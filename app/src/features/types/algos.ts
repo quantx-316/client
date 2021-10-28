@@ -6,6 +6,7 @@ export const ALGO_DELETE_SUCCESS = "ALGO_DELETE_SUCCESS";
 export const ALGO_DELETE_FAIL = "ALGO_DELETE_FAIL";
 export const ALGO_FETCH_SUCCESS = "ALGO_FETCH_SUCCESS";
 export const ALGO_FETCH_FAIL = "ALGO_FETCH_FAIL";
+export const ALGO_SELECT = 'ALGO_SELECT';
 
 export interface AlgoSubmit {
     title: string, 
@@ -19,6 +20,11 @@ export interface Algo {
     code: string, 
     created: string, 
     edited_at: string, 
+}
+
+interface AlgoSelectAction {
+  type: typeof ALGO_SELECT, 
+  payload: number,
 }
 
 interface AlgoCreateSuccessAction {
@@ -58,4 +64,4 @@ interface AlgoFetchFail {
 }
 
 
-export type AlgoTypes = AlgoCreateSuccessAction | AlgoCreateFailAction | AlgoSaveSuccess | AlgoSaveFail | AlgoDeleteSuccess | AlgoDeleteFail | AlgoFetchSuccess | AlgoFetchFail
+export type AlgoTypes = AlgoSelectAction | AlgoCreateSuccessAction | AlgoCreateFailAction | AlgoSaveSuccess | AlgoSaveFail | AlgoDeleteSuccess | AlgoDeleteFail | AlgoFetchSuccess | AlgoFetchFail

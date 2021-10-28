@@ -10,23 +10,31 @@ import {
     ALGO_DELETE_FAIL,
     ALGO_FETCH_FAIL,
     ALGO_FETCH_SUCCESS,
+    ALGO_SELECT,
 } from '../types/algos';
 
 type state = {
-    algos: Array<Algo>
+    algos: Array<Algo>,
+    selected_algo_id: number,
 }
 
 const initialState: state = {
     algos: [],
+    selected_algo_id: -1,
 }
 
 export default function (state = initialState, action: AlgoTypes) {
 
     switch(action.type) {
+        case ALGO_SELECT: 
+            return {
+                ...state, 
+                selected_algo_id: action.payload,
+            }
         case ALGO_CREATE_SUCCESS:
             return {
                 ...state,
-                algos: state.algos.map(obj => obj.id === action.payload.id ? action.payload : obj), 
+                algos: state.algos.concat([action.payload]), 
             }
         case ALGO_CREATE_FAIL:
             return state 

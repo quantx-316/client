@@ -85,6 +85,13 @@ code {
   align-items: center;
 }
 
+.centered-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  align-content: center;
+}
+
 .centered {
   display: flex;
   justify-content: center;
@@ -205,4 +212,8 @@ code {
   display: flex;
   justify-content: center;
   align-content: center;
+}
+
+.bp3-tree {
+  box-shadow: none !important;
 }
