@@ -272,8 +272,21 @@ const Editor = (props: EditorProps) => {
 
 
   return (
-    <div style={{}}>
-      <div style={{ width: WIDTH }}>
+    <div
+      className="full"
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        padding: "25px"
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          maxWidth: "800px"
+        }}
+      >
         <div
           style={{
             display: 'flex',
@@ -288,100 +301,95 @@ const Editor = (props: EditorProps) => {
             }}
           >
 
-            <div style={{
-              display: "flex",
-              justifyContent: 'center',
-              alignContent: 'center',
-            }}
-            >
-              <label>Theme: &nbsp;</label>
-              <Select
-                items={themes}
-                itemRenderer={renderTheme}
-                activeItem={editorState.theme}
-                onItemSelect={onThemeChange}
-                filterable={false}
-              >
-                <Button
-                  text={editorState.theme}
-                  rightIcon="double-caret-vertical"
-                  outlined={true}
-                />
-              </Select>
+            <div>
+              <label>Theme: &nbsp;
+                <Select
+                  items={themes}
+                  itemRenderer={renderTheme}
+                  activeItem={editorState.theme}
+                  onItemSelect={onThemeChange}
+                  filterable={false}
+                >
+                  <Button
+                    text={editorState.theme}
+                    rightIcon="double-caret-vertical"
+                    outlined={true}
+                  />
+                </Select>
+              </label>
             </div>
 
-            <div style={{ display: 'flex' }}>
-              <label>Font Size: &nbsp;</label>
-              <Select
-                items={fontsize}
-                itemRenderer={renderFontSize}
-                activeItem={editorState.fontSize}
-                onItemSelect={onFontSizeChange}
-                filterable={false}
-              >
-                <Button
-                  text={editorState.fontSize}
-                  rightIcon="double-caret-vertical"
-                  outlined={true}
-                />
-              </Select>
+            <div>
+              <label>Font Size: &nbsp;
+                <Select
+                  items={fontsize}
+                  itemRenderer={renderFontSize}
+                  activeItem={editorState.fontSize}
+                  onItemSelect={onFontSizeChange}
+                  filterable={false}
+                >
+                  <Button
+                    text={editorState.fontSize}
+                    rightIcon="double-caret-vertical"
+                    outlined={true}
+                  />
+                </Select>
+              </label>
             </div>
 
-            <div style={{ display: 'flex' }}>
-              <label>Tab Size: &nbsp;</label>
-              <Select
-                items={tabsize}
-                itemRenderer={renderFontSize}
-                activeItem={editorState.tabSize}
-                onItemSelect={onTabSizeChange}
-                filterable={false}
-              >
-                <Button
-                  text={editorState.tabSize}
-                  rightIcon="double-caret-vertical"
-                  outlined={true}
-                />
-              </Select>
+            <div>
+              <label>Tab Size: &nbsp;
+                <Select
+                  items={tabsize}
+                  itemRenderer={renderFontSize}
+                  activeItem={editorState.tabSize}
+                  onItemSelect={onTabSizeChange}
+                  filterable={false}
+                >
+                  <Button
+                    text={editorState.tabSize}
+                    rightIcon="double-caret-vertical"
+                    outlined={true}
+                  />
+                </Select>
+              </label>
             </div>
-          </div>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              width: "100%"
-            }}
-          >
-            <div style={{display: 'flex'}}>
-              <label>Time Interval: &nbsp;</label>
-                <p>
-                  <span>
-                    <Select
-                      items={timeIntervalsArr}
-                      itemRenderer={renderTimeInterval}
-                      activeItem={selectTimeInterval}
-                      onItemSelect={onTimeIntervalChange}
-                      filterable={false}
-                    >
-                      <Button
-                        text={selectTimeInterval ?? "None"}
-                        rightIcon="double-caret-vertical"
-                        outlined={true}
-                      />
-                    </Select>
-                  </span>
-                </p>          
+
+            <div>
+              <label>Time Interval: &nbsp;
+                  <Select
+                    items={timeIntervalsArr}
+                    itemRenderer={renderTimeInterval}
+                    activeItem={selectTimeInterval}
+                    onItemSelect={onTimeIntervalChange}
+                    filterable={false}
+                  >
+                    <Button
+                      text={selectTimeInterval ?? "None"}
+                      rightIcon="double-caret-vertical"
+                      outlined={true}
+                    />
+                  </Select>   
+                </label>
             </div>
+
           </div>
 
         </div>
+
+
         <div
           style={{
-            marginBottom: '25px'
+            marginBottom: '25px',
+            marginTop: '25px'
           }}
         ><label>Title: &nbsp;</label>
           <EditableText placeholder="Enter the title of code" alwaysRenderInput={true} selectAllOnFocus={false} maxLength={100} onChange={e => handleTitleChange(e)} value={algoState.title}/>
         </div>
+
+
+
         <div>
           <AceEditor
             mode="python"
@@ -407,7 +415,8 @@ const Editor = (props: EditorProps) => {
               justifyContent: "center",
               flexDirection: "column",
               alignContent: "center",
-              gap: "10px"
+              gap: "10px",
+              marginBottom: "20px"
             }}
           >
 

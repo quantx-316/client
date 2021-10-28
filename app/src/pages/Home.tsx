@@ -35,16 +35,16 @@ export const Home: React.FC = () => {
             }}
         >
             <div
-                className="full-height almost-full-width centered-top-col"
+                className="full centered-top-col"
                 style={{
                     gap: "10px"
                 }}
             >
-                <div
+                {/* <div
                     className="navbar-like"
                 >
                     <HomeHeader />
-                </div>
+                </div> */}
 
                 {
                     algos && algos.length > 0 ? 
