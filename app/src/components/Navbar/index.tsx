@@ -1,6 +1,7 @@
 import React from 'react'
 import {Navbar, Alignment, Button} from '@blueprintjs/core';
 import {useHistory, Link} from 'react-router-dom';
+import {useSelector} from 'react-redux';
 import UserDropdown from './UserDropdown';
 
 const ComposedNavbar: React.FC = () => {
@@ -11,13 +12,20 @@ const ComposedNavbar: React.FC = () => {
     history.push(link);
   }
 
+  //@ts-ignore 
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
   return (
     <Navbar className="bp3-dark">
       <Navbar.Group align={Alignment.LEFT}>  
         <Navbar.Heading>
           <h2>
             <Link
-              to="/"
+              to={
+                isLoggedIn ? 
+                "/home" : 
+                "/"
+              }
               style={{
                 color: 'inherit',
                 textDecoration: 'none'
@@ -37,7 +45,7 @@ const ComposedNavbar: React.FC = () => {
         <Navbar.Divider /> 
         <UserDropdown />
         <Button className="bp3-minimal" icon="notifications" />
-        <Button className="bp3-minimal" icon="cog" />
+        {/* <Button className="bp3-minimal" icon="cog" /> */}
       </Navbar.Group>
     </Navbar>
   )
