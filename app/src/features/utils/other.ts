@@ -1,4 +1,5 @@
 import {logout} from '../actions/auth';
+import { dispatchErrorMsg } from './notifs';
 
 export const getErrorMsg = (error: any) => {
     let msg = (error.response &&
@@ -22,5 +23,15 @@ export const handleError = (error: any, dispatch: any) => {
     // if (error.response && error.response.status === 401) {
     //     dispatch(logout());
     // }
+
+}
+
+export const genericErrorHandler = (error: any, dispatch: any) => {
+
+    const msg = getErrorMsg(error);
+
+    handleError(error, dispatch);
+
+    dispatchErrorMsg(dispatch, msg);
 
 }

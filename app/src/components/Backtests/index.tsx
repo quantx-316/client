@@ -6,8 +6,9 @@ import { Classes as Popover2Classes, ContextMenu2, Tooltip2 } from "@blueprintjs
 import {useSelector, useDispatch} from 'react-redux';
 import {Algo} from '../../features/types/algos';
 import {fetchAlgos, deleteAlgo} from '../../features/actions/algos';
+import {deleteBacktest, getBacktestByAlgo} from '../../features/actions/backtest';
 import {useHistory} from 'react-router-dom';
-import {dispatchErrorMsg} from '../../features/utils/notifs';
+import {dispatchErrorMsg, dispatchSuccessMsg} from '../../features/utils/notifs';
 
 type NodePath = number[];
 
@@ -36,8 +37,13 @@ const Backtest: React.FC = () => {
     //@ts-ignore 
     const selectedAlgoId = useSelector(state => state.algos.selected_algo_id);
 
+    //@ts-ignore 
+    const backtests = useSelector(state => state.backtests.backtests);
+
     useEffect(() => {
+
         console.log(selectedAlgoId);
+        redDispatch(getBacktestByAlgo(selectedAlgoId));
     }, [selectedAlgoId])
 
     const history = useHistory();
@@ -70,7 +76,7 @@ const Backtest: React.FC = () => {
                     {
                         ...obj, 
                         icon: "chart",
-                        label: obj.title,
+                        label: obj.created,
                     }
                 ))
                 return newState3;
@@ -81,23 +87,14 @@ const Backtest: React.FC = () => {
 
     const [nodes, dispatch] = React.useReducer(treeExampleReducer, []);
 
-    //@ts-ignore 
-    const algos = useSelector(state => state.algos.algos);
-
     const redDispatch = useDispatch();
 
     useEffect(() => {
-        console.log("fetch algos");
-        redDispatch(fetchAlgos());
-    }, [])
-
-    useEffect(() => {
-        console.log("new algos, dispatch");
         dispatch({
             type: "FETCHED_NODES",
-            payload: algos,
+            payload: backtests,
         })
-    }, [algos])
+    }, [backtests])
 
     const handleNodeClick = React.useCallback(
         (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
@@ -112,24 +109,23 @@ const Backtest: React.FC = () => {
         [],
     );
 
-    const onNewClick = () => {
-        history.push({
-            pathname: "/editor",
-        });
-    }
+    const onViewClick = () => {
 
-    const onEditClick = () => {
+        // //@ts-ignore 
+        // if (selectedInfo && selectedInfo.id) {
+        //     history.push({
+        //         pathname: "/editor",
+        //         state: {
+        //             algo: selectedInfo,
+        //         }
+        //     });
+        //     return 
+        // } 
 
         //@ts-ignore 
         if (selectedInfo && selectedInfo.id) {
-            history.push({
-                pathname: "/editor",
-                state: {
-                    algo: selectedInfo,
-                }
-            });
-            return 
-        } 
+            dispatchSuccessMsg(redDispatch, "Placeholder success");
+        }
 
         dispatchErrorMsg(redDispatch, "Invalid selected information");
     }
@@ -138,7 +134,7 @@ const Backtest: React.FC = () => {
         //@ts-ignore
         if (selectedInfo && selectedInfo.id) {
             //@ts-ignore
-            redDispatch(deleteAlgo(selectedInfo.id))
+            redDispatch(deleteBacktest(selectedInfo.id))
             return 
         }
 
@@ -170,7 +166,7 @@ const Backtest: React.FC = () => {
                 }}
             >
                 <H1>
-                    <a href="#" style={{textDecoration: "none", color: "inherit"}}>Backtests</a>
+                    Backtests
                 </H1>
 
                 {/* <Button
@@ -201,7 +197,7 @@ const Backtest: React.FC = () => {
                     }}
                 >
                     <h1>
-                        No Algos Found
+                        No backtests found
                     </h1>
                 </div>
             }
@@ -212,7 +208,7 @@ const Backtest: React.FC = () => {
                     <Button
                         className={Classes.BUTTON}
                         icon={"eye-open"}
-                        onClick={() => onEditClick()}
+                        onClick={() => onViewClick()}
                     >
                         View
                     </Button>

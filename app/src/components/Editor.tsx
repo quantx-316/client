@@ -3,10 +3,14 @@ import AceEditor from 'react-ace'
 import { Select, ItemRenderer } from '@blueprintjs/select'
 import {useDispatch, useSelector} from 'react-redux';
 import {createAlgo, updateAlgo} from '../features/actions/algos';
+import {createBacktest} from '../features/actions/backtest';
 import { Button, EditableText, MenuItem } from '@blueprintjs/core'
 import { Classes, Popover2 } from "@blueprintjs/popover2";
 import TimeSelectDialog from './TimeSelectDialog';
 import {fetchQuoteAllowedTimes, fetchQuoteIntervals} from '../features/actions/quotes';
+import { dispatchErrorMsg } from '../features/utils/notifs';
+
+const moment = require('moment');
 
 import 'ace-builds/src-noconflict/mode-jsx'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
@@ -60,6 +64,54 @@ const Editor = (props: EditorProps) => {
 
   const [minDate, setMinDate] = useState<Date | null>(null);
   const [maxDate, setMaxDate] = useState<Date | null>(null);
+
+
+  const handleClickRun = () => {
+    if (timeIntervals == null || minDate == null || maxDate == null) {
+      dispatchErrorMsg(dispatch, "Editor state not fully loaded")
+      return
+    }
+
+    if (startDate == null || endDate == null || selectTimeInterval == null) {
+      dispatchErrorMsg(dispatch, "Start/End date & Time Interval required")
+      return
+    }
+
+    if (algoState == null || algoState.id < 0) {
+      dispatchErrorMsg(dispatch, "Current algorithm is not valid, loading failed or not saved yet")
+    }
+
+    if (startDate >= endDate) {
+      dispatchErrorMsg(dispatch, "End date must be strictly greater than end date");
+    }
+
+    console.log(startDate);
+    console.log(endDate);
+
+    const startTime = moment(startDate).unix();
+    const endTime = moment(endDate).unix();
+
+    console.log(startTime);
+    console.log(endTime);
+
+    console.log(moment.unix(startTime).toDate());
+
+    //@ts-ignore 
+    const realInterval = timeIntervals[selectTimeInterval];
+
+    console.log(realInterval);
+
+    const submit = {
+      algo: algoState.id,
+      test_interval: realInterval,
+      test_start: startTime,
+      test_end: endTime,
+    }
+
+    dispatch(createBacktest(submit));
+
+  }
+
 
   const dispatch = useDispatch();
 
@@ -228,7 +280,7 @@ const Editor = (props: EditorProps) => {
     })
   }
 
-  const handleClickRun = () => {}
+
 
   useEffect(() => {
     

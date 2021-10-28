@@ -49,16 +49,17 @@ const AlgosList: React.FC = () => {
             case "DESELECT_ALL":
                 const newState1 = cloneDeep(state);
                 forEachNode(newState1, node => {node.isSelected = false});
-                setSelectedInfo(null);
+                // setSelectedInfo(null);
+                // ^ this is edited out because there will always be selected info 
                 return newState1;
             case "SET_IS_SELECTED":
                 const newState2 = cloneDeep(state);
                 forNodeAtPath(newState2, action.payload.path, node => {
+
                     if (action.payload.isSelected) {
                         //@ts-ignore
                         setSelectedInfo(node)
                     }
-
                     node.isSelected = true
 
                     // we will not allow deselection (so that backtest appears)
@@ -173,7 +174,7 @@ const AlgosList: React.FC = () => {
                 }}
             >
                 <H1>
-                    <a href="#" style={{textDecoration: "none", color: "inherit"}}>Algorithms</a>
+                    Algorithms
                 </H1>
 
                 <Button
@@ -204,7 +205,7 @@ const AlgosList: React.FC = () => {
                     }}
                 >
                     <h1>
-                        No Algos Found
+                        No algos found
                     </h1>
                 </div>
             }

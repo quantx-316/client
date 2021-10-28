@@ -8,8 +8,8 @@ export const BACKTEST_FETCH_FAIL = "BACKTEST_FETCH_FAIL";
 export interface BacktestSubmit {
     algo: number,
     test_interval: string,
-    test_start: Date,
-    test_end: Date,
+    test_start: number,
+    test_end: number,
 }
 
 export interface Backtest {

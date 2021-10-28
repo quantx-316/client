@@ -4,24 +4,20 @@ import {BacktestSubmit, Backtest} from '../features/types/backtest';
 
 class backtestService {
 
-    static createAlgo(algo: AlgoSubmit) {
-        const url = algoURL; 
-        return requests.authPost(url, algo);
+    static createBacktest(backtest: BacktestSubmit) {
+        const url = backtestURL;
+        return requests.authPost(url, backtest); 
+        // backend is expecting time in unix time 
     }
 
-    static updateAlgo(newAlgo: Algo) {
-        const url = algoURL; 
-        return requests.authPut(url, newAlgo)
-    }
-
-    static deleteAlgo(algoID: number) {
-        const url = algoURL + "?algo_id=" + algoID;
-        return requests.authDelete(url);
-    }
-
-    static getAlgos() {
-        const url = algoURL + "all/";
+    static getBacktestByAlgoID(algoID: number) {
+        const url = backtestURL + "?algo_id=" + algoID;
         return requests.authGet(url);
+    }
+
+    static deleteBacktest(backtestID: number) {
+        const url = backtestURL + "?backtest_id=" + backtestID;
+        return requests.authDelete(url);
     }
 
 }
