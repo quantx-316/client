@@ -24,9 +24,6 @@ export const createAlgo = (algo: AlgoSubmit, createAlgoCallback: any) => (dispat
             })
 
             createAlgoCallback(res.data);
-
-            dispatchSuccessMsg(dispatch, "Placeholder algo create success msg")
-
         },
         (error) => {
             const msg = getErrorMsg(error);
@@ -53,9 +50,6 @@ export const updateAlgo = (newAlgo: Algo, updateAlgoCallback: any) => (dispatch:
             })
 
             updateAlgoCallback(res.data);
-
-            dispatchSuccessMsg(dispatch, "Placeholder algo update success msg");
-
         },
         (error) => {
             const msg = getErrorMsg(error);
@@ -82,7 +76,7 @@ export const deleteAlgo = (algoID: number) => (dispatch: any) => {
                 payload: algoID,
             })
 
-            dispatchSuccessMsg(dispatch, "Placeholder algo delete success")
+            dispatchSuccessMsg(dispatch, "Successfully deleted")
         },
         (error) => {
             const msg = getErrorMsg(error);
@@ -107,8 +101,6 @@ export const fetchAlgos = () => (dispatch: any) => {
                 type: ALGO_FETCH_SUCCESS, 
                 payload: res.data, 
             })
-
-            dispatchSuccessMsg(dispatch, "Debugging algo fetch success msg");
 
         },
         (error) => {

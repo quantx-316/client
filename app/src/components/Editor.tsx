@@ -48,6 +48,8 @@ const Editor = (props: EditorProps) => {
     print('hello world')
   `
 
+  const [popOverOpen, setPopoverOpen] = useState(false);
+
   // also need dropdown for time interval 
   const [timeIntervals, setTimeIntervals] = useState(null);
   const [timeIntervalsArr, setTimeIntervalsArr] = useState([]);
@@ -228,13 +230,24 @@ const Editor = (props: EditorProps) => {
 
   const handleClickRun = () => {}
 
+  useEffect(() => {
+    
+    const timer = setTimeout(() => {
+      setPopoverOpen(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [popOverOpen])
+
   const createAlgoCallBack = (algo: Algo) => {
     setAlgoState(algo);
     setIsNewAlgo(false);
+    setPopoverOpen(true);
   }
 
   const updateAlgoCallBack = (algo: Algo) => {
     setAlgoState(algo);
+    setPopoverOpen(true);
   }
 
   const handleClickSave = () => {
@@ -424,10 +437,16 @@ const Editor = (props: EditorProps) => {
           >
             <div style={{marginRight: '10px'}}>
               
-              <Popover2 interactionKind="click" popoverClassName={Classes.POPOVER2_CONTENT_SIZING} enforceFocus={false}
-                  placement="bottom-end" content={
+              <Popover2 
+                interactionKind="click" 
+                popoverClassName={Classes.POPOVER2_CONTENT_SIZING} 
+                enforceFocus={false}
+                placement="bottom-end" 
+                isOpen={popOverOpen}
+                content={
                   <h5>Saved!</h5>
-              } >
+                } 
+              >
                 <Button
                   rightIcon="saved"
                   text="Save"
