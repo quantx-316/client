@@ -54,7 +54,6 @@ const Dev: React.FC = () => {
   }
 
   const onLogout = () => {
-    dispatch(logout());
     setRequestMade(true);
   }
 

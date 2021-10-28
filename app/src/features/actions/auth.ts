@@ -90,10 +90,12 @@ export const register = (username: string, email: string, password: string) => (
 
 }
 
-export const logout = () => (dispatch: any) => {
+export const logout = (callBack: any) => (dispatch: any) => {
     authService.logout();
 
     dispatch({
         type: LOGOUT,
     })
+
+    callBack();
 }

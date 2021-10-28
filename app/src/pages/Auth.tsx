@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux';
 import {
   Tab,
@@ -15,11 +15,20 @@ import { Popover2, Tooltip2 } from "@blueprintjs/popover2";
 
 const Auth: React.FC = () => {
 
+  const location = useLocation();
+
+  //@ts-ignore
+  const [tabId, setTabId] = useState(location && location.state && location.state.tab ? location.state.tab : "reg");
+
+  const onTabIdChange = (tabId: string) => {
+    setTabId(tabId);
+  }
+
   return (
     <div>
-      <Tabs id="Auth" renderActiveTabPanelOnly={false} large={true}>
-        <Tab id="ng" title="Registration" panel={<RegisterPanel />} />
-        <Tab id="rx" title="Login" panel={<LoginPanel />} />
+      <Tabs id="Auth" renderActiveTabPanelOnly={false} large={true} selectedTabId={tabId} onChange={onTabIdChange}>
+        <Tab id="reg" title="Registration" panel={<RegisterPanel />} />
+        <Tab id="log" title="Login" panel={<LoginPanel />} />
       </Tabs>
     </div>
   )
