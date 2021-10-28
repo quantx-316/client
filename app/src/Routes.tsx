@@ -1,5 +1,5 @@
 import React from 'react'
-import { HashRouter, Switch, Route } from 'react-router-dom'
+import { HashRouter, Switch, Route, Redirect } from 'react-router-dom'
 import {useSelector} from "react-redux";
 import Dev from './pages/Dev'
 import { Home } from './pages/Home'
@@ -12,8 +12,10 @@ import Editor from "./pages/Editor";
 import Profile from './pages/Profile';
 import Auth from './pages/Auth';
 import Social from './pages/Social';
+import NotFound from './pages/NotFound';
 
 import ProtectedRoute from './components/ProtectedRoute';
+import Backtest from './pages/Backtest';
 
 const Routes: React.FC = () => {  
 
@@ -51,7 +53,7 @@ const Routes: React.FC = () => {
             </Base>
           )}
         />
-        <ProtectedRoute 
+        {/* <ProtectedRoute 
           path="/files" 
           exact 
           isAuthenticated={isLoggedIn}
@@ -60,14 +62,24 @@ const Routes: React.FC = () => {
               <Files />
             </Base>
           )}
-        />
-        <ProtectedRoute 
+        /> */}
+        {/* <ProtectedRoute 
           path="/backtests" 
           exact 
           isAuthenticated={isLoggedIn}
           render={() => (
             <Base>
               <Backtests />
+            </Base>
+          )}
+        /> */}
+        <ProtectedRoute 
+          path="/backtest"
+          exact 
+          isAuthenticated={isLoggedIn}
+          render={() => (
+            <Base>
+              <Backtest />
             </Base>
           )}
         />
@@ -121,6 +133,18 @@ const Routes: React.FC = () => {
             </Base>
           )}
         />
+
+        <Route 
+          path="/404"
+          render={() => (
+            <Base>
+              <NotFound />
+            </Base>
+          )}
+        />
+
+        <Redirect to="/404" />
+
       </Switch>
     </HashRouter>
   )

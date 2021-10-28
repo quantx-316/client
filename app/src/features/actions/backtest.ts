@@ -60,6 +60,19 @@ export const getBacktestByAlgo = (algoID: number) => (dispatch: any) => {
     )
 }
 
+export const getBacktestByID = (backtestID: number, getBacktestCallback: any) => (dispatch: any) => {
+
+    return backtestService.getBacktestByID(backtestID).then(
+        (res) => {
+            getBacktestCallback(backtestID);
+        },
+        (error) => {
+            genericErrorHandler(error, dispatch);
+        }
+    )
+
+}
+
 export const deleteBacktest = (backtestID: number) => (dispatch: any) => {
 
     return backtestService.deleteBacktest(backtestID).then(

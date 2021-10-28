@@ -15,6 +15,11 @@ class backtestService {
         return requests.authGet(url);
     }
 
+    static getBacktestByID(backtestID: number) {
+        const url = backtestURL + "?backtest_id=" + backtestID;
+        return requests.authGet(url);
+    }
+
     static deleteBacktest(backtestID: number) {
         const url = backtestURL + "?backtest_id=" + backtestID;
         return requests.authDelete(url);
