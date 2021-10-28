@@ -1,8 +1,10 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Navbar, Alignment, Button} from '@blueprintjs/core';
 import {useHistory, Link} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import UserDropdown from './UserDropdown';
+import Badge from '@mui/material/Badge';
+import NotifsModal from '../NotifsModal';
 
 const ComposedNavbar: React.FC = () => {
 
@@ -11,9 +13,22 @@ const ComposedNavbar: React.FC = () => {
   const handleOnClick = (link: string) => {
     history.push(link);
   }
+  
+  const [notifsOpen, setNotifsOpen] = useState(false);
+
+  const handleNotifsClose = () => {
+    setNotifsOpen(false);
+  }
+
+  const handleNotifsOpen = () => {
+    setNotifsOpen(true);
+  }
 
   //@ts-ignore 
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
+  //@ts-ignore 
+  const notifs = useSelector(state => state.notif.listNotif);
 
   return (
     <Navbar className="bp3-dark">
@@ -44,9 +59,37 @@ const ComposedNavbar: React.FC = () => {
 
         <Navbar.Divider /> 
         <UserDropdown />
-        <Button className="bp3-minimal" icon="notifications" />
+
+        {
+          notifs && notifs.length > 0 ? 
+
+            <Badge variant="dot" color="error">
+              <Button 
+                className="bp3-minimal" 
+                icon="notifications" 
+                onClick={() => handleNotifsOpen()}
+              />
+            </Badge>
+
+            :
+
+            <Button 
+              className="bp3-minimal" 
+              icon="notifications" 
+              onClick={() => handleNotifsOpen()}
+            />
+
+        }
+        
         {/* <Button className="bp3-minimal" icon="cog" /> */}
       </Navbar.Group>
+
+      <NotifsModal 
+        isOpen={notifsOpen}
+        handleClose={handleNotifsClose}
+        title="Notifications"
+      />
+
     </Navbar>
   )
 
