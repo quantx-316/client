@@ -4,6 +4,7 @@
 
 - Netlify 
   - https://quantx-algo.netlify.app/ (quantx taken)
+  - NOT guaranteed to be the most up to date (takes too many resources to rebuild every commit)
 
 ## SETUP 
 
