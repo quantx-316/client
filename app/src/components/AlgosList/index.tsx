@@ -38,11 +38,14 @@ const AlgosList: React.FC = () => {
     const [selectedInfo, setSelectedInfo] = useState(null);
 
     useEffect(() => {
-        console.log(selectedInfo);
-
         //@ts-ignore
         redDispatch(selectAlgo(selectedInfo ? selectedInfo.id : -1));
     }, [selectedInfo])
+
+    useEffect(() => {
+        //@ts-ignore 
+        redDispatch(selectAlgo(selectedInfo ? selectedInfo.id : -1));
+    }, [])
 
     function treeExampleReducer(state: any, action: TreeAction) {
         switch (action.type) {

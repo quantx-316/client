@@ -1,23 +1,32 @@
-import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom'
+import React, {useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { Backtest } from '../features/types/backtest';
+import { dispatchErrorMsg } from '../features/utils/notifs';
 
-const Backtest = () => {
+type BacktestProps = {
+    backtest?: Backtest
+}
 
-    // const location = useLocation();
+const BacktestComp = (props: BacktestProps) => {
 
-    // //@ts-ignore
-    // const [tabId, setTabId] = useState(location && location.state && location.state.tab ? location.state.tab : "reg");
-  
-    const location = useLocation();
+    const dispatch = useDispatch();
 
-    //@ts-ignore
-    const [tabId, setTabId] = useState(location && location.state && location.state.tab ? location.state.tab : "reg");
+    const history = useHistory();
 
+    useEffect(() => {
+        if (props.backtest == null) {
+            history.push("/home");
+            dispatchErrorMsg(dispatch, "No valid backtest information given. Select from Home.")
+        }
+    }, [])
 
     return (
-        <div></div>
+        <div>
+
+        </div>
     )
 
 }
 
-export default Backtest;
+export default BacktestComp;
