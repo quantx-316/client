@@ -9,10 +9,15 @@ const Editor = () => {
     const location = useLocation();
 
     return (
+        <div
+            className="full centered-top-col"
+        >
+            <h1>Editor</h1>
             <CodeEditor 
                 //@ts-ignore
                 algo={location && location.state && location.state.algo ? location.state.algo : null}
             />
+        </div>
     )
 }
 

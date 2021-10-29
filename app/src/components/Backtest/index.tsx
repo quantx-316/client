@@ -30,6 +30,18 @@ const BacktestComp = (props: BacktestProps) => {
         }
     }, [])
 
+    // export interface Backtest {
+    //     id: number, 
+    //     algo: number, 
+    //     owner: number, 
+    //     result: string, 
+    //     code_snapshot: string, 
+    //     test_interval: string,
+    //     test_start: Date,
+    //     test_end: Date, 
+    //     created: Date,
+    // }
+    
     return (
         <div
             className="full centered-top-col"
@@ -37,6 +49,9 @@ const BacktestComp = (props: BacktestProps) => {
                 marginTop: "20px"
             }}
         >
+            <h1>Backtest</h1>
+            
+            <p>Submitted {props.backtest && props.backtest.created ? props.backtest.created : ""}</p>
             <Tabs
                 className="centered-top-col"
             >
