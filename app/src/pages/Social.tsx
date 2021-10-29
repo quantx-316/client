@@ -23,7 +23,9 @@ const Social: React.FC = () => {
                 marginTop: "20px"
             }}
         >
-            <Tabs>
+            <Tabs
+                className="centered-top-col full"
+            >
                 <Tab id="lead" title="Global Leaderboard" panel = {<LeaderboardPanel />} />
                 <Tab id="comp" title="Competitions" panel = {<CompetitionPanel />} />
             </Tabs>

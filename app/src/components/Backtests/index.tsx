@@ -123,8 +123,15 @@ const Backtest: React.FC = () => {
         // } 
 
         //@ts-ignore 
-        if (selectedInfo && selectedInfo.id) {
-            dispatchSuccessMsg(redDispatch, "Placeholder success");
+        if (selectedInfo && selectedInfo.id) {            
+            history.push({
+                pathname: "/backtest",
+                state: {
+                    backtest: selectedInfo,
+                }
+            })
+            
+            return;
         }
 
         dispatchErrorMsg(redDispatch, "Invalid selected information");
