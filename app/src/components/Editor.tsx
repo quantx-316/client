@@ -501,12 +501,11 @@ const Editor = (props: EditorProps) => {
               <Popover2 
                 interactionKind="click" 
                 popoverClassName={Classes.POPOVER2_CONTENT_SIZING} 
-                enforceFocus={true}
+                autoFocus={false}
+                enforceFocus={false}
                 placement="bottom-end" 
                 isOpen={popOverOpen}
-                content={
-                  <h5>Saved!</h5>
-                } 
+                content="Saved"
               >
                 <Button
                   rightIcon="saved"
@@ -521,12 +520,11 @@ const Editor = (props: EditorProps) => {
                 <Popover2 
                   interactionKind="click" 
                   popoverClassName={Classes.POPOVER2_CONTENT_SIZING} 
-                  enforceFocus={true}
+                  autoFocus={false}
+                  enforceFocus={false}
                   placement="bottom-end" 
                   isOpen={runPopoverOpen}
-                  content={
-                    <h5>Run started!</h5>
-                  } 
+                  content="Run started"
                 >
                   <Button
                     rightIcon="arrow-right"

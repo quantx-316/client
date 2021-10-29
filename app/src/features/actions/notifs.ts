@@ -59,7 +59,7 @@ export default class notifsActionsHandler {
 
     handleDispatchAllNotif(status: string, msg: string) {
 
-        this.handleDispatchAddListNotif(status, msg);
+        // this.handleDispatchAddListNotif(status, msg);
 
         let singleNotifState: SingleNotifState = {
             status: status, 

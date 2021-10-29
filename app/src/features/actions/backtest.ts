@@ -37,7 +37,7 @@ export const createBacktest = (backtest: BacktestSubmit, createBacktestCallback:
     )
 }
 
-export const getBacktestByAlgo = (algoID: number) => (dispatch: any) => {
+export const getBacktestByAlgo = (algoID: number, callBack?: any) => (dispatch: any) => {
 
     return backtestService.getBacktestByAlgoID(algoID).then(
         (res) => {
@@ -46,6 +46,10 @@ export const getBacktestByAlgo = (algoID: number) => (dispatch: any) => {
                 type: BACKTEST_FETCH_SUCCESS,
                 payload: res.data,
             })
+
+            if (callBack) {
+                callBack();
+            }
 
         },
         (error) => {

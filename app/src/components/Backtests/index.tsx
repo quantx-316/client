@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { Button, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch } from "@blueprintjs/core";
 import { Icon, Intent, TreeNodeInfo, Tree } from "@blueprintjs/core";
 import { cloneDeep } from "lodash-es";
-import { Classes as Popover2Classes, ContextMenu2, Tooltip2 } from "@blueprintjs/popover2";
+import { Classes as Popover2Classes, Popover2 } from "@blueprintjs/popover2";
 import {useSelector, useDispatch} from 'react-redux';
 import {Algo} from '../../features/types/algos';
 import {fetchAlgos, deleteAlgo} from '../../features/actions/algos';
@@ -42,9 +42,7 @@ const Backtest: React.FC = () => {
     const backtests = useSelector(state => state.backtests.backtests);
 
     useEffect(() => {
-
-        console.log(selectedAlgoId);
-        redDispatch(getBacktestByAlgo(selectedAlgoId));
+        refreshNodes();
     }, [selectedAlgoId])
 
     const history = useHistory();
@@ -78,6 +76,11 @@ const Backtest: React.FC = () => {
                         ...obj, 
                         icon: "chart",
                         label: dateStrToDate(obj.created).toString(),
+                        //@ts-ignore
+                        secondaryLabel: (obj.result == null ? 
+                            <b className="nice-red">Executing</b>
+                            :
+                            "")
                     }
                 ))
                 return newState3;
@@ -149,6 +152,27 @@ const Backtest: React.FC = () => {
         dispatchErrorMsg(redDispatch, "Invalid selected information");
     }
 
+    const [refreshOpen, setRefreshOpen] = useState(false);
+
+    useEffect(() => {
+    
+        const timer = setTimeout(() => {
+          setRefreshOpen(false);
+        }, 1000);
+    
+        return () => clearTimeout(timer);
+    }, [refreshOpen])
+
+    const refreshNodes = (callBack?: any) => {
+        console.log("REFRESH NODES");
+        console.log(selectedAlgoId);
+        redDispatch(getBacktestByAlgo(selectedAlgoId, callBack));
+    }
+
+    const onRefreshClick = () => {
+        refreshNodes(() => setRefreshOpen(true));
+    }
+
     return (
         <Card
             style={{
@@ -175,15 +199,23 @@ const Backtest: React.FC = () => {
                 <H1>
                     Backtests
                 </H1>
-
-                {/* <Button
-                    className={Classes.BUTTON}
-                    icon={"new-link"}
-                    intent={"success"}
-                    onClick={() => onNewClick()}
+                <Popover2 
+                    interactionKind="click" 
+                    autoFocus={false}
+                    popoverClassName={Popover2Classes.POPOVER2_CONTENT_SIZING} 
+                    enforceFocus={false}
+                    placement="bottom-end" 
+                    isOpen={refreshOpen}
+                    content="Refreshed"
                 >
-                    New
-                </Button> */}
+                    <Button
+                        className={Classes.BUTTON}
+                        icon={"refresh"}
+                        // intent={"success"}
+                        onClick={() => onRefreshClick()}
+                    >
+                    </Button>
+            </Popover2>
             </div>
 
             {

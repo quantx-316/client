@@ -61,7 +61,7 @@ const UserDropdown: React.FC = () => {
     )
 
     return (
-        <Popover2 content={UserMenu} placement="bottom">
+        <Popover2 content={UserMenu} placement="bottom" autoFocus={false} enforceFocus={false}>
             <Button className="bp3-minimal" icon="user" />
         </Popover2>
     )

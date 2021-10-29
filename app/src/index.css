@@ -220,3 +220,7 @@ code {
   height: 250px !important;
   max-height: 300px !important;
 }
+
+.nice-red {
+  color: #FF4136 !important;
+}
