@@ -157,7 +157,7 @@ const Backtest: React.FC = () => {
         >
             <div
                 style={{
-                    height: "10%",
+                    height: "40px",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
@@ -177,12 +177,15 @@ const Backtest: React.FC = () => {
                     New
                 </Button> */}
             </div>
-            
-            <Tree
-                contents={nodes}
-                onNodeClick={handleNodeClick}
-                className={Classes.ELEVATION_0}
-            />
+
+            {
+                nodes && nodes.length > 0 && 
+                <Tree
+                    contents={nodes}
+                    onNodeClick={handleNodeClick}
+                    className={Classes.ELEVATION_0}
+                />
+            }
 
             {
                 nodes.length === 0 && 

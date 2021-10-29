@@ -216,4 +216,7 @@ code {
 
 .bp3-tree {
   box-shadow: none !important;
+  min-height: 250px !important;
+  height: 250px !important;
+  max-height: 300px !important;
 }
