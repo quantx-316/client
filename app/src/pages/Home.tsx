@@ -78,7 +78,7 @@ export const Home: React.FC = () => {
                         <AlgosList />
 
                         
-                        <div
+                        {/* <div
                             className="centered"
                         >
                         
@@ -87,7 +87,7 @@ export const Home: React.FC = () => {
                                 size={100}
                             />
 
-                        </div>
+                        </div> */}
 
 
                         <Backtests />

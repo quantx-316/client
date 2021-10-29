@@ -9,8 +9,7 @@ import { Classes, Popover2 } from "@blueprintjs/popover2";
 import TimeSelectDialog from './TimeSelectDialog';
 import {fetchQuoteAllowedTimes, fetchQuoteIntervals} from '../features/actions/quotes';
 import { dispatchErrorMsg, dispatchSuccessMsg } from '../features/utils/notifs';
-
-const moment = require('moment');
+import {dateToUnix} from '../features/utils/time';
 
 import 'ace-builds/src-noconflict/mode-jsx'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
@@ -99,21 +98,11 @@ const Editor = (props: EditorProps) => {
       dispatchErrorMsg(dispatch, "End date must be strictly greater than end date");
     }
 
-    console.log(startDate);
-    console.log(endDate);
-
-    const startTime = moment(startDate).unix();
-    const endTime = moment(endDate).unix();
-
-    console.log(startTime);
-    console.log(endTime);
-
-    console.log(moment.unix(startTime).toDate());
+    const startTime = dateToUnix(startDate);
+    const endTime = dateToUnix(endDate);
 
     //@ts-ignore 
     const realInterval = timeIntervals[selectTimeInterval];
-
-    console.log(realInterval);
 
     const submit = {
       algo: algoState.id,

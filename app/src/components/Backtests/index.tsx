@@ -9,6 +9,7 @@ import {fetchAlgos, deleteAlgo} from '../../features/actions/algos';
 import {deleteBacktest, getBacktestByAlgo} from '../../features/actions/backtest';
 import {useHistory} from 'react-router-dom';
 import {dispatchErrorMsg, dispatchSuccessMsg} from '../../features/utils/notifs';
+import {dateStrToDate} from '../../features/utils/time';
 
 type NodePath = number[];
 
@@ -76,7 +77,7 @@ const Backtest: React.FC = () => {
                     {
                         ...obj, 
                         icon: "chart",
-                        label: obj.created,
+                        label: dateStrToDate(obj.created).toString(),
                     }
                 ))
                 return newState3;

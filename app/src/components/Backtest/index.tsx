@@ -12,6 +12,10 @@ import {useDispatch} from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { dispatchErrorMsg } from '../../features/utils/notifs';
 import { Backtest } from '../../features/types/backtest';
+import BacktestPerformance from './BacktestPerformance';
+import {dateStrToDate} from '../../features/utils/time';
+
+const moment = require('moment');
 
 type BacktestProps = {
     backtest?: Backtest
@@ -27,6 +31,7 @@ const BacktestComp = (props: BacktestProps) => {
         if (props.backtest == null) {
             history.push("/home");
             dispatchErrorMsg(dispatch, "No valid backtest information given, redirected to home.")
+            return;
         }
     }, [])
 
@@ -51,12 +56,12 @@ const BacktestComp = (props: BacktestProps) => {
         >
             <h1>Backtest</h1>
             
-            <p>Submitted {props.backtest && props.backtest.created ? props.backtest.created : ""}</p>
+            <p><b>Submitted:</b> {props.backtest && props.backtest.created ? dateStrToDate(props.backtest.created).toString() : ""}</p>
             <Tabs
                 className="centered-top-col"
             >
                 <Tab id="code" title="Code Snapshot" panel = {<BacktestEditor backtest={props.backtest} />} />
-                <Tab id="perf" title="Performance" panel = {<div />} />
+                <Tab id="perf" title="Performance" panel = {<BacktestPerformance backtest={props.backtest} />} />
             </Tabs>
         </div>
     )

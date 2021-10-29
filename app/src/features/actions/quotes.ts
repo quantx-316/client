@@ -1,8 +1,7 @@
 import quoteService from "../../services/quoteService";
 import {dispatchErrorMsg, dispatchSuccessMsg} from '../utils/notifs';
 import {getErrorMsg} from '../utils/other';
-
-const moment = require('moment');
+import {dateStrToDate} from '../utils/time';
 
 export const fetchQuoteAllowedTimes = (dispatch: any, minDateCallBack: any, maxDateCallBack: any) => {
 
@@ -15,8 +14,8 @@ export const fetchQuoteAllowedTimes = (dispatch: any, minDateCallBack: any, maxD
             //@ts-ignore
             let maxDate = data['max_time'];
 
-            minDate = moment.utc(minDate).toDate();
-            maxDate = moment.utc(maxDate).toDate();
+            minDate = dateStrToDate(minDate);
+            maxDate = dateStrToDate(maxDate);
 
             minDateCallBack(minDate);
             maxDateCallBack(maxDate);
