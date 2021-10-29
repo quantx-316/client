@@ -176,7 +176,7 @@ const Backtest: React.FC = () => {
     return (
         <Card
             style={{
-                minWidth: "500px",
+                minWidth: "550px",
                 minHeight: "400px",
                 maxHeight: "400px",
                 display: "flex",
