@@ -105,7 +105,8 @@ const Backtest = () => {
                         secondaryLabel: (obj.result == null ? 
                             <b className="nice-red">Executing</b>
                             :
-                            "")
+                            //@ts-ignore
+                            <b className="nice-green">{obj.score}</b>)
                     }
                 ))
                 return newState3;
