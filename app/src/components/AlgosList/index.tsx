@@ -2,10 +2,12 @@ import React, {useEffect, useState} from 'react';
 import { Button, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch, H2 } from "@blueprintjs/core";
 import { Icon, Intent, TreeNodeInfo, Tree } from "@blueprintjs/core";
 import {useSelector, useDispatch} from 'react-redux';
+import { Classes as Popover2Classes, Popover2 } from "@blueprintjs/popover2";
 import {Algo} from '../../features/types/algos';
 import {fetchAlgos, deleteAlgo, selectAlgo} from '../../features/actions/algos';
 import {useHistory} from 'react-router-dom';
 import {dispatchErrorMsg} from '../../features/utils/notifs';
+import {dateStrToDate} from '../../features/utils/time';
 import Pagination from '../Pagination';
 
 type NodePath = number[];
@@ -42,6 +44,26 @@ const AlgosList  = (props: AlgosListProps) => {
     const history = useHistory();
 
     const [selectedInfo, setSelectedInfo] = useState(null);
+
+    const [hoveringInfo, setHoveringInfo] = useState(null);
+
+    const onNodeEnter = React.useCallback(
+        (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
+            console.log("ON NODE ENTER");
+            console.log(nodePath);
+            console.log(node);
+            //@ts-ignore 
+            setHoveringInfo(node);
+        },
+        [],
+    );
+
+    const onNodeLeave = React.useCallback(
+        (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
+            setHoveringInfo(null);
+        },
+        [],
+    );
 
     useEffect(() => {
         //@ts-ignore
@@ -199,11 +221,54 @@ const AlgosList  = (props: AlgosListProps) => {
             
             {
                 nodes && nodes.length > 0 &&
-                <Tree
-                    contents={nodes}
-                    onNodeClick={handleNodeClick}
-                    className={Classes.ELEVATION_0}
-                />
+                <Popover2
+                    isOpen={!(hoveringInfo==null)}
+                    autoFocus={false}
+                    enforceFocus={false}
+                    content={
+                        <Card
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "10px",
+                            }}
+                        >
+                            {
+                                !(hoveringInfo==null) && 
+                                (
+                                    <>
+                                        <p>
+                                            <b>Title: </b>
+                                            {/* @ts-ignore */}
+                                            {hoveringInfo.title}
+                                        </p>
+                                        <p> 
+                                            <b>Created: </b>
+                                            {/* @ts-ignore */}
+                                            
+                                            {dateStrToDate(hoveringInfo.created).toString()}
+                                        </p>
+                                        <p>
+                                            <b>Edited: </b>
+                                            {/* @ts-ignore */}
+                                            
+                                            {dateStrToDate(hoveringInfo.edited_at).toString()}
+                                        </p>
+                                    </>                                
+                                )
+                            }
+                        </Card>
+                    }
+                    placement="left"
+                >
+                    <Tree
+                        contents={nodes}
+                        onNodeClick={handleNodeClick}
+                        className={Classes.ELEVATION_0}
+                        onNodeMouseEnter={onNodeEnter}
+                        onNodeMouseLeave={onNodeLeave}
+                    />
+                </Popover2>
             }
 
             {

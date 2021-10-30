@@ -74,6 +74,7 @@ const Backtest = () => {
 
     const history = useHistory();
 
+    const [hoveringInfo, setHoveringInfo] = useState(null);
     const [selectedInfo, setSelectedInfo] = useState(null);
 
     function treeExampleReducer(state: any, action: TreeAction) {
@@ -135,6 +136,24 @@ const Backtest = () => {
             payload: backtests,
         })
     }, [backtests])
+
+    const onNodeEnter = React.useCallback(
+        (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
+            console.log("ON NODE ENTER");
+            console.log(nodePath);
+            console.log(node);
+            //@ts-ignore 
+            setHoveringInfo(node);
+        },
+        [],
+    );
+
+    const onNodeLeave = React.useCallback(
+        (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
+            setHoveringInfo(null);
+        },
+        [],
+    );
 
     const handleNodeClick = React.useCallback(
         (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
@@ -256,11 +275,67 @@ const Backtest = () => {
 
             {
                 nodes && nodes.length > 0 && 
-                <Tree
-                    contents={nodes}
-                    onNodeClick={handleNodeClick}
-                    className={Classes.ELEVATION_0}
-                />
+
+                <Popover2
+                    isOpen={!(hoveringInfo==null)}
+                    autoFocus={false}
+                    enforceFocus={false}
+                    content={
+                        <Card
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "10px",
+                            }}
+                        >
+                            {
+                                !(hoveringInfo==null) && 
+                                (
+                                    <>
+                                        <p>
+                                            <b>Score: </b>
+                                            {/* @ts-ignore */}
+                                            {hoveringInfo.score ?? "N/A"}
+                                        </p>
+                                        <p>
+                                            <b>Interval: </b> 
+                                            {/* @ts-ignore */}
+                                            {hoveringInfo.test_interval}
+                                        </p>
+                                        <p> 
+                                            <b>Start: </b>
+                                            {/* @ts-ignore */}
+                                            
+                                            {dateStrToDate(hoveringInfo.test_start).toString()}
+                                        </p>
+                                        <p>
+                                            <b>End: </b>
+                                            {/* @ts-ignore */}
+                                            
+                                            {dateStrToDate(hoveringInfo.test_end).toString()}
+                                        </p>
+                                        <p>
+                                            <b>Created: </b>
+                                            {/* @ts-ignore */}
+                                            
+                                            
+                                            {dateStrToDate(hoveringInfo.created).toString()}
+                                        </p>
+                                    </>
+                                )
+                            }
+                        </Card>
+                    }
+                    placement="left"
+                >
+                    <Tree
+                        contents={nodes}
+                        onNodeClick={handleNodeClick}
+                        className={Classes.ELEVATION_0}
+                        onNodeMouseEnter={onNodeEnter}
+                        onNodeMouseLeave={onNodeLeave}
+                    />
+                </Popover2>
             }
 
             {
