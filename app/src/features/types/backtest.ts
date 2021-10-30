@@ -19,6 +19,7 @@ export interface Backtest {
     algo: number, 
     owner: number, 
     result: string, 
+    score: number, 
     code_snapshot: string, 
     test_interval: string,
     test_start: Date,
