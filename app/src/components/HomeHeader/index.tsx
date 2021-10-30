@@ -1,7 +1,14 @@
 import React from 'react';
 import { Button, Card, Icon, IconSize, ButtonGroup, Elevation, H1, H3, H4, H5, Label, Slider, Switch } from "@blueprintjs/core";
+import {useSelector} from 'react-redux';
 
 const HomeHeader: React.FC = () => {
+
+
+    //@ts-ignore 
+    const algoPagination = useSelector(state => state.algos.pagination);
+    //@ts-ignore 
+    const backTestPagination = useSelector(state => state.backtests.pagination);
 
 
     return (
@@ -35,7 +42,7 @@ const HomeHeader: React.FC = () => {
                     className="centered-top-col"
                 >
                     <H3>
-                        Ranking
+                        Algorithms
                     </H3>
                     <div
                         style={{
@@ -45,23 +52,33 @@ const HomeHeader: React.FC = () => {
                             justifyContent: "center",
                         }}
                     >
-                        <H4>6</H4>
-                        <Icon icon={"chevron-up"} intent={"success"} size={IconSize.LARGE}/>
-                        {/* intent=danger for decrease, chevron-down for decrease*/}
+                        {
+                            algoPagination && 
+                            <H4>
+                                {algoPagination.total}
+                            </H4>
+                        }
+
+                        {
+                            algoPagination==null && 
+                            <H4>
+                                -
+                            </H4>
+                        }
                     </div>
                     <span
                         style={{
                             fontSize: "10px"
                         }}
                     >
-                        Weekly Change
+                        Total Created
                     </span>
                 </div>
                 <div
                     className="centered-top-col"
                 >
                     <H3>
-                        Submissions
+                        Competitions 
                     </H3>
                     <div
                         style={{
@@ -71,23 +88,23 @@ const HomeHeader: React.FC = () => {
                             justifyContent: "center",
                         }}
                     >
-                        <H4>6</H4>
-                        <Icon icon={"chevron-down"} intent={"danger"} size={IconSize.LARGE}/>
-                        {/* intent=danger for decrease, chevron-down for decrease*/}
+                        <H4>
+                            -
+                        </H4>
                     </div>
                     <span
                         style={{
                             fontSize: "10px"
                         }}
                     >
-                        Weekly Change
+                        Total Participated
                     </span>
                 </div>
                 <div
                     className="centered-top-col"
                 >
                     <H3>
-                        Competitions
+                        Backtests
                     </H3>
                     <div
                         style={{
@@ -97,16 +114,29 @@ const HomeHeader: React.FC = () => {
                             justifyContent: "center",
                         }}
                     >
-                        <H4>3</H4>
-                        <Icon icon={"chevron-up"} intent={"success"} size={IconSize.LARGE}/>
-                        {/* intent=danger for decrease, chevron-down for decrease*/}
+                        {
+
+                        }
+                        {
+                            backTestPagination && 
+                            <H4>
+                                {backTestPagination.total}
+                            </H4>
+                        }
+
+                        {
+                            backTestPagination==null && 
+                            <H4>
+                                -
+                            </H4>
+                        }
                     </div>
                     <span
                         style={{
                             fontSize: "10px"
                         }}
                     >
-                        Weekly Change
+                        For Chosen Algorithm 
                     </span>
                 </div>
             </div>  

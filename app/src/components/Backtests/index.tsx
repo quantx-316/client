@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Button, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch } from "@blueprintjs/core";
+import { Button, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch, H2 } from "@blueprintjs/core";
 import { Icon, Intent, TreeNodeInfo, Tree } from "@blueprintjs/core";
 import { cloneDeep } from "lodash-es";
 import { Classes as Popover2Classes, Popover2 } from "@blueprintjs/popover2";
@@ -264,9 +264,9 @@ const Backtest = () => {
                         alignContent: "center",
                     }}
                 >
-                    <h1>
+                    <H2>
                         No backtests found
-                    </h1>
+                    </H2>
                 </div>
             }
 
