@@ -14,6 +14,7 @@ import {
 } from '../types/algos';
 import {dispatchErrorMsg, dispatchSuccessMsg} from '../utils/notifs';
 import { getErrorMsg, handleError } from "../utils/other";
+import {getPagination} from '../utils/pages';
 
 export const selectAlgo = (algo_id: number) => (dispatch: any) => {
     dispatch({
@@ -73,7 +74,7 @@ export const updateAlgo = (newAlgo: Algo, updateAlgoCallback: any) => (dispatch:
 
 }
 
-export const deleteAlgo = (algoID: number) => (dispatch: any) => {
+export const deleteAlgo = (algoID: number, callBack?: any) => (dispatch: any) => {
 
     return algoService.deleteAlgo(algoID).then(
         (res) => {
@@ -83,6 +84,8 @@ export const deleteAlgo = (algoID: number) => (dispatch: any) => {
                 type: ALGO_DELETE_SUCCESS, 
                 payload: algoID,
             })
+
+            callBack();
 
             dispatchSuccessMsg(dispatch, "Successfully deleted")
         },
@@ -100,14 +103,18 @@ export const deleteAlgo = (algoID: number) => (dispatch: any) => {
 
 }
 
-export const fetchAlgos = () => (dispatch: any) => {
+export const fetchAlgos = (page: number, size: number) => (dispatch: any) => {
 
-    return algoService.getAlgos().then(
+    return algoService.getAlgos(page, size).then(
         (res) => {
 
             dispatch({
                 type: ALGO_FETCH_SUCCESS, 
-                payload: res.data, 
+                payload: {
+                    //@ts-ignore
+                    'algos': res.data.items,
+                    'pagination': getPagination(res.data)
+                }, 
             })
 
         },

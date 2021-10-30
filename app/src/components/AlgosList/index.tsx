@@ -8,6 +8,7 @@ import {Algo} from '../../features/types/algos';
 import {fetchAlgos, deleteAlgo, selectAlgo} from '../../features/actions/algos';
 import {useHistory} from 'react-router-dom';
 import {dispatchErrorMsg} from '../../features/utils/notifs';
+import Pagination from '../Pagination';
 
 type NodePath = number[];
 
@@ -31,7 +32,14 @@ function forNodeAtPath(nodes: TreeNodeInfo[], path: NodePath, callback: (node: T
     callback(Tree.nodeFromPath(path, nodes));
 }
 
-const AlgosList: React.FC = () => {
+type AlgosListProps = {
+    page: number, 
+    onPageChange: any,
+    pageAfterDelete: any,
+    pagination: any,
+}
+
+const AlgosList  = (props: AlgosListProps) => {
 
     const history = useHistory();
 
@@ -145,7 +153,7 @@ const AlgosList: React.FC = () => {
         //@ts-ignore
         if (selectedInfo && selectedInfo.id) {
             //@ts-ignore
-            redDispatch(deleteAlgo(selectedInfo.id))
+            redDispatch(deleteAlgo(selectedInfo.id, props.pageAfterDelete));
             return 
         }
 
@@ -156,8 +164,8 @@ const AlgosList: React.FC = () => {
         <Card
             style={{
                 minWidth: "550px",
-                minHeight: "400px",
-                maxHeight: "400px",
+                minHeight: "450px",
+                maxHeight: "450px",
                 display: "flex",
                 justifyContent: "flex-start",
                 alignContent: "center",
@@ -217,22 +225,41 @@ const AlgosList: React.FC = () => {
 
             {
                 nodes.length > 0 && 
-                <ButtonGroup>
-                    <Button
-                        className={Classes.BUTTON}
-                        icon={"edit"}
-                        onClick={() => onEditClick()}
-                    >
-                        Edit
-                    </Button>
-                    <Button
-                        className={Classes.BUTTON}
-                        icon={"trash"}
-                        onClick={() => onDeleteClick()}
-                    >
-                        Delete
-                    </Button>
-                </ButtonGroup>
+                <div
+                    style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "space-between"
+                    }}
+                >
+                    <ButtonGroup>
+                        <Button
+                            className={Classes.BUTTON}
+                            icon={"edit"}
+                            onClick={() => onEditClick()}
+                        >
+                            Edit
+                        </Button>
+                        <Button
+                            className={Classes.BUTTON}
+                            icon={"trash"}
+                            onClick={() => onDeleteClick()}
+                        >
+                            Delete
+                        </Button>
+                    </ButtonGroup>
+
+                    {
+                        !(props.pagination==null) &&
+
+                        <Pagination 
+                            pagination={props.pagination}
+                            onPageChange={props.onPageChange}
+                            page={props.page}
+                        />
+
+                    }
+                </div>
             }
 
         </Card>

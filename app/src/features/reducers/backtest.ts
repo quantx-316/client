@@ -8,13 +8,16 @@ import {
     BACKTEST_FETCH_SUCCESS,
     BACKTEST_FETCH_FAIL
 } from '../types/backtest';
+import {PageState} from '../types/pages';
 
 type state = {
-    backtests: Array<Backtest>
+    backtests: Array<Backtest>,
+    pagination: PageState | null,
 }
 
 const initialState: state = {
-    backtests: []
+    backtests: [],
+    pagination: null,
 }
 
 export default function (state = initialState, action: BacktestTypes) {
@@ -23,21 +26,30 @@ export default function (state = initialState, action: BacktestTypes) {
         case BACKTEST_CREATE_SUCCESS:
             return {
                 ...state,
-                backtests: state.backtests.concat([action.payload])
+                backtests: state.backtests.concat([action.payload]),
+                pagination: state.pagination ? {
+                    ...state.pagination,
+                    total: state.pagination.total + 1,
+                } : state.pagination
             }
         case BACKTEST_CREATE_FAIL:
             return state 
         case BACKTEST_DELETE_SUCCESS:
             return {
                 ...state, 
-                backtests: state.backtests.filter(obj => obj.id !== action.payload)
+                backtests: state.backtests.filter(obj => obj.id !== action.payload),
+                pagination: state.pagination ? {
+                    ...state.pagination,
+                    total: state.pagination.total -1,
+                } : state.pagination
             }
         case BACKTEST_DELETE_FAIL:
             return state 
         case BACKTEST_FETCH_SUCCESS:
             return {
                 ...state, 
-                backtests: action.payload
+                backtests: action.payload.backtests,
+                pagination: action.payload.pagination,
             }
         case BACKTEST_FETCH_FAIL:
             return state 

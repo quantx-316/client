@@ -11,6 +11,7 @@
     "@blueprintjs/table": "^3.9.9",
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.0.5",
     "@mui/material": "^5.0.4",
     "@types/enzyme": "3.10.4",
     "@types/jest": "27.0.0",

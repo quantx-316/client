@@ -1,3 +1,5 @@
+import {PageState} from './pages';
+
 export const ALGO_CREATE_SUCCESS = "ALGO_CREATE_SUCCESS";
 export const ALGO_CREATE_FAIL = "ALGO_CREATE_FAIL";
 export const ALGO_SAVE_SUCCESS = "ALGO_SAVE_SUCCESS";
@@ -56,7 +58,10 @@ interface AlgoDeleteFail {
 
 interface AlgoFetchSuccess {
     type: typeof ALGO_FETCH_SUCCESS,
-    payload: Array<Algo>
+    payload: {
+      algos: Array<Algo>,
+      pagination: PageState
+    }
 }
 
 interface AlgoFetchFail {

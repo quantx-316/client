@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Button, Icon, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch } from "@blueprintjs/core";
 import {fetchAlgos, deleteAlgo, selectAlgo} from '../features/actions/algos';
 import {useSelector, useDispatch} from 'react-redux';
@@ -15,9 +15,8 @@ export const Home: React.FC = () => {
 
     //@ts-ignore 
     const algos = useSelector(state => state.algos.algos);
-
     //@ts-ignore 
-    const user = useSelector(state => state.auth.user);
+    const pagination = useSelector(state => state.algos.pagination);
 
     const onNewClick = () => {
         history.push({
@@ -25,9 +24,31 @@ export const Home: React.FC = () => {
         });
     }
 
+    const fetchNextAlgos = (page: number, size: number) => {
+        dispatch(fetchAlgos(page, size));
+    }
+
+    const [algoPage, setAlgoPage] = useState(1);
+    const [algoSize, setAlgoSize] = useState(10);
+    const onAlgoPageChange = (e: any, page: number) => {
+        setAlgoPage(page);
+        fetchNextAlgos(page, algoSize);
+    }
+
+    const algoPageAfterDelete = () => {
+
+        console.log(algoPage);
+        console.log(algos.length);
+
+        if (algoPage > 1 && algos.length === 1) {
+           onAlgoPageChange(null, algoPage-1);
+        } else {
+            onAlgoPageChange(null, algoPage);
+        }
+    }
+
     useEffect(() => {
-        console.log("fetch algos");
-        dispatch(fetchAlgos());
+        fetchNextAlgos(algoPage, algoSize);
     }, [])
 
     return (
@@ -48,49 +69,22 @@ export const Home: React.FC = () => {
                 >
                     <HomeHeader />
                 </div>
-                
-                {/* <div
-                    style={{
-                        width: "100%"
-                    }}
-                >
-
-                    {
-                        user && user.username ? 
-                        <h1>
-                            Welcome back, '{user.username}'.
-                        </h1>
-
-                        :
-
-                        <h1>
-                            Please try logging in again.
-                        </h1>
-                    }
-
-                </div> */}
 
                 {
                     algos && algos.length > 0 ? 
                     <div
                         className="full separated-row"
                     >
-                        <AlgosList />
+                        <AlgosList 
+                            page={algoPage}
+                            onPageChange={onAlgoPageChange}
+                            pageAfterDelete={algoPageAfterDelete}
+                            pagination={pagination}
+                        />
 
+                        <Backtests 
                         
-                        {/* <div
-                            className="centered"
-                        >
-                        
-                            <Icon
-                                icon={"chevron-right"}
-                                size={100}
-                            />
-
-                        </div> */}
-
-
-                        <Backtests />
+                        />
                     </div>
 
                     :

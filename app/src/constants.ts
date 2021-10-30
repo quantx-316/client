@@ -7,3 +7,5 @@ export const quotesTimeURL = `${baseURL}/quote/range/`
 export const quotesIntervalsURL = `${baseURL}/quote/intervals/`
 
 export const backtestURL = `${baseURL}/backtest/`
+
+export const notifsURL = 'ws://localhost:80/ws/'

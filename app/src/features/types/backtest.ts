@@ -1,3 +1,5 @@
+import {PageState} from './pages';
+
 export const BACKTEST_CREATE_SUCCESS = "BACKTEST_CREATE_SUCCESS";
 export const BACKTEST_CREATE_FAIL = "BACKTEST_CREATE_FAIL";
 export const BACKTEST_DELETE_SUCCESS = "BACKTEST_DELETE_SUCCESS";
@@ -44,7 +46,10 @@ interface BacktestDeleteFailAction {
 
 interface BacktestFetchSuccessAction {
     type: typeof BACKTEST_FETCH_SUCCESS,
-    payload: Array<Backtest>
+    payload: {
+        backtests: Array<Backtest>,
+        pagination: PageState,
+    }
 }
 
 interface BacktestFetchFailAction {

@@ -12,6 +12,7 @@ import {
 } from '../types/backtest';
 import {dispatchErrorMsg, dispatchSuccessMsg} from '../utils/notifs';
 import { getErrorMsg, handleError, genericErrorHandler } from "../utils/other";
+import {getPagination} from '../utils/pages';
 
 export const createBacktest = (backtest: BacktestSubmit, createBacktestCallback: any) => (dispatch: any) => {
 
@@ -37,14 +38,18 @@ export const createBacktest = (backtest: BacktestSubmit, createBacktestCallback:
     )
 }
 
-export const getBacktestByAlgo = (algoID: number, callBack?: any) => (dispatch: any) => {
+export const getBacktestByAlgo = (algoID: number, page: number, size: number, callBack?: any) => (dispatch: any) => {
 
-    return backtestService.getBacktestByAlgoID(algoID).then(
+    return backtestService.getBacktestByAlgoID(algoID, page, size).then(
         (res) => {
 
             dispatch({
                 type: BACKTEST_FETCH_SUCCESS,
-                payload: res.data,
+                payload: {
+                    //@ts-ignore
+                    'backtests': res.data.items,
+                    'pagination': getPagination(res.data)
+                },
             })
 
             if (callBack) {
@@ -77,7 +82,7 @@ export const getBacktestByID = (backtestID: number, getBacktestCallback: any) =>
 
 }
 
-export const deleteBacktest = (backtestID: number) => (dispatch: any) => {
+export const deleteBacktest = (backtestID: number, callBack?: any) => (dispatch: any) => {
 
     return backtestService.deleteBacktest(backtestID).then(
         (res) => {
@@ -86,6 +91,8 @@ export const deleteBacktest = (backtestID: number) => (dispatch: any) => {
                 type: BACKTEST_DELETE_SUCCESS,
                 payload: backtestID
             })
+
+            callBack();
 
             dispatchSuccessMsg(dispatch, "Successfully deleted")
 

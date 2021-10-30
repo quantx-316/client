@@ -19,8 +19,8 @@ class algoService {
         return requests.authDelete(url);
     }
 
-    static getAlgos() {
-        const url = algoURL + "all/";
+    static getAlgos(page: number, size: number) {
+        const url = algoURL + "all/" + "?page=" + page + "&size=" + size;
         return requests.authGet(url);
     }
 

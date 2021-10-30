@@ -12,15 +12,18 @@ import {
     ALGO_FETCH_SUCCESS,
     ALGO_SELECT,
 } from '../types/algos';
+import {PageState} from '../types/pages';
 
 type state = {
     algos: Array<Algo>,
     selected_algo_id: number,
+    pagination: PageState | null,
 }
 
 const initialState: state = {
     algos: [],
     selected_algo_id: -1,
+    pagination: null,
 }
 
 export default function (state = initialState, action: AlgoTypes) {
@@ -35,6 +38,10 @@ export default function (state = initialState, action: AlgoTypes) {
             return {
                 ...state,
                 algos: state.algos.concat([action.payload]), 
+                pagination: state.pagination ? {
+                    ...state.pagination,
+                    total: state.pagination.total + 1,
+                } : state.pagination
             }
         case ALGO_CREATE_FAIL:
             return state 
@@ -48,14 +55,19 @@ export default function (state = initialState, action: AlgoTypes) {
         case ALGO_DELETE_SUCCESS:
             return {
                 ...state, 
-                algos: state.algos.filter(obj => obj.id !== action.payload)
+                algos: state.algos.filter(obj => obj.id !== action.payload),
+                pagination: state.pagination ? {
+                    ...state.pagination,
+                    total: state.pagination.total - 1,
+                } : state.pagination
             }
         case ALGO_DELETE_FAIL:
             return state 
         case ALGO_FETCH_SUCCESS:
             return {
                 ...state, 
-                algos: action.payload, 
+                algos: action.payload.algos,
+                pagination: action.payload.pagination, 
             }
         case ALGO_FETCH_FAIL: 
             return {

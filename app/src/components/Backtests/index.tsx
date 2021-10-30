@@ -10,6 +10,7 @@ import {deleteBacktest, getBacktestByAlgo} from '../../features/actions/backtest
 import {useHistory} from 'react-router-dom';
 import {dispatchErrorMsg, dispatchSuccessMsg} from '../../features/utils/notifs';
 import {dateStrToDate} from '../../features/utils/time';
+import Pagination from '../Pagination';
 
 type NodePath = number[];
 
@@ -33,16 +34,40 @@ function forNodeAtPath(nodes: TreeNodeInfo[], path: NodePath, callback: (node: T
     callback(Tree.nodeFromPath(path, nodes));
 }
 
-const Backtest: React.FC = () => {
+// type BacktestProps = {
+//     page: number, 
+//     onPageChange: any,
+//     pageAfterDelete: any,
+//     pagination: any,
+// }
+
+const Backtest = () => {
 
     //@ts-ignore 
-    const selectedAlgoId = useSelector(state => state.algos.selected_algo_id);
+    const pagination = useSelector(state => state.backtests.pagination);
 
     //@ts-ignore 
     const backtests = useSelector(state => state.backtests.backtests);
 
+    const [page, setPage] = useState(1);
+    const [size, setSize] = useState(10);
+    const onPageChange = (e: any, page: number) => {
+        setPage(page);
+        refreshNodes(page);
+    }
+
+    const pageAfterDelete = () => {
+        if (page > 1 && backtests.length === 1) {
+            onPageChange(null, page-1);
+         } else {
+            onPageChange(null, page);
+         }
+    }
+
+    //@ts-ignore 
+    const selectedAlgoId = useSelector(state => state.algos.selected_algo_id);
     useEffect(() => {
-        refreshNodes();
+        onPageChange(null, 1);
     }, [selectedAlgoId])
 
     const history = useHistory();
@@ -145,7 +170,7 @@ const Backtest: React.FC = () => {
         //@ts-ignore
         if (selectedInfo && selectedInfo.id) {
             //@ts-ignore
-            redDispatch(deleteBacktest(selectedInfo.id))
+            redDispatch(deleteBacktest(selectedInfo.id, pageAfterDelete))
             return 
         }
 
@@ -163,22 +188,22 @@ const Backtest: React.FC = () => {
         return () => clearTimeout(timer);
     }, [refreshOpen])
 
-    const refreshNodes = (callBack?: any) => {
+    const refreshNodes = (page: number, callBack?: any) => {
         console.log("REFRESH NODES");
         console.log(selectedAlgoId);
-        redDispatch(getBacktestByAlgo(selectedAlgoId, callBack));
+        redDispatch(getBacktestByAlgo(selectedAlgoId, page, size, callBack));
     }
 
     const onRefreshClick = () => {
-        refreshNodes(() => setRefreshOpen(true));
+        onPageChange(null, page);
     }
 
     return (
         <Card
             style={{
                 minWidth: "550px",
-                minHeight: "400px",
-                maxHeight: "400px",
+                minHeight: "450px",
+                maxHeight: "450px",
                 display: "flex",
                 justifyContent: "flex-start",
                 alignContent: "center",
@@ -246,22 +271,44 @@ const Backtest: React.FC = () => {
 
             {
                 nodes.length > 0 && 
-                <ButtonGroup>
-                    <Button
-                        className={Classes.BUTTON}
-                        icon={"eye-open"}
-                        onClick={() => onViewClick()}
-                    >
-                        View
-                    </Button>
-                    <Button
-                        className={Classes.BUTTON}
-                        icon={"trash"}
-                        onClick={() => onDeleteClick()}
-                    >
-                        Delete
-                    </Button>
-                </ButtonGroup>
+
+                <div
+                    style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "space-between"
+                    }}
+                >
+                    <ButtonGroup>
+                        <Button
+                            className={Classes.BUTTON}
+                            icon={"eye-open"}
+                            onClick={() => onViewClick()}
+                        >
+                            View
+                        </Button>
+                        <Button
+                            className={Classes.BUTTON}
+                            icon={"trash"}
+                            onClick={() => onDeleteClick()}
+                        >
+                            Delete
+                        </Button>
+                    </ButtonGroup>
+                
+
+                {
+                    !(pagination==null) &&
+
+                    <Pagination 
+                        pagination={pagination}
+                        onPageChange={onPageChange}
+                        page={page}
+                    />
+
+                }
+
+                </div>
             }
 
         </Card>
