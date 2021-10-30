@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Button, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch, H2 } from "@blueprintjs/core";
 import { Icon, Intent, TreeNodeInfo, Tree } from "@blueprintjs/core";
-import { cloneDeep } from "lodash-es";
-import { Classes as Popover2Classes, ContextMenu2, Tooltip2 } from "@blueprintjs/popover2";
 import {useSelector, useDispatch} from 'react-redux';
 import {Algo} from '../../features/types/algos';
 import {fetchAlgos, deleteAlgo, selectAlgo} from '../../features/actions/algos';
@@ -58,13 +56,15 @@ const AlgosList  = (props: AlgosListProps) => {
     function treeExampleReducer(state: any, action: TreeAction) {
         switch (action.type) {
             case "DESELECT_ALL":
-                const newState1 = cloneDeep(state);
+                //@ts-ignore 
+                const newState1 = state.map((obj) => ({...obj}))                
                 forEachNode(newState1, node => {node.isSelected = false});
                 // setSelectedInfo(null);
                 // ^ this is edited out because there will always be selected info 
                 return newState1;
             case "SET_IS_SELECTED":
-                const newState2 = cloneDeep(state);
+                //@ts-ignore 
+                const newState2 = state.map((obj) => ({...obj}))                
                 forNodeAtPath(newState2, action.payload.path, node => {
 
                     if (action.payload.isSelected) {

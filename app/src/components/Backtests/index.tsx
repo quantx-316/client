@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Button, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch, H2 } from "@blueprintjs/core";
 import { Icon, Intent, TreeNodeInfo, Tree } from "@blueprintjs/core";
-import { cloneDeep } from "lodash-es";
 import { Classes as Popover2Classes, Popover2 } from "@blueprintjs/popover2";
 import {useSelector, useDispatch} from 'react-redux';
 import {Algo} from '../../features/types/algos';
@@ -67,6 +66,9 @@ const Backtest = () => {
     //@ts-ignore 
     const selectedAlgoId = useSelector(state => state.algos.selected_algo_id);
     useEffect(() => {
+
+        console.log("USE EFFECT REFRESH");
+
         onPageChange(null, 1);
     }, [selectedAlgoId])
 
@@ -77,14 +79,19 @@ const Backtest = () => {
     function treeExampleReducer(state: any, action: TreeAction) {
         switch (action.type) {
             case "DESELECT_ALL":
-                const newState1 = cloneDeep(state);
+                //@ts-ignore 
+                const newState1 = state.map((obj) => ({...obj}))
+
                 forEachNode(newState1, node => {node.isSelected = false});
                 setSelectedInfo(null);
                 return newState1;
             case "SET_IS_SELECTED":
-                const newState2 = cloneDeep(state);
+                //@ts-ignore
+                const newState2 = state.map((obj) => ({...obj}))
                 forNodeAtPath(newState2, action.payload.path, node => {
                     node.isSelected = action.payload.isSelected
+
+                    console.log("FOR NODE AT PATH");
 
                     //@ts-ignore 
                     if (action.payload.isSelected) {
@@ -120,6 +127,9 @@ const Backtest = () => {
     const redDispatch = useDispatch();
 
     useEffect(() => {
+
+        console.log("USE EFFECT FETCHED NODES");
+
         dispatch({
             type: "FETCHED_NODES",
             payload: backtests,
