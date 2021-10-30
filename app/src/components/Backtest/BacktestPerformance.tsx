@@ -9,7 +9,23 @@ const BacktestPerformance = (props: BacktestProps) => {
 
     return (
         <div>
-            <h1>placeholder performance</h1>
+
+            {
+                //@ts-ignore
+                props.backtest && props.backtest.result == null && 
+                <h1>
+                    Executing...
+                </h1>
+            }
+
+            {
+                //@ts-ignore 
+                props.backtest && !(props.backtest.result==null) &&
+
+                <h1>placeholder performance</h1>
+
+            }
+
         </div>
     )
 
