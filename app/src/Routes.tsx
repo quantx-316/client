@@ -53,33 +53,14 @@ const Routes: React.FC = () => {
             </Base>
           )}
         />
-        {/* <ProtectedRoute 
-          path="/files" 
-          exact 
-          isAuthenticated={isLoggedIn}
-          render={() => (
-            <Base>
-              <Files />
-            </Base>
-          )}
-        /> */}
-        {/* <ProtectedRoute 
-          path="/backtests" 
-          exact 
-          isAuthenticated={isLoggedIn}
-          render={() => (
-            <Base>
-              <Backtests />
-            </Base>
-          )}
-        /> */}
         <ProtectedRoute 
-          path="/backtest"
+          path="/backtest/:backtest_id"
           exact 
           isAuthenticated={isLoggedIn}
-          render={() => (
+          //@ts-ignore 
+          render={routeProps => (
             <Base>
-              <Backtest />
+              <Backtest {...routeProps} />
             </Base>
           )}
         />
@@ -87,9 +68,10 @@ const Routes: React.FC = () => {
           path="/stock-view" 
           exact 
           isAuthenticated={isLoggedIn}
-          render={() => (
+          //@ts-ignore 
+          render={routeProps => (
             <Base>
-              <StockView />
+              <StockView {...routeProps} />
             </Base>
           )}
         />
@@ -113,12 +95,13 @@ const Routes: React.FC = () => {
           )}
         />
         <ProtectedRoute 
-          path="/profile" 
+          path="/profile/:username" 
           exact 
           isAuthenticated={isLoggedIn}
-          render={() => (
+          //@ts-ignore 
+          render={routeProps => (
             <Base>
-              <Profile />
+              <Profile {...routeProps} />
             </Base>
           )}
         />

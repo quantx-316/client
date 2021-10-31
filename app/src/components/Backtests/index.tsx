@@ -174,7 +174,8 @@ const Backtest = () => {
         //@ts-ignore 
         if (selectedInfo && selectedInfo.id) {            
             history.push({
-                pathname: "/backtest",
+                //@ts-ignore 
+                pathname: "/backtest/" + selectedInfo.id,
                 state: {
                     backtest: selectedInfo,
                 }
@@ -239,11 +240,6 @@ const Backtest = () => {
         setDir(newDir);
         refreshNodes(page, attr, newDir);
     }
-
-    // useEffect(() => {
-    //     fetchNextAlgos(algoPage, algoSize, algoAttr, algoDir);
-    // }, [])
-
 
     return (
         <Card

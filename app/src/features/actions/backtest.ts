@@ -73,7 +73,7 @@ export const getBacktestByID = (backtestID: number, getBacktestCallback: any) =>
 
     return backtestService.getBacktestByID(backtestID).then(
         (res) => {
-            getBacktestCallback(backtestID);
+            getBacktestCallback(res.data);
         },
         (error) => {
             genericErrorHandler(error, dispatch);

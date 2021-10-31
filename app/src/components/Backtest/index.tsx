@@ -23,30 +23,11 @@ type BacktestProps = {
 
 const BacktestComp = (props: BacktestProps) => {
 
-    const dispatch = useDispatch();
-
-    const history = useHistory();
-
     useEffect(() => {
-        if (props.backtest == null) {
-            history.push("/home");
-            dispatchErrorMsg(dispatch, "No valid backtest information given, redirected to home.")
-            return;
-        }
+        console.log('backtest');
+        console.log(props.backtest);
     }, [])
 
-    // export interface Backtest {
-    //     id: number, 
-    //     algo: number, 
-    //     owner: number, 
-    //     result: string, 
-    //     code_snapshot: string, 
-    //     test_interval: string,
-    //     test_start: Date,
-    //     test_end: Date, 
-    //     created: Date,
-    // }
-    
     return (
         <div
             className="full centered-top-col"
@@ -57,12 +38,17 @@ const BacktestComp = (props: BacktestProps) => {
             <h1>Backtest</h1>
             
             <p><b>Submitted:</b> {props.backtest && props.backtest.created ? dateStrToDate(props.backtest.created).toString() : ""}</p>
-            <Tabs
-                className="centered-top-col"
-            >
-                <Tab id="code" title="Code Snapshot" panel = {<BacktestEditor backtest={props.backtest} />} />
-                <Tab id="perf" title="Performance" panel = {<BacktestPerformance backtest={props.backtest} />} />
-            </Tabs>
+           
+            {
+                props.backtest && 
+                <Tabs
+                    className="centered-top-col"
+                >
+                    <Tab id="code" title="Code Snapshot" panel = {<BacktestEditor backtest={props.backtest} />} />
+                    <Tab id="perf" title="Performance" panel = {<BacktestPerformance backtest={props.backtest} />} />
+                </Tabs>
+            }
+           
         </div>
     )
 

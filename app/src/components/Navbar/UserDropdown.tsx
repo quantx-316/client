@@ -10,6 +10,18 @@ const UserDropdown: React.FC = () => {
 
     const dispatch = useDispatch();
     const history = useHistory();
+
+    //@ts-ignore
+    const user = useSelector(state => state.auth.user);
+
+    const goToProfile = () => {
+        history.push({
+            pathname: "/profile/" + user.username ?? "",
+            state: {
+                user: user,
+            }
+        })
+    }
     
     const goToAuth = (tabId: string) => {
         history.push({
@@ -38,7 +50,7 @@ const UserDropdown: React.FC = () => {
         <Menu>
             <MenuItem 
                 text="Profile" 
-
+                onClick={() => goToProfile()}
             />
             <MenuItem 
                 text="Logout" 
