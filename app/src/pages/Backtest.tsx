@@ -23,7 +23,7 @@ const BacktestPage = () => {
         } else {
             dispatch(getBacktestByID(backtest_id, setBacktest));
         }
-    }, [])
+    }, [backtest_id])
 
     return (
         <Backtest 
