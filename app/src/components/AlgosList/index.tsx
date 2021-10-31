@@ -77,11 +77,6 @@ const AlgosList  = (props: AlgosListProps) => {
         redDispatch(selectAlgo(selectedInfo ? selectedInfo.id : -1));
     }, [selectedInfo])
 
-    // useEffect(() => {
-    //     //@ts-ignore 
-    //     redDispatch(selectAlgo(selectedInfo ? selectedInfo.id : -1));
-    // }, [])
-
     function treeExampleReducer(state: any, action: TreeAction) {
         switch (action.type) {
             case "DESELECT_ALL":

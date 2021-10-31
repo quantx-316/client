@@ -4,8 +4,19 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const RELOGIN = "RELOGIN";
 export const LOGOUT = "LOGOUT";
+export const USER_FETCH_SUCCESS = 'USER_FETCH_SUCCESS'; 
+export const USER_FETCH_FAIL = 'USER_FETCH_FAIL';
 
 type user = {email: string, id: number};
+
+interface UserFetchSuccessAction {
+  type: typeof USER_FETCH_SUCCESS,
+  payload: user,
+}
+
+interface UserFetchFailAction {
+  type: typeof USER_FETCH_FAIL
+}
 
 interface RegisterSuccessAction {
   type: typeof REGISTER_SUCCESS
@@ -16,7 +27,7 @@ interface RegisterFailureAction {
 }
 
 interface LoginSuccess {
-  payload: user;
+  payload: user,
   type: typeof LOGIN_SUCCESS
 }
 
@@ -33,4 +44,4 @@ interface Relogin {
 }
 
 
-export type AuthTypes = RegisterSuccessAction | RegisterFailureAction | LoginSuccess | LoginFail | Logout | Relogin
+export type AuthTypes = RegisterSuccessAction | RegisterFailureAction | LoginSuccess | LoginFail | Logout | Relogin | UserFetchFailAction | UserFetchSuccessAction

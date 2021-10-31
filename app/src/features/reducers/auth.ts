@@ -4,6 +4,8 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  USER_FETCH_SUCCESS,
+  USER_FETCH_FAIL
 } from "../types/auth";
 
 import { AuthTypes } from "../types/auth";
@@ -69,6 +71,13 @@ export default function (state = initialState, action: AuthTypes) {
         isLoggedIn: false,
         user: null,
       };
+    case USER_FETCH_SUCCESS:
+      return {
+        ...state, 
+        user: action.payload,
+      }
+    case USER_FETCH_FAIL:
+      return state;
     default:
       return state;
   }
