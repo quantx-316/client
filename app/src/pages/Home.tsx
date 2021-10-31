@@ -24,15 +24,15 @@ export const Home: React.FC = () => {
         });
     }
 
-    const fetchNextAlgos = (page: number, size: number) => {
-        dispatch(fetchAlgos(page, size));
+    const fetchNextAlgos = (page: number, size: number, algoAttr: string, algoDir: string) => {
+        dispatch(fetchAlgos(page, size, convertAlgoAttr(algoAttr), algoDir));
     }
 
     const [algoPage, setAlgoPage] = useState(1);
     const [algoSize, setAlgoSize] = useState(10);
     const onAlgoPageChange = (e: any, page: number) => {
         setAlgoPage(page);
-        fetchNextAlgos(page, algoSize);
+        fetchNextAlgos(page, algoSize, algoAttr, algoDir);
     }
 
     const algoPageAfterDelete = () => {
@@ -47,9 +47,30 @@ export const Home: React.FC = () => {
         }
     }
 
+    const algoAttrsMapping = {
+        "Created": "created",
+        "Last Edited": "edited_at",
+        "Title": "title"
+    };
+    const [algoAttr, setAlgoAttr] = useState("Last Edited");
+    const convertAlgoAttr = (algoAttr: string) => {
+        //@ts-ignore
+        return algoAttrsMapping[algoAttr];
+    }
+    const onAlgoAttrChange = (newAttr: string) => {
+        setAlgoAttr(newAttr);
+        fetchNextAlgos(algoPage, algoSize, newAttr, algoDir);
+    }
+    const [algoDir, setAlgoDir] = useState("desc");
+    const onAlgoDirChange = (newDir: string) => {
+        setAlgoDir(newDir);
+        fetchNextAlgos(algoPage, algoSize, algoAttr, newDir);
+    }
+
     useEffect(() => {
-        fetchNextAlgos(algoPage, algoSize);
+        fetchNextAlgos(algoPage, algoSize, algoAttr, algoDir);
     }, [])
+
 
     return (
         <div
@@ -80,6 +101,11 @@ export const Home: React.FC = () => {
                             onPageChange={onAlgoPageChange}
                             pageAfterDelete={algoPageAfterDelete}
                             pagination={pagination}
+                            attrsMapping={algoAttrsMapping}
+                            attr={algoAttr}
+                            onAttrChange={onAlgoAttrChange}
+                            dir={algoDir}
+                            onDirChange={onAlgoDirChange}
                         />
 
                         <Backtests 

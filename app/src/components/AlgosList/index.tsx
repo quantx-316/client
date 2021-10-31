@@ -9,6 +9,8 @@ import {useHistory} from 'react-router-dom';
 import {dispatchErrorMsg} from '../../features/utils/notifs';
 import {dateStrToDate} from '../../features/utils/time';
 import Pagination from '../Pagination';
+import Sorting from '../Sorting';
+
 
 type NodePath = number[];
 
@@ -37,6 +39,11 @@ type AlgosListProps = {
     onPageChange: any,
     pageAfterDelete: any,
     pagination: any,
+    attrsMapping: any, 
+    attr: string,
+    onAttrChange: any, 
+    dir: string,
+    onDirChange: any,
 }
 
 const AlgosList  = (props: AlgosListProps) => {
@@ -186,8 +193,8 @@ const AlgosList  = (props: AlgosListProps) => {
         <Card
             style={{
                 minWidth: "550px",
-                minHeight: "450px",
-                maxHeight: "450px",
+                minHeight: "500px",
+                maxHeight: "500px",
                 display: "flex",
                 justifyContent: "flex-start",
                 alignContent: "center",
@@ -218,6 +225,14 @@ const AlgosList  = (props: AlgosListProps) => {
                     New
                 </Button>
             </div>
+
+            <Sorting 
+                attrsMapping={props.attrsMapping}
+                attr={props.attr}
+                onAttrChange={props.onAttrChange}
+                dir={props.dir}
+                onDirChange={props.onDirChange}
+            />
             
             {
                 nodes && nodes.length > 0 &&

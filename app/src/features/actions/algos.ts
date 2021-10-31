@@ -103,9 +103,9 @@ export const deleteAlgo = (algoID: number, callBack?: any) => (dispatch: any) =>
 
 }
 
-export const fetchAlgos = (page: number, size: number) => (dispatch: any) => {
+export const fetchAlgos = (page: number, size: number, attr: string, dir: string) => (dispatch: any) => {
 
-    return algoService.getAlgos(page, size).then(
+    return algoService.getAlgos(page, size, attr, dir).then(
         (res) => {
 
             dispatch({

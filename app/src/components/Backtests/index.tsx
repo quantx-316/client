@@ -170,17 +170,6 @@ const Backtest = () => {
 
     const onViewClick = () => {
 
-        // //@ts-ignore 
-        // if (selectedInfo && selectedInfo.id) {
-        //     history.push({
-        //         pathname: "/editor",
-        //         state: {
-        //             algo: selectedInfo,
-        //         }
-        //     });
-        //     return 
-        // } 
-
         //@ts-ignore 
         if (selectedInfo && selectedInfo.id) {            
             history.push({
@@ -232,8 +221,8 @@ const Backtest = () => {
         <Card
             style={{
                 minWidth: "550px",
-                minHeight: "450px",
-                maxHeight: "450px",
+                minHeight: "500px",
+                maxHeight: "500px",
                 display: "flex",
                 justifyContent: "flex-start",
                 alignContent: "center",
