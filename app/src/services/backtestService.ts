@@ -10,8 +10,8 @@ class backtestService {
         // backend is expecting time in unix time 
     }
 
-    static getBacktestByAlgoID(algoID: number, page: number, size: number) {
-        const url = backtestURL + "?algo_id=" + algoID + "&page=" + page + "&size=" + size;
+    static getBacktestByAlgoID(algoID: number, page: number, size: number, attr: string, dir: string) {
+        const url = backtestURL + "?algo_id=" + algoID + "&page=" + page + "&size=" + size + "&sort_by=" + attr + "&sort_direction=" + dir;
         return requests.authGet(url);
     }
 

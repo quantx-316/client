@@ -38,9 +38,9 @@ export const createBacktest = (backtest: BacktestSubmit, createBacktestCallback:
     )
 }
 
-export const getBacktestByAlgo = (algoID: number, page: number, size: number, callBack?: any) => (dispatch: any) => {
+export const getBacktestByAlgo = (algoID: number, page: number, size: number, attr: string, dir: string, callBack?: any) => (dispatch: any) => {
 
-    return backtestService.getBacktestByAlgoID(algoID, page, size).then(
+    return backtestService.getBacktestByAlgoID(algoID, page, size, attr, dir).then(
         (res) => {
 
             dispatch({

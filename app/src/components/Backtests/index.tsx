@@ -10,6 +10,7 @@ import {useHistory} from 'react-router-dom';
 import {dispatchErrorMsg, dispatchSuccessMsg} from '../../features/utils/notifs';
 import {dateStrToDate} from '../../features/utils/time';
 import Pagination from '../Pagination';
+import Sorting from '../Sorting';
 
 type NodePath = number[];
 
@@ -52,7 +53,7 @@ const Backtest = () => {
     const [size, setSize] = useState(10);
     const onPageChange = (e: any, page: number) => {
         setPage(page);
-        refreshNodes(page);
+        refreshNodes(page, attr, dir);
     }
 
     const pageAfterDelete = () => {
@@ -207,15 +208,42 @@ const Backtest = () => {
         return () => clearTimeout(timer);
     }, [refreshOpen])
 
-    const refreshNodes = (page: number, callBack?: any) => {
+    const refreshNodes = (page: number, attr: string, dir: string, callBack?: any) => {
         console.log("REFRESH NODES");
         console.log(selectedAlgoId);
-        redDispatch(getBacktestByAlgo(selectedAlgoId, page, size, callBack));
+        redDispatch(getBacktestByAlgo(selectedAlgoId, page, size, convertAttr(attr), dir, callBack));
     }
 
     const onRefreshClick = () => {
         onPageChange(null, page);
     }
+
+    const attrsMapping = {
+        "Score": "score",
+        "Test Interval": "test_interval", // this does not do a sort of 1 day vs 1 week, it sorts 1d vs 1w and 'groups' them
+        "Test Start": "test_start",
+        "Test End": "test_end",
+        "Created": "created",
+    };
+    const [attr, setAttr] = useState("Created");
+    const convertAttr = (attr: string) => {
+        //@ts-ignore
+        return attrsMapping[attr];
+    }
+    const onAttrChange = (newAttr: string) => {
+        setAttr(newAttr);
+        refreshNodes(page, newAttr, dir);
+    }
+    const [dir, setDir] = useState("desc");
+    const onDirChange = (newDir: string) => {
+        setDir(newDir);
+        refreshNodes(page, attr, newDir);
+    }
+
+    // useEffect(() => {
+    //     fetchNextAlgos(algoPage, algoSize, algoAttr, algoDir);
+    // }, [])
+
 
     return (
         <Card
@@ -259,8 +287,16 @@ const Backtest = () => {
                         onClick={() => onRefreshClick()}
                     >
                     </Button>
-            </Popover2>
+                </Popover2>
             </div>
+
+            <Sorting 
+                attrsMapping={attrsMapping}
+                attr={attr}
+                onAttrChange={onAttrChange}
+                dir={dir}
+                onDirChange={onDirChange}
+            />
 
             {
                 nodes && nodes.length > 0 && 
