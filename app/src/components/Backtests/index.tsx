@@ -69,6 +69,7 @@ const Backtest = () => {
     useEffect(() => {
 
         console.log("USE EFFECT REFRESH");
+        console.log(selectedAlgoId);
 
         onPageChange(null, 1);
     }, [selectedAlgoId])
@@ -210,9 +211,9 @@ const Backtest = () => {
     }, [refreshOpen])
 
     const refreshNodes = (page: number, attr: string, dir: string, callBack?: any) => {
-        console.log("REFRESH NODES");
-        console.log(selectedAlgoId);
-        redDispatch(getBacktestByAlgo(selectedAlgoId, page, size, convertAttr(attr), dir, callBack));
+        if (selectedAlgoId > 0) {
+            redDispatch(getBacktestByAlgo(selectedAlgoId, page, size, convertAttr(attr), dir, callBack));
+        }
     }
 
     const onRefreshClick = () => {
