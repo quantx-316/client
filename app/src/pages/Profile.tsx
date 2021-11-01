@@ -4,6 +4,15 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Button, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch, H2 } from "@blueprintjs/core";
 import {fetchUser, updateUser} from '../features/actions/users';
 import ProfileEdit from '../components/ProfileEdit';
+import {fetchPublicAlgos} from '../features/actions/algos';
+import Sorting from '../components/Sorting';
+import Pagination from '../components/Pagination';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemButton from '@mui/material/ListItemButton';
 
 const Profile = () => {
 
@@ -34,7 +43,63 @@ const Profile = () => {
         }
     }, [username])
 
-    const [editUser, setEditUser] = useState(null);
+    const [publicAlgos, setPublicAlgos] = useState({});
+    const [publicAlgosArr, setPublicAlgosArr] = useState([]);
+
+    useEffect(() => {
+
+        console.log(publicAlgos);
+        //@ts-ignore 
+        setPublicAlgosArr(publicAlgos && publicAlgos.items ? publicAlgos.items: [])
+    }, [publicAlgos])
+
+    const [page, setPage] = useState(1);
+    const onPageChange = (e: any, newPage: number) => {
+        setPage(newPage);
+        refreshPublicAlgos(newPage, size, attr, dir);
+    }
+    const [size, setSize] = useState(10);
+    const attrsMapping = {
+        "Score": "score",
+        "Test Interval": "test_interval",
+        "Test Start": "test_start",
+        "Test End": "test_end",
+        "Created": "created"
+    }
+    const [attr, setAttr] = useState("Score");
+    const convertAttr = (attr: string) => {
+        //@ts-ignore 
+        return attrsMapping[attr];
+    }
+    const [dir, setDir] = useState("desc");
+    const onDirChange = (newDir: string) => {
+        setDir(newDir);
+        refreshPublicAlgos(page, size, attr, newDir);
+    }
+    const onAttrChange = (newAttr: string) => {
+        setAttr(newAttr);
+        refreshPublicAlgos(page, size, newAttr, dir);
+    }
+
+    const refreshPublicAlgos = (
+        page: number, 
+        size: number, 
+        attr: string, 
+        dir: string 
+    ) => {
+        dispatch(fetchPublicAlgos(
+            username, 
+            page,
+            size,
+            convertAttr(attr),
+            dir,
+            setPublicAlgos
+        ))
+    }
+
+    useEffect(() => {
+        refreshPublicAlgos(page, size, attr, dir)
+    }, [username])
 
     const onFirstNameChange = (e: any) => {
         setUser({
@@ -167,6 +232,60 @@ const Profile = () => {
                                             {user.description ?? "N/A"}
                                         </p>
                                     </div>
+                                </div>
+                            }
+
+                            {
+                                //@ts-ignore 
+                                publicAlgosArr && publicAlgosArr.length && publicAlgosArr.length > 0 &&
+                                <div
+                                    className="full centered-top-col"
+                                >
+                                    <H5>
+                                        Best Backtests
+                                    </H5>
+
+                                    <Sorting 
+                                        attrsMapping={attrsMapping}
+                                        attr={attr}
+                                        onAttrChange={onAttrChange}
+                                        dir={dir}
+                                        onDirChange={onDirChange}
+                                    />
+                                    
+                                    <List 
+                                         sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+                                    >
+                                        {
+                                            publicAlgosArr.map((obj, idx) => {
+
+                                                return (
+                                                        <ListItem 
+                                                            alignItems="flex-start"
+                                                            //@ts-ignore 
+                                                        >
+
+                                                        </ListItem>
+                                                
+                                                )
+
+                                            })
+                                        }
+                                    </List>
+
+                                    {
+                                        //@ts-ignore
+                                        publicAlgos && publicAlgos.pagination &&
+
+                                        <Pagination 
+                                            //@ts-ignore
+                                            pagination={publicAlgos.pagination}
+                                            onPageChange={onPageChange}
+                                            page={page}
+                                        />
+
+                                    }
+
                                 </div>
                             }
 

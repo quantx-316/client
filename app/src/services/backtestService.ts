@@ -25,6 +25,14 @@ class backtestService {
         return requests.authDelete(url);
     }
 
+    static backtestLeaderboard(
+        page: number, size: number, attr: string, dir: string
+    ) {
+        const url = backtestURL + "leaderboard/" + "?page=" + page + "&size=" + size + "&sort_by=" + attr + "&sort_direction=" + dir;
+
+        return requests.authGet(url);
+    }
+
 }
 
 export default backtestService;

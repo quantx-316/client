@@ -109,3 +109,18 @@ export const deleteBacktest = (backtestID: number, callBack?: any) => (dispatch:
     )
 
 }
+
+export const getBacktestLeaderboard = (page: number, size: number, attr: string, dir: string, callBack: any) => (dispatch: any) => {
+
+    return backtestService.backtestLeaderboard(
+        page, size, attr, dir 
+    ).then(
+        (res) => {
+            callBack(res.data);
+        },
+        (error) => {
+            genericErrorHandler(error, dispatch);
+        }
+    )
+
+} 

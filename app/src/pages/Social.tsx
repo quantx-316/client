@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {
     Tab,
     Tabs,
@@ -12,8 +14,13 @@ import {
   import Divider from '@mui/material/Divider';
   import ListItemText from '@mui/material/ListItemText';
   import ListItemAvatar from '@mui/material/ListItemAvatar';
+  import ListItemButton from '@mui/material/ListItemButton';
   import Avatar from '@mui/material/Avatar';
   import Typography from '@mui/material/Typography';
+  import {getBacktestLeaderboard} from '../features/actions/backtest';
+  import {dateStrToDate} from '../features/utils/time';
+  import Sorting from '../components/Sorting';
+  import Pagination from '../components/Pagination';
 
 const Social: React.FC = () => {
     return (
@@ -35,83 +42,153 @@ const Social: React.FC = () => {
 
 const LeaderboardPanel = () => {
 
-    const testLeaderboard = [
-        {
-            username: "bluedevil",
-            score: 15
-        },
-        {
-            username: "cameroncrazy",
-            score: 10,
-        },
-        {
-            username: "dook",
-            score: 5
-        },
-        {
-            username: "dook",
-            score: 5
-        },
-        {
-            username: "dook",
-            score: 5
-        },
-        {
-            username: "dook",
-            score: 5
-        },
-        {
-            username: "dook",
-            score: 5
-        },
-        {
-            username: "dook",
-            score: 5
-        }
-    ]
+    const [leaderboard, setLeaderboard] = useState({});
+    const [leaderboardArr, setLeaderboardArr] = useState([]);
+
+    const dispatch = useDispatch();
+
+    const history = useHistory();
+
+    const onUserClick = (username: string) => {
+        history.push('/profile/' + username);
+    }
+
+    const [page, setPage] = useState(1);
+    const onPageChange = (e: any, newPage: number) => {
+        setPage(newPage);
+        refreshLeaderboard(newPage, size, attr, dir);
+    }
+    const [size, setSize] = useState(10);
+    const attrsMapping = {
+        "Score": "score",
+        "Test Interval": "test_interval",
+        "Test Start": "test_start",
+        "Test End": "test_end",
+        "Created": "created"
+    }
+    const [attr, setAttr] = useState("Score");
+    const convertAttr = (attr: string) => {
+        //@ts-ignore 
+        return attrsMapping[attr];
+    }
+    const [dir, setDir] = useState("desc");
+    const onDirChange = (newDir: string) => {
+        setDir(newDir);
+        refreshLeaderboard(page, size, attr, newDir);
+    }
+    const onAttrChange = (newAttr: string) => {
+        setAttr(newAttr);
+        refreshLeaderboard(page, size, newAttr, dir);
+    }
+
+    const refreshLeaderboard = (
+        page: number, 
+        size: number, 
+        attr: string, 
+        dir: string,
+    ) => {
+        dispatch(getBacktestLeaderboard(
+            page, 
+            size, 
+            convertAttr(attr),
+            dir,
+            setLeaderboard
+        ));
+    }
+
+    useEffect(() => {
+        //@ts-ignore 
+        setLeaderboardArr(leaderboard && leaderboard.items ? leaderboard.items : []);
+    }, [leaderboard])
+
+    useEffect(() => {
+        console.log("SOCIAL LEADERBOARD USE EFFECT")
+        refreshLeaderboard(page, size, attr, dir);
+    }, [])
 
     return (
-        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-        
+        <List 
+            sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+        >
+
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignContent: "center"
+                }}
+            >
+                <Sorting 
+                    attrsMapping={attrsMapping}
+                    attr={attr}
+                    onAttrChange={onAttrChange}
+                    dir={dir}
+                    onDirChange={onDirChange}
+                />
+            </div>
+
             {
-                testLeaderboard.map((obj, idx) => {
+                leaderboardArr.map((obj, idx) => {
 
                     return (
-                        <>
-                            <ListItem alignItems="flex-start">
+                            <ListItem 
+                                alignItems="flex-start"
+                                //@ts-ignore 
+                                key={obj.username}
+                            >
+                                <ListItemButton
+                                    //@ts-ignore 
+                                    onClick={() => onUserClick(obj.username)}
+                                >
                                     <ListItemAvatar>
                                         <Avatar />
                                     </ListItemAvatar>
                                     <ListItemText
+                                        //@ts-ignore 
                                         primary={obj.username}
                                         secondary={
-                                            <React.Fragment>
-                                                {/* <Typography
-                                                sx={{ display: 'inline' }}
-                                                component="span"
-                                                variant="body2"
-                                                color="text.primary"
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: "column"
+                                                }}
+                                            >
+                                                <div
+                                                    style={{
+                                                        display: "flex",
+                                                    }}
                                                 >
-                                                Ali Connors
-                                                </Typography> */}
-                                                Score: {obj.score}
-                                            </React.Fragment>
+                                                    <p>Score: </p>
+                                                    {/* @ts-ignore */}
+                                                    <p>{obj.score}</p>
+                                                </div>
+
+                                            </div>
                                         }
                                     />
-                            </ListItem>
 
-                            {
-                                idx < testLeaderboard.length-1 ?
-                                <Divider variant="inset" component="li" />
-                                :
-                                <></>
-                            }
-                        </>
+                                </ListItemButton>
+                                    
+                            </ListItem>
                        
                     )
 
                 })
             }
+
+            {
+                //@ts-ignore
+                leaderboard && leaderboard.pagination &&
+
+                <Pagination 
+                    //@ts-ignore
+                    pagination={leaderboard.pagination}
+                    onPageChange={onPageChange}
+                    page={page}
+                />
+
+            }
+
       </List>
     )
 

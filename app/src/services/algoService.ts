@@ -24,6 +24,11 @@ class algoService {
         return requests.authGet(url);
     }
 
+    static getPublicAlgos(username: string, page: number, size: number, attr: string, dir: string) {
+        const url = algoURL + "public/" + "?username=" + username + "&page=" + page + "&size=" + size + "&sort_by=" + attr + "&sort_direction=" + dir;
+        return requests.authGet(url);
+    }
+
 }
 
 export default algoService;

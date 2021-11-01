@@ -13,8 +13,9 @@ import {
     Algo,
 } from '../types/algos';
 import {dispatchErrorMsg, dispatchSuccessMsg} from '../utils/notifs';
-import { getErrorMsg, handleError } from "../utils/other";
+import { getErrorMsg, handleError, genericErrorHandler } from "../utils/other";
 import {getPagination} from '../utils/pages';
+
 
 export const selectAlgo = (algo_id: number) => (dispatch: any) => {
     dispatch({
@@ -127,6 +128,21 @@ export const fetchAlgos = (page: number, size: number, attr: string, dir: string
             })
 
             dispatchErrorMsg(dispatch, msg);
+        }
+    )
+
+}
+
+export const fetchPublicAlgos = (username: string, page: number, size: number, attr: string, dir: string, callBack: any) => (dispatch: any) => {
+
+    return algoService.getPublicAlgos(
+        username, page, size, attr, dir
+    ).then(
+        (res) => {
+            callBack(res.data);
+        },
+        (error) => {
+            genericErrorHandler(error, dispatch);
         }
     )
 
