@@ -34,3 +34,23 @@ export const updateUser = (user: any, callBack: any) => (dispatch: any) => {
     )
 
 }
+
+export const getCurrentUser = (errCallBack: any) => (dispatch: any) => {
+
+    return userService.getCurrentUser().then(
+        (res) => {
+            dispatch({
+                type: USER_FETCH_SUCCESS, 
+                payload: res.data,
+            })
+        },
+        (error) => {
+            genericErrorHandler(error, dispatch);
+            dispatch({
+                type: USER_FETCH_FAIL,
+            })
+            errCallBack();
+        }
+    )
+
+}

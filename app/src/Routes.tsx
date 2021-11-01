@@ -1,6 +1,6 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { HashRouter, Switch, Route, Redirect } from 'react-router-dom'
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import Dev from './pages/Dev'
 import { Home } from './pages/Home'
 import Backtests from './pages/Backtests';
@@ -13,7 +13,9 @@ import Profile from './pages/Profile';
 import Auth from './pages/Auth';
 import Social from './pages/Social';
 import NotFound from './pages/NotFound';
-
+import {getCurrentUser} from './features/actions/users';
+import {logout} from './features/actions/auth';
+import {dispatchErrorMsg} from './features/utils/notifs';
 import ProtectedRoute from './components/ProtectedRoute';
 import Backtest from './pages/Backtest';
 
@@ -21,6 +23,25 @@ const Routes: React.FC = () => {
 
   //@ts-ignore 
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
+  const dispatch = useDispatch();
+
+  const onLogout = () => {
+    dispatchErrorMsg(dispatch, "Please log in again.")
+  }
+
+  const onUserVerifyError = () => {
+    dispatch(logout(onLogout));
+  }
+
+  useEffect(() => {
+    console.log('ROUTES USE EFFECT');
+
+    if (isLoggedIn) {
+      dispatch(getCurrentUser(onUserVerifyError))
+    }
+
+  }, [])
 
   return (
     <HashRouter>
