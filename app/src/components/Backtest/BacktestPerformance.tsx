@@ -22,8 +22,14 @@ const BacktestPerformance = (props: BacktestProps) => {
                 //@ts-ignore 
                 props.backtest && !(props.backtest.result==null) &&
 
-                <h1>placeholder performance</h1>
+                <>
+                    <h1>placeholder performance</h1>
 
+                    <h3>Backtest Results (raw):</h3>
+                    <code>
+                        {JSON.stringify(props.backtest.result, null, 4)}
+                    </code>
+                </>
             }
 
         </div>
