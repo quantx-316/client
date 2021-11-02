@@ -6,6 +6,7 @@ import { dispatchErrorMsg } from '../features/utils/notifs'
 import { useDispatch } from 'react-redux'
 import { Classes, Popover2 } from '@blueprintjs/popover2'
 import { fetchQuoteAllowedTimes } from '../features/actions/quotes'
+import {dateStrToDate} from '../features/utils/time'
 
 const Competition: React.FC = () => {
   const [title, setTitle] = useState('')
@@ -17,6 +18,10 @@ const Competition: React.FC = () => {
 
   const [minDate, setMinDate] = useState<Date | null>(null)
   const [maxDate, setMaxDate] = useState<Date | null>(null)
+  const now = new Date()
+  //minimum competition end date is 7 days from now
+  const minCompEndDate = dateStrToDate(now.setDate(now.getDate() + 7))
+  const maxCompEndDate = dateStrToDate(now.setDate(now.getDate() + 30))
 
   const [startDateOpen, setStartDateOpen] = useState(false)
   const [endDateOpen, setEndDateOpen] = useState(false)
@@ -79,13 +84,13 @@ const Competition: React.FC = () => {
       return
     }
 
-    if (compEndDate <= new Date()) {
-      dispatchErrorMsg(
-        dispatch,
-        'Competition end date must be greater than today'
-      )
-      return
-    }
+    // if (compEndDate <= new Date()) {
+    //   dispatchErrorMsg(
+    //     dispatch,
+    //     'Competition end date must be greater than today'
+    //   )
+    //   return
+    // }
 
     if (startDate >= endDate) {
       dispatchErrorMsg(
@@ -261,8 +266,8 @@ const Competition: React.FC = () => {
           handleClose={onCompEndDateClose}
           title={'Select competition end date'}
           onDateChange={onCompEndDateChange}
-          minDate={minDate}
-          maxDate={maxDate}
+          minDate={minCompEndDate}
+          maxDate={maxCompEndDate}
         />
       </div>
     </>
