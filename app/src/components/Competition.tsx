@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import TimeSelectDialog from './TimeSelectDialog'
 import { dateToUnix } from '../features/utils/time'
 import { Button, FormGroup, InputGroup, TextArea } from '@blueprintjs/core'
 import { dispatchErrorMsg } from '../features/utils/notifs'
 import { useDispatch } from 'react-redux'
+import { Classes, Popover2 } from '@blueprintjs/popover2'
+import { fetchQuoteAllowedTimes } from '../features/actions/quotes'
 
 const Competition: React.FC = () => {
   const [title, setTitle] = useState('')
@@ -19,6 +21,12 @@ const Competition: React.FC = () => {
   const [startDateOpen, setStartDateOpen] = useState(false)
   const [endDateOpen, setEndDateOpen] = useState(false)
   const [compEndDateOpen, setCompEndDateOpen] = useState(false)
+
+  const [runPopoverOpen, setRunPopoverOpen] = useState(false)
+
+  useEffect(() => {
+    fetchQuoteAllowedTimes(dispatch, setMinDate, setMaxDate);
+  }, [])
 
   const dispatch = useDispatch()
 
@@ -71,8 +79,11 @@ const Competition: React.FC = () => {
       return
     }
 
-    if (compEndDate <= new Date) {
-      dispatchErrorMsg(dispatch, 'Competition end date must be greater than today')
+    if (compEndDate <= new Date()) {
+      dispatchErrorMsg(
+        dispatch,
+        'Competition end date must be greater than today'
+      )
       return
     }
 
@@ -83,11 +94,10 @@ const Competition: React.FC = () => {
       )
     }
 
-    const startTime = dateToUnix(startDate);
-    const endTime = dateToUnix(endDate);
+    const startTime = dateToUnix(startDate)
+    const endTime = dateToUnix(endDate)
 
-
-    if (title && description) {
+    if (title && description && startTime && endTime) {
       return
     }
 
@@ -197,22 +207,33 @@ const Competition: React.FC = () => {
                 <Button
                   rightIcon="calendar"
                   text={
-                    endDate ? endDate.toString() : 'No competition end date'
+                    compEndDate
+                      ? compEndDate.toString()
+                      : 'No competition end date'
                   }
-                  onClick={() => onEndDateOpen()}
+                  onClick={() => onCompEndDateOpen()}
                   outlined={true}
                   fill={true}
                 />
               </FormGroup>
-
-              <Button
-                rightIcon="tick-circle"
-                intent="success"
-                text="Create"
-                type="submit"
-                large={true}
-                outlined={false}
-              />
+              <Popover2
+                interactionKind="click"
+                popoverClassName={Classes.POPOVER2_CONTENT_SIZING}
+                autoFocus={false}
+                enforceFocus={false}
+                placement="bottom-end"
+                isOpen={runPopoverOpen}
+                content="Run started"
+              >
+                <Button
+                  rightIcon="tick-circle"
+                  intent="success"
+                  text="Create"
+                  type="submit"
+                  large={true}
+                  outlined={false}
+                />
+              </Popover2>
             </div>
           </div>
         </form>
