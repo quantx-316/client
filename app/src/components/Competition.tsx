@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import TimeSelectDialog from './TimeSelectDialog'
-// import { dateToUnix } from '../features/utils/time'
+import { dateToUnix } from '../features/utils/time'
 import { Button, FormGroup, InputGroup, TextArea } from '@blueprintjs/core'
 import { dispatchErrorMsg } from '../features/utils/notifs'
 import { useDispatch } from 'react-redux'
@@ -11,12 +11,14 @@ const Competition: React.FC = () => {
 
   const [startDate, setStartDate] = useState<Date | null>(null)
   const [endDate, setEndDate] = useState<Date | null>(null)
+  const [compEndDate, setCompEndDate] = useState<Date | null>(null)
 
   const [minDate, setMinDate] = useState<Date | null>(null)
   const [maxDate, setMaxDate] = useState<Date | null>(null)
 
   const [startDateOpen, setStartDateOpen] = useState(false)
   const [endDateOpen, setEndDateOpen] = useState(false)
+  const [compEndDateOpen, setCompEndDateOpen] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -33,12 +35,24 @@ const Competition: React.FC = () => {
     setEndDateOpen(true)
   }
 
+  const onCompEndDateClose = () => {
+    setCompEndDateOpen(false)
+  }
+
+  const onCompEndDateOpen = () => {
+    setCompEndDateOpen(true)
+  }
+
   const onStartDateChange = (date: Date) => {
     setStartDate(date)
   }
 
   const onEndDateChange = (date: Date) => {
     setEndDate(date)
+  }
+
+  const onCompEndDateChange = (date: Date) => {
+    setCompEndDate(date)
   }
 
   const onChangeTitle = (e: React.FormEvent<HTMLInputElement>) => {
@@ -51,6 +65,27 @@ const Competition: React.FC = () => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
+
+    if (startDate === null || endDate === null || compEndDate === null) {
+      dispatchErrorMsg(dispatch, 'Start/End date & Time Interval required')
+      return
+    }
+
+    if (compEndDate <= new Date) {
+      dispatchErrorMsg(dispatch, 'Competition end date must be greater than today')
+      return
+    }
+
+    if (startDate >= endDate) {
+      dispatchErrorMsg(
+        dispatch,
+        'End date must be strictly greater than end date'
+      )
+    }
+
+    const startTime = dateToUnix(startDate);
+    const endTime = dateToUnix(endDate);
+
 
     if (title && description) {
       return
@@ -69,14 +104,14 @@ const Competition: React.FC = () => {
           padding: '25px',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            maxWidth: '800px',
-          }}
-        >
-          <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              maxWidth: '800px',
+            }}
+          >
             <FormGroup
               disabled={true}
               inline={false}
@@ -88,7 +123,7 @@ const Competition: React.FC = () => {
                 fill={true}
                 large={true}
                 placeholder="Enter your title"
-                leftIcon="edit"
+                // leftIcon="edit"
                 onChange={onChangeTitle}
                 value={title}
               ></InputGroup>
@@ -102,8 +137,8 @@ const Competition: React.FC = () => {
               labelInfo={true && '(required)'}
             >
               <TextArea
+                // growVertically={true}
                 fill={true}
-                growVertically={true}
                 large={true}
                 placeholder="Enter your description"
                 onChange={onChangeDescription}
@@ -173,14 +208,14 @@ const Competition: React.FC = () => {
               <Button
                 rightIcon="tick-circle"
                 intent="success"
-                text="Register"
+                text="Create"
                 type="submit"
                 large={true}
                 outlined={false}
               />
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
 
         <TimeSelectDialog
           isOpen={startDateOpen}
@@ -201,10 +236,10 @@ const Competition: React.FC = () => {
         />
 
         <TimeSelectDialog
-          isOpen={startDateOpen}
-          handleClose={onStartDateClose}
-          title={'Select start date'}
-          onDateChange={onStartDateChange}
+          isOpen={compEndDateOpen}
+          handleClose={onCompEndDateClose}
+          title={'Select competition end date'}
+          onDateChange={onCompEndDateChange}
           minDate={minDate}
           maxDate={maxDate}
         />
