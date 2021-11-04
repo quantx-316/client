@@ -509,7 +509,7 @@ const Editor = (props: EditorProps) => {
               >
                 <Button
                   rightIcon="saved"
-                  text="Save"
+                  text={isNewAlgo ? "Create": "Save"}
                   onClick={handleClickSave}
                   large={true}
                   outlined={true}
