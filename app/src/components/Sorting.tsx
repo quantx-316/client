@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'; 
 import { Select, ItemRenderer } from '@blueprintjs/select'
 import { Button, MenuItem } from '@blueprintjs/core'
+import { Classes, Popover2 } from "@blueprintjs/popover2";
 
 type SortingProps = {
     attrsMapping: any,
@@ -74,11 +75,22 @@ const Sorting = (props: SortingProps) => {
                 />
             </Select>   
 
-            <Button 
-                //@ts-ignore
-                icon={props.dir in dirToIcon ? dirToIcon[props.dir] : null}
-                onClick={() => onDirChange()}
-            />
+            <Popover2
+                interactionKind="hover"
+                placement="right"
+                popoverClassName={Classes.POPOVER2_CONTENT_SIZING}
+                autoFocus={false}
+                enforceFocus={false}
+                content={props.dir === "asc" ? "Ascending" : "Descending"}
+            >
+
+                <Button 
+                    //@ts-ignore
+                    icon={props.dir in dirToIcon ? dirToIcon[props.dir] : null}
+                    onClick={() => onDirChange()}
+                />
+            
+            </Popover2>
 
         </div>
     )
