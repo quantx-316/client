@@ -47,11 +47,9 @@ const RegisterPanel: React.FC = () => {
   }
   const onChangePassword = (e: React.FormEvent<HTMLInputElement>) => {
     setPassword(e.currentTarget.value)
-    console.log(password)
   }
   const onChangeEmail = (e: React.FormEvent<HTMLInputElement>) => {
     setEmail(e.currentTarget.value)
-    console.log(email)
   }
 
   const handleSubmit = (e: React.SyntheticEvent) => {
