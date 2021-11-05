@@ -15,6 +15,9 @@ import { Backtest } from '../../features/types/backtest';
 import BacktestPerformance from './BacktestPerformance';
 import {dateStrToDate} from '../../features/utils/time';
 
+import * as test_data from './test.json';
+import * as test_err_data from './test_error.json';
+
 const moment = require('moment');
 
 type BacktestProps = {
@@ -27,6 +30,11 @@ const BacktestComp = (props: BacktestProps) => {
         console.log('backtest');
         console.log(props.backtest);
     }, [])
+
+    //@ts-ignore 
+    const test_info = test_data.default; 
+    //@ts-ignore 
+    const test_err_info = test_err_data.default;
 
     return (
         <div
@@ -45,7 +53,11 @@ const BacktestComp = (props: BacktestProps) => {
                     className="centered-top-col"
                 >
                     <Tab id="code" title="Code Snapshot" panel = {<BacktestEditor backtest={props.backtest} />} />
-                    <Tab id="perf" title="Performance" panel = {<BacktestPerformance backtest={props.backtest} />} />
+                    <Tab id="perf" title="Performance" panel = {<BacktestPerformance backtest={{
+                        ...props.backtest,
+                        //@ts-ignore 
+                        result: JSON.stringify(test_info)
+                    }} />} />
                 </Tabs>
             }
            
