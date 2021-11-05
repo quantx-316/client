@@ -110,7 +110,9 @@ const BacktestComp = (props: BacktestProps) => {
       }
     
     return (
-        <div>
+        <div
+          className="centered-top-col"
+        >
             <div>
                 <div>
                 <label>Theme: &nbsp;

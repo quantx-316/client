@@ -3,6 +3,14 @@ import { Backtest } from '../../features/types/backtest';
 import { Line } from 'react-chartjs-2'; 
 import 'chartjs-adapter-moment';
 // import {dateStrToDate} from '../../features/utils/time';
+import {
+    Tab,
+    Tabs,
+    InputGroup,
+    Icon,
+    Button,
+    FormGroup,
+  } from '@blueprintjs/core';
 
 type BacktestProps = {
     backtest?: Backtest
@@ -121,7 +129,12 @@ const BacktestPerformance = (props: BacktestProps) => {
     }, [props.backtest])
 
     return (
-        <div>
+        <div
+            className="full"
+            style={{
+                minWidth: "100%"
+            }}
+        >
 
             {
                 executing && 
@@ -158,17 +171,68 @@ const BacktestPerformance = (props: BacktestProps) => {
 
             {
                 !executing && (errors == null) && !loading && 
-                <>
-                    <h1>WIP:</h1>
-
-                    <Line
-                        data={data}
-                        //@ts-ignore 
-                        options={options}
-                    />
-
-                </>
+                <Tabs
+                    className="centered-top-col-lite full"
+                    defaultSelectedTabId={"sum"}
+                >
+                    <Tab id="sum" title="Summary" panel = {
+                        <SummaryPanel data={data} options={options} />
+                    } />
+                    <Tab id="det" title="Detailed" 
+                        panel = {<div></div>} />
+                </Tabs>
+                // <div
+                //     className="full"
+                // >
+                //     <div
+                //         className="full"
+                //         style={{
+                //             padding: "10px"
+                //         }}
+                //     >
+                //         <h2>Graph: </h2>
+                //         <Line
+                //             data={data}
+                //             //@ts-ignore 
+                //             options={options}
+                //         />
+                //     </div>
+                // </div> 
             }
+
+        </div>
+    )
+
+}
+
+type SummaryPanelProps = {
+    data: any,
+    options: any, 
+}
+
+const SummaryPanel = ({data, options} : SummaryPanelProps) => {
+
+    return (
+        <div
+            className="full"
+            style={{
+                padding: "10px"
+            }}
+        >
+            <h2>Graph: </h2>
+            <Line
+                data={data}
+                //@ts-ignore 
+                options={options}
+            />
+        </div>
+    )
+}
+
+const DetailedPanel = () => {
+
+    return (
+        <div>
 
         </div>
     )

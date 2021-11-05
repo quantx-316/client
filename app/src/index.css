@@ -85,6 +85,11 @@ code {
   align-items: center;
 }
 
+.centered-top-col-lite {
+  display: flex;
+  flex-direction: column;
+}
+
 .centered-col {
   display: flex;
   flex-direction: column;
@@ -162,6 +167,23 @@ code {
 
 .bp3-tab-list > div {
   font-size: 20px !important;
+}
+/* .bp3-tab-panel {
+  height: "100%" !improtant;
+  width: "100% !important";
+} */
+
+.bp3-tab-list {
+  justify-content: center !important; 
+  align-content: center !important;
+}
+
+.bp3-tab-indicator-wrapper {
+  display: none !important; 
+}
+
+.bp3-tabs {
+  align-self: center !important;
 }
 
 .bp3-tree {
