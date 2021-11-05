@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { Backtest } from '../../features/types/backtest';
 import { Line } from 'react-chartjs-2'; 
 import 'chartjs-adapter-moment';
+import { Cell, Column, Table2, TruncatedFormat, JSONFormat } from "@blueprintjs/table";
 // import {dateStrToDate} from '../../features/utils/time';
 import {
     Tab,
@@ -170,34 +171,26 @@ const BacktestPerformance = (props: BacktestProps) => {
             }
 
             {
-                !executing && (errors == null) && !loading && 
+                !executing && (errors == null) && !loading && rawData && 
                 <Tabs
                     className="centered-top-col-lite full"
                     defaultSelectedTabId={"sum"}
                 >
                     <Tab id="sum" title="Summary" panel = {
-                        <SummaryPanel data={data} options={options} />
+                        <SummaryPanel 
+                            graphData={data} 
+                            graphOptions={options} 
+                            rawData={rawData}    
+                        />
                     } />
                     <Tab id="det" title="Detailed" 
-                        panel = {<div></div>} />
+                        panel = {<DetailedPanel 
+                            //@ts-ignore 
+                            transactions={rawData.transactions}
+                            //@ts-ignore 
+                            portfolio={rawData.portfolio_over_time}
+                        />} />
                 </Tabs>
-                // <div
-                //     className="full"
-                // >
-                //     <div
-                //         className="full"
-                //         style={{
-                //             padding: "10px"
-                //         }}
-                //     >
-                //         <h2>Graph: </h2>
-                //         <Line
-                //             data={data}
-                //             //@ts-ignore 
-                //             options={options}
-                //         />
-                //     </div>
-                // </div> 
             }
 
         </div>
@@ -206,11 +199,12 @@ const BacktestPerformance = (props: BacktestProps) => {
 }
 
 type SummaryPanelProps = {
-    data: any,
-    options: any, 
+    graphData: any,
+    graphOptions: any, 
+    rawData: any, 
 }
 
-const SummaryPanel = ({data, options} : SummaryPanelProps) => {
+const SummaryPanel = ({graphData, graphOptions, rawData} : SummaryPanelProps) => {
 
     return (
         <div
@@ -219,21 +213,148 @@ const SummaryPanel = ({data, options} : SummaryPanelProps) => {
                 padding: "10px"
             }}
         >
+            <div>
+                <h5>
+                    Return On Investment (ROI): {rawData.roi}
+                </h5>
+                <h5>
+                    Final Portfolio Value: {rawData.final_value}
+                </h5>
+            </div>
+
             <h2>Graph: </h2>
             <Line
-                data={data}
+                data={graphData}
                 //@ts-ignore 
-                options={options}
+                options={graphOptions}
             />
         </div>
     )
 }
 
-const DetailedPanel = () => {
+type DetailedPanelProps = {
+    transactions: any, 
+    portfolio: any, 
+}
+
+const DetailedPanel = ({transactions, portfolio} : DetailedPanelProps) => {
+
+    const renderAction = (row: number) => <Cell>{transactions[row].action}</Cell>;
+    const renderSymbol = (row: number) => <Cell>{transactions[row].symbol}</Cell>;
+    const renderShares = (row: number) => <Cell>{transactions[row].num_shares}</Cell>;
+
+    const renderTime = (row: number) => {
+
+        return (
+            <Cell>
+                <TruncatedFormat>
+                    {portfolio[row].time}
+
+                </TruncatedFormat>           
+            </Cell>
+        )
+    
+    }
+    const renderValue = (row: number) => <Cell>{portfolio[row].portfolio.value}</Cell>;
+    const renderCash = (row: number) => <Cell>{portfolio[row].portfolio.cash}</Cell>;
+    const renderPositions = (row: number) => {
+        return (
+            <Cell>
+                <JSONFormat>{portfolio[row].portfolio.positions}</JSONFormat>
+            </Cell>
+        )
+    };
+    const renderErrors = (row: number) => {
+        return (
+            <Cell>
+                {'errors' in portfolio[row].portfolio && portfolio[row].portfolio.errors ? 
+                    <JSONFormat>
+                        {portfolio[row].portfolio.errors}
+                    </JSONFormat>
+                    :
+                    'N/A'
+                }
+            </Cell>
+        )
+    }
 
     return (
-        <div>
+        <div
+            className="centered full"
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                padding: "20px"
+            }}
+        >   
+            <div>
+                <h2>
+                    Transactions
+                </h2>
+                <div
+                    style={{
+                        height: "300px",
+                    }}
+                >
+                    <Table2
+                        numRows={transactions.length}
+                    >
+                        <Column 
+                            name="Action"
+                            cellRenderer={renderAction}
+                        />  
 
+                        <Column 
+                            name="Symbol"
+                            cellRenderer={renderSymbol}
+                        />
+
+                        <Column 
+                            name="# Shares"
+                            cellRenderer={renderShares}
+                        />  
+                    </Table2>
+                </div>
+            </div>
+            <div>
+                <h2>
+                    Portfolio 
+                </h2>
+                <div
+                    style={{
+                        height: "300px",
+                    }}
+                >
+                    <Table2
+                        numRows={portfolio.length}
+                    >
+                        <Column 
+                            name="Time (UTC)"
+                            cellRenderer={renderTime}
+                        />  
+
+                        <Column 
+                            name="Value"
+                            cellRenderer={renderValue}
+                        />
+
+                        <Column 
+                            name="Cash"
+                            cellRenderer={renderCash}
+                        />  
+
+                        <Column 
+                            name="Positions"
+                            cellRenderer={renderPositions}
+                        />
+
+                        <Column 
+                            name="Errors"
+                            cellRenderer={renderErrors}
+                        />
+                    </Table2>
+                </div>
+            </div>
         </div>
     )
 
