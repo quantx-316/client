@@ -54,11 +54,7 @@ const BacktestComp = (props: BacktestProps) => {
                 >
                     <Tab id="code" title="Code Snapshot" panel = {<BacktestEditor backtest={props.backtest} />} />
                     <Tab id="perf" title="Performance" 
-                        panel = {<BacktestPerformance backtest={{
-                        ...props.backtest,
-                        //@ts-ignore 
-                        result: JSON.stringify(test_info)
-                    }} />} />
+                        panel = {<BacktestPerformance backtest={props.backtest} />} />
                 </Tabs>
             }
            

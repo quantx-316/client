@@ -11,7 +11,10 @@ import {
     Icon,
     Button,
     FormGroup,
+    Menu,
+    MenuItem,
   } from '@blueprintjs/core';
+import { Popover2 } from "@blueprintjs/popover2";
 
 type BacktestProps = {
     backtest?: Backtest
@@ -81,12 +84,16 @@ const BacktestPerformance = (props: BacktestProps) => {
 
         const cashDataSet = {
             label: 'Cash',
+            backgroundColor: "#90EE90",
+            borderColor: "#90EE90",
             //@ts-ignore 
             data: cash,
         }
 
         const portDataSet = {
             label: 'Portfolio Value',
+            backgroundColor: "#FF7F7F",
+            borderColor: "#FF7F7F",
             //@ts-ignore 
             data: portVal,
         }
@@ -175,6 +182,7 @@ const BacktestPerformance = (props: BacktestProps) => {
                 <Tabs
                     className="centered-top-col-lite full"
                     defaultSelectedTabId={"sum"}
+                    renderActiveTabPanelOnly={true}
                 >
                     <Tab id="sum" title="Summary" panel = {
                         <SummaryPanel 
@@ -278,81 +286,115 @@ const DetailedPanel = ({transactions, portfolio} : DetailedPanelProps) => {
         )
     }
 
+    const [tab, setTab] = useState('trans');
+
+    const SimpleSelectMenu = (
+        <Menu>
+            <MenuItem 
+                text="Transactions"
+                onClick={() => setTab('trans')}
+            />
+            <MenuItem 
+                text="Portfolio"
+                onClick={() => setTab('port')}
+            /> 
+        </Menu>
+    )
+
+    const TransTable = () => (
+        <Table2
+            numRows={transactions.length}
+        >
+            <Column 
+                name="Action"
+                cellRenderer={renderAction}
+            />  
+
+            <Column 
+                name="Symbol"
+                cellRenderer={renderSymbol}
+            />
+
+            <Column 
+                name="# Shares"
+                cellRenderer={renderShares}
+            />  
+        </Table2>
+    )
+
+    const PortTable = () => (
+        <Table2
+            numRows={portfolio.length}
+        >
+            <Column 
+                name="Time (UTC)"
+                cellRenderer={renderTime}
+            />  
+
+            <Column 
+                name="Value"
+                cellRenderer={renderValue}
+            />
+
+            <Column 
+                name="Cash"
+                cellRenderer={renderCash}
+            />  
+
+            <Column 
+                name="Positions"
+                cellRenderer={renderPositions}
+            />
+
+            <Column 
+                name="Errors"
+                cellRenderer={renderErrors}
+            />
+        </Table2>
+    )
+    
+
     return (
         <div
             className="centered full"
             style={{
                 display: "flex",
-                flexDirection: "column",
+                // flexDirection: "column",
                 padding: "20px"
             }}
         >   
-            <div>
-                <h2>
-                    Transactions
-                </h2>
-                <div
-                    style={{
-                        height: "300px",
-                    }}
-                >
-                    <Table2
-                        numRows={transactions.length}
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "20px"
+                }}
+            >
+                <div>
+                    <Popover2
+                        content={SimpleSelectMenu}
+                        placement="bottom"
+                        autoFocus={false}
+                        enforceFocus={false}
                     >
-                        <Column 
-                            name="Action"
-                            cellRenderer={renderAction}
-                        />  
-
-                        <Column 
-                            name="Symbol"
-                            cellRenderer={renderSymbol}
+                        <Button 
+                            text={tab === 'trans' ? "Transactions" : "Portfolio"}
                         />
-
-                        <Column 
-                            name="# Shares"
-                            cellRenderer={renderShares}
-                        />  
-                    </Table2>
+                    </Popover2>
                 </div>
-            </div>
-            <div>
-                <h2>
-                    Portfolio 
-                </h2>
                 <div
                     style={{
                         height: "300px",
                     }}
                 >
-                    <Table2
-                        numRows={portfolio.length}
-                    >
-                        <Column 
-                            name="Time (UTC)"
-                            cellRenderer={renderTime}
-                        />  
-
-                        <Column 
-                            name="Value"
-                            cellRenderer={renderValue}
-                        />
-
-                        <Column 
-                            name="Cash"
-                            cellRenderer={renderCash}
-                        />  
-
-                        <Column 
-                            name="Positions"
-                            cellRenderer={renderPositions}
-                        />
-
-                        <Column 
-                            name="Errors"
-                            cellRenderer={renderErrors}
-                        />
-                    </Table2>
+                    {
+                        tab === 'trans' &&
+                        <TransTable />
+                    }
+                    {
+                        tab === "port" && 
+                        <PortTable />
+                    }
                 </div>
             </div>
         </div>
