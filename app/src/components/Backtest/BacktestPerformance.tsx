@@ -13,6 +13,7 @@ import {
     FormGroup,
     Menu,
     MenuItem,
+    Card,
   } from '@blueprintjs/core';
 import { Popover2 } from "@blueprintjs/popover2";
 
@@ -257,7 +258,6 @@ const DetailedPanel = ({transactions, portfolio} : DetailedPanelProps) => {
             <Cell>
                 <TruncatedFormat>
                     {portfolio[row].time}
-
                 </TruncatedFormat>           
             </Cell>
         )
@@ -268,17 +268,48 @@ const DetailedPanel = ({transactions, portfolio} : DetailedPanelProps) => {
     const renderPositions = (row: number) => {
         return (
             <Cell>
-                <JSONFormat>{portfolio[row].portfolio.positions}</JSONFormat>
+                <Popover2
+                    content={
+                    <Card>
+                        <pre>
+                            {JSON.stringify(portfolio[row].portfolio.positions, null, 2)}
+                        </pre>
+                    </Card>
+                    }
+                    autoFocus={false}
+                    enforceFocus={false}
+                    interactionKind='hover'
+                >
+                    <JSONFormat>{portfolio[row].portfolio.positions}</JSONFormat>
+                </Popover2>
             </Cell>
         )
     };
     const renderErrors = (row: number) => {
+
+        const error = 'errors' in portfolio[row].portfolio && portfolio[row].portfolio.errors; 
+
         return (
-            <Cell>
-                {'errors' in portfolio[row].portfolio && portfolio[row].portfolio.errors ? 
-                    <JSONFormat>
-                        {portfolio[row].portfolio.errors}
-                    </JSONFormat>
+            <Cell
+                interactive={true}
+            >
+                {error ? 
+                    <Popover2
+                        content={
+                        <Card>
+                            <pre>
+                                {JSON.stringify(portfolio[row].portfolio.errors, null, 4)}
+                            </pre>
+                        </Card>
+                        }
+                        autoFocus={false}
+                        enforceFocus={false}
+                        interactionKind='hover'
+                    >
+                        <JSONFormat>
+                            {portfolio[row].portfolio.errors}
+                        </JSONFormat>
+                    </Popover2>
                     :
                     'N/A'
                 }
@@ -286,7 +317,7 @@ const DetailedPanel = ({transactions, portfolio} : DetailedPanelProps) => {
         )
     }
 
-    const [tab, setTab] = useState('trans');
+    const [tab, setTab] = useState('port');
 
     const SimpleSelectMenu = (
         <Menu>
@@ -322,36 +353,39 @@ const DetailedPanel = ({transactions, portfolio} : DetailedPanelProps) => {
         </Table2>
     )
 
-    const PortTable = () => (
-        <Table2
-            numRows={portfolio.length}
-        >
-            <Column 
-                name="Time (UTC)"
-                cellRenderer={renderTime}
-            />  
 
-            <Column 
-                name="Value"
-                cellRenderer={renderValue}
-            />
+    const PortTable = () => {
+        return (
+            <Table2
+                numRows={portfolio.length}
+            >
+                <Column 
+                    name="Time (UTC)"
+                    cellRenderer={renderTime}
+                />  
 
-            <Column 
-                name="Cash"
-                cellRenderer={renderCash}
-            />  
+                <Column 
+                    name="Value"
+                    cellRenderer={renderValue}
+                />
 
-            <Column 
-                name="Positions"
-                cellRenderer={renderPositions}
-            />
+                <Column 
+                    name="Cash"
+                    cellRenderer={renderCash}
+                />  
 
-            <Column 
-                name="Errors"
-                cellRenderer={renderErrors}
-            />
-        </Table2>
-    )
+                <Column 
+                    name="Positions"
+                    cellRenderer={renderPositions}
+                />
+
+                <Column 
+                    name="Errors"
+                    cellRenderer={renderErrors}
+                />
+            </Table2>
+        )
+    }
     
 
     return (
