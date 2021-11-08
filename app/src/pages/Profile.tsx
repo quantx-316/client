@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import { useParams, useLocation } from 'react-router-dom';
-import { Button, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch, H2 } from "@blueprintjs/core";
+import { Button, Card, Classes, H1, H5, TextArea} from "@blueprintjs/core";
 import {fetchUser, updateUser} from '../features/actions/users';
 import ProfileEdit from '../components/ProfileEdit';
 import {fetchPublicAlgos} from '../features/actions/algos';
@@ -261,16 +261,21 @@ const Profile = () => {
                                         <p>
                                             {/* @ts-ignore */}
                                             <b>Last Name: </b>{user.lastname ?? "N/A"}
-                                        </p>                         
+                                        </p>         
                                     </div>
                                     <div>
                                         <H5>
                                             Description
                                         </H5>
-                                        <p>
+                                        <TextArea
+                                            growVertically={true}
+                                            large={true}
+                                            fill={true}
+                                            readOnly={true}
+                                        >
                                             {/* @ts-ignore */}
                                             {user.description ?? "N/A"}
-                                        </p>
+                                        </TextArea>
                                     </div>
                                 </div>
                             }
@@ -282,6 +287,7 @@ const Profile = () => {
                  !editing && viewPublicScore && publicAlgosArr && publicAlgosArr.length && publicAlgosArr.length > 0 &&
                  <Backtests 
                     title={"Public Scores"}
+                    info={"Scores for the best performing backtest per algorithm that the user has made public"}
                     backtests={publicAlgosArr}
                     page={page}
                     onPageChange={onPageChange}

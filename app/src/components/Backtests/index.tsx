@@ -43,6 +43,7 @@ function forNodeAtPath(nodes: TreeNodeInfo[], path: NodePath, callback: (node: T
 
 type BacktestProps = {
     title?: string,
+    info?: string, 
     backtests: any, 
     page: number, 
     onPageChange: any, 
@@ -217,13 +218,47 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
                     borderBottom: "1px solid #d9e1eb"
                 }}
             >
-                <H1>
-                    {
-                        props.title ? 
-                        props.title :
-                        "Backtests"
-                    }
-                </H1>
+                <div
+                    style={{
+                        display: "flex",
+                        gap: "10px"
+                    }}
+                >
+                    <H1>
+                        {
+                            props.title ? 
+                            props.title :
+                            "Backtests"
+                        }
+                    </H1>
+
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                        }}
+                    >
+                        {
+                            props.info && 
+                            <Popover2
+                                interactionKind="hover" 
+                                autoFocus={false}
+                                popoverClassName={Popover2Classes.POPOVER2_CONTENT_SIZING} 
+                                enforceFocus={false}
+                                placement="left" 
+                                content={props.info}
+                            >
+                                <Button 
+                                    className={Classes.BUTTON}
+                                    icon={"info-sign"}
+                                />
+                            </Popover2>
+                        }
+                    </div>
+                    
+
+                </div>
                 {
                     props.onRefresh &&
                     
