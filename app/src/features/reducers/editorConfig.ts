@@ -6,19 +6,20 @@ import {
   FETCH_EDITOR_CONFIG_FAIl,
 } from '../types/editorConfig'
 
-let editorConfig
+let editorConfig: EditorConfigTypes
 
 try {
   editorConfig = JSON.parse(localStorage.getItem('editorConfig') || '{}')
+  console.log({editorConfig})
 } catch (e) {
   console.log('editorConfig')
   console.log(e)
-  console.log(editorConfig)
   localStorage.removeItem('editorConfig')
+  // @ts-ignore
   editorConfig = null
 }
 
-const initialState = editorConfig ? editorConfig : null
+const initialState: EditorConfigTypes = editorConfig
 
 export default function (state = initialState, action: EditorConfigTypes) {
   switch (action.type) {

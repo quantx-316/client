@@ -2,9 +2,6 @@ type editorConfigState = {
   fontSize: number,
   theme: string,
   tabSize: number,
-  timeInterval: string,
-  startTime: any,
-  endTime: any,
 }
 
 export interface SaveEditorConfigSuccessAction {

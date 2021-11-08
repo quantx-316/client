@@ -53,6 +53,9 @@ const Editor = (props: EditorProps) => {
   const defaultValue = `def helloworld():
     print('hello world')
   `
+  //@ts-ignore
+  const editorConfigState = useSelector(state => state.editorConfig)
+  console.log(editorConfigState)
 
   const [popOverOpen, setPopoverOpen] = useState(false)
 
@@ -146,21 +149,6 @@ const Editor = (props: EditorProps) => {
     event?: React.SyntheticEvent<HTMLElement, Event> | undefined
   ) => {
     setSelectTimeInterval(timeInterval)
-    setEditorState({
-      ...editorState,
-      timeInterval,
-    })
-
-    dispatch(
-      saveEditorConfig(
-        editorState.fontSize,
-        editorState.theme,
-        editorState.tabSize,
-        editorState.timeInterval,
-        editorState.startTime,
-        editorState.endTime
-      )
-    )
   }
 
   useEffect(() => {
@@ -178,40 +166,10 @@ const Editor = (props: EditorProps) => {
 
   const onStartDateChange = (date: Date) => {
     setStartDate(date)
-    setEditorState({
-      ...editorState,
-      startTime: dateToUnix(date),
-    })
-
-    dispatch(
-      saveEditorConfig(
-        editorState.fontSize,
-        editorState.theme,
-        editorState.tabSize,
-        editorState.timeInterval,
-        editorState.startTime,
-        editorState.endTime
-      )
-    )
   }
 
   const onEndDateChange = (date: Date) => {
     setEndDate(date)
-    setEditorState({
-      ...editorState,
-      endTime: dateToUnix(date),
-    })
-
-    dispatch(
-      saveEditorConfig(
-        editorState.fontSize,
-        editorState.theme,
-        editorState.tabSize,
-        editorState.timeInterval,
-        editorState.startTime,
-        editorState.endTime
-      )
-    )
   }
 
   const [startDateOpen, setStartDateOpen] = useState(false)
@@ -250,12 +208,12 @@ const Editor = (props: EditorProps) => {
   )
 
   const [editorState, setEditorState] = useState({
-    fontSize: 14,
-    theme: 'solarized_dark',
-    tabSize: 4,
-    timeInterval: '0',
-    startTime: dateToUnix(new Date()),
-    endTime: dateToUnix(new Date()),
+    // fontSize: 14,
+    // theme: 'solarized_dark',
+    // tabSize: 4,
+    fontSize: editorConfigState.fontSize,
+    theme: editorConfigState.theme,
+    tabSize: editorConfigState.tabSize
   })
 
   const onEditorChange = (newValue: string) => {
@@ -276,12 +234,9 @@ const Editor = (props: EditorProps) => {
 
     dispatch(
       saveEditorConfig(
-        editorState.fontSize,
+        fontSize,
         editorState.theme,
         editorState.tabSize,
-        editorState.timeInterval,
-        editorState.startTime,
-        editorState.endTime
       )
     )
   }
@@ -314,11 +269,8 @@ const Editor = (props: EditorProps) => {
     dispatch(
       saveEditorConfig(
         editorState.fontSize,
-        editorState.theme,
-        editorState.tabSize,
-        editorState.timeInterval,
-        editorState.startTime,
-        editorState.endTime
+        theme,
+        editorState.tabSize
       )
     )
   }
@@ -352,10 +304,7 @@ const Editor = (props: EditorProps) => {
       saveEditorConfig(
         editorState.fontSize,
         editorState.theme,
-        editorState.tabSize,
-        editorState.timeInterval,
-        editorState.startTime,
-        editorState.endTime
+        tabSize
       )
     )
   }
@@ -459,7 +408,7 @@ const Editor = (props: EditorProps) => {
                 <Select
                   items={themes}
                   itemRenderer={renderTheme}
-                  activeItem={editorState.theme}
+                  activeItem={editorConfigState.theme}
                   onItemSelect={onThemeChange}
                   filterable={false}
                 >
@@ -478,12 +427,12 @@ const Editor = (props: EditorProps) => {
                 <Select
                   items={fontsize}
                   itemRenderer={renderFontSize}
-                  activeItem={editorState.fontSize}
+                  activeItem={editorConfigState.fontSize}
                   onItemSelect={onFontSizeChange}
                   filterable={false}
                 >
                   <Button
-                    text={editorState.fontSize}
+                    text={editorConfigState.fontSize}
                     rightIcon="double-caret-vertical"
                     outlined={true}
                   />
@@ -497,12 +446,12 @@ const Editor = (props: EditorProps) => {
                 <Select
                   items={tabsize}
                   itemRenderer={renderFontSize}
-                  activeItem={editorState.tabSize}
+                  activeItem={editorConfigState.tabSize}
                   onItemSelect={onTabSizeChange}
                   filterable={false}
                 >
                   <Button
-                    text={editorState.tabSize}
+                    text={editorConfigState.tabSize}
                     rightIcon="double-caret-vertical"
                     outlined={true}
                   />

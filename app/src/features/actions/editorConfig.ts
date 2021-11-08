@@ -9,19 +9,13 @@ export const saveEditorConfig = (
   fontSize: number,
   theme: string,
   tabSize: number,
-  timeInterval: string,
-  startTime: any,
-  endTime: any
 ) => (dispatch: any) => {
 
 
   const editorConfig = {
     fontSize: fontSize,
     theme: theme,
-    tabSize: tabSize,
-    timeInterval: timeInterval,
-    startTime: startTime,
-    endTime: endTime
+    tabSize: tabSize
   }
   try {
     //@ts-ignore
@@ -35,10 +29,7 @@ export const saveEditorConfig = (
   if (
     !fontSize ||
     !theme ||
-    !tabSize ||
-    !timeInterval ||
-    !startTime ||
-    !endTime
+    !tabSize 
   ) {
     dispatch({
       type: SAVE_EDITOR_CONFIG_FAIL,
@@ -53,7 +44,6 @@ export const saveEditorConfig = (
     },
   })
   console.log('dipatche')
-
   //maybe dispatch success msg?
 
   return Promise.resolve()
