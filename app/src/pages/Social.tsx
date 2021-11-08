@@ -21,7 +21,6 @@ import {
   import {dateStrToDate} from '../features/utils/time';
   import Sorting from '../components/Sorting';
   import Pagination from '../components/Pagination';
-  import Competition from '../components/Competition';
 
 const Social: React.FC = () => {
     return (
@@ -199,7 +198,7 @@ const CompetitionPanel = () => {
 
     return (
         <div>
-            <Competition/>
+            
         </div>
     )
 
