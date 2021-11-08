@@ -7,9 +7,16 @@ export interface editorConfigState {
   endTime: any
 }
 
-export interface updateEditorConfig {
-  type: typeof UPDATE_EDITOR_CONFIG,
+export interface SaveEditorConfigSuccessAction {
+  type: typeof SAVE_EDITOR_CONFIG_SUCCESS,
   payload: editorConfigState
 }
 
-export const UPDATE_EDITOR_CONFIG = 'UPDATE_EDITOR_CONFIG'
+export interface SaveEditorConfigFailAction {
+  type: typeof SAVE_EDITOR_CONFIG_FAIL
+}
+
+export const SAVE_EDITOR_CONFIG_SUCCESS = 'SAVE_EDITOR_CONFIG_SUCCESS'
+export const SAVE_EDITOR_CONFIG_FAIL = 'SAVE_EDITOR_CONFIG_FAIL'
+
+export type EditorConfigTypes = SaveEditorConfigFailAction | SaveEditorConfigSuccessAction

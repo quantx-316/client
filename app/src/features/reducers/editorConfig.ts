@@ -12,8 +12,11 @@ export const defaultEditorConfigState: editorConfigState = {
 const initialEditorConfigStateStr = localStorage.getItem('editorConfig') || '[]'
 
 const initialEditorConfigState = function() {
+  let editorConfig;
   try {
-    return JSON.parse(initialEditorConfigStateStr) || defaultEditorConfigState
+    editorConfig = JSON.parse(initialEditorConfigStateStr) || defaultEditorConfigState
+
+    return editorConfig
   } catch(e) {
     console.log(e)
     localStorage.setItem('editorConfig', JSON.stringify([]))
@@ -21,10 +24,7 @@ const initialEditorConfigState = function() {
   }
 }();
 
-const initialState: editorConfigState = {
-  editorConfigState: initialEditorConfigState
-}
-
+const initialState = initialEditorConfigState
 
 export default function editorConfigReducer(state = initialState, action: updateEditorConfig): editorConfigState {
   switch(action.type) {
