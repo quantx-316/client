@@ -13,22 +13,24 @@ export const saveEditorConfig = (
   startTime: any,
   endTime: any
 ) => (dispatch: any) => {
-  let editorConfig
+
+
+  const editorConfig = {
+    fontSize: fontSize,
+    theme: theme,
+    tabSize: tabSize,
+    timeInterval: timeInterval,
+    startTime: startTime,
+    endTime: endTime
+  }
   try {
     //@ts-ignore
-    editorConfig = JSON.parse(localStorage.getItem('editorConfig'))
+    // editorConfig = JSON.parse(localStorage.getItem('editorConfig'))
+    localStorage.setItem("editorConfig", JSON.stringify(editorConfig))
+    console.log("try")
   } catch (error) {
     console.log(error)
   }
-
-  const {
-    fontSize,
-    theme,
-    tabSize,
-    timeInterval,
-    startTime,
-    endTime,
-  } = editorConfig
 
   if (
     !fontSize ||
@@ -50,6 +52,7 @@ export const saveEditorConfig = (
       editorConfig: editorConfig,
     },
   })
+  console.log('dipatche')
 
   //maybe dispatch success msg?
 

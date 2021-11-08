@@ -47,6 +47,7 @@ class authService {
   static logout() {
     localStorage.removeItem("access");
     localStorage.removeItem("user");
+    localStorage.removeItem("editorConfig")
   }
 
   static register(email: string, username: string, password: string) {
