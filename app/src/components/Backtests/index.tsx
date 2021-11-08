@@ -252,6 +252,7 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
                                 <Button 
                                     className={Classes.BUTTON}
                                     icon={"info-sign"}
+                                    minimal={true}
                                 />
                             </Popover2>
                         }

@@ -9,6 +9,11 @@ class userService {
         return requests.authGet(url);
     }
 
+    static getUserByID(userID: number) {
+        const url = userURL + "?user_id=" + userID; 
+        return requests.authGet(url);
+    }
+
     static getUser(username: string) {
         const url = userURL + "?username=" + username; 
         return requests.authGet(url);

@@ -32,6 +32,8 @@ const saveNewState = (newState: StarredState) => {
         localStorage.setItem("starred", JSON.stringify(newState));
     } catch (error) {
         console.log("ERROR SAVING NEW STATE IN STARRED");
+        console.log(newState);
+        console.log(error);
         if (localStorage.getItem("starred")) {
             localStorage.removeItem("starred");
         }
@@ -44,6 +46,11 @@ export default function starredReducer(state = initialState, action: StarredActi
     switch(action.type) {
 
         case ADD_BACKTEST:
+
+            if (action.payload.hasOwnProperty('secondaryLabel')) {
+                //@ts-ignore 
+                delete action.payload['secondaryLabel']
+            }
 
             const newState1 = {
                 ...state, 
@@ -79,6 +86,11 @@ export default function starredReducer(state = initialState, action: StarredActi
                 backtests: {
                     ...state.backtests,
                 }
+            }
+
+            if (action.payload.hasOwnProperty('secondaryLabel')) {
+                //@ts-ignore 
+                delete action.payload['secondaryLabel']
             }
 
             newState5.backtests[action.payload.id] = action.payload; 

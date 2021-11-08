@@ -13,7 +13,7 @@ import {
 } from '../features/actions/quotes'
 import { dispatchErrorMsg, dispatchSuccessMsg } from '../features/utils/notifs'
 import { saveEditorConfig } from '../features/actions/editorConfig'
-import { dateToUnix } from '../features/utils/time'
+import { dateToUnix, dateStrToDate } from '../features/utils/time'
 
 import 'ace-builds/src-noconflict/mode-jsx'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
@@ -57,20 +57,25 @@ const Editor = (props: EditorProps) => {
   const editorConfigState = useSelector(state => state.editorConfig)
   console.log(editorConfigState)
 
+  const default_end_date = new Date();
+  default_end_date.setHours(0, 0, 0);
+  const default_start_date = new Date();
+  default_start_date.setHours(0, 0, 0);
+  default_start_date.setDate(default_end_date.getDate()-30);
+
+
   const [popOverOpen, setPopoverOpen] = useState(false)
 
-  // also need dropdown for time interval
-  const [timeIntervals, setTimeIntervals] = useState(null)
-  const [timeIntervalsArr, setTimeIntervalsArr] = useState([])
-  const [selectTimeInterval, setSelectTimeInterval] = useState(null)
+  // also need dropdown for time interval 
+  const [timeIntervals, setTimeIntervals] = useState(null);
+  const [timeIntervalsArr, setTimeIntervalsArr] = useState([]);
+  const [selectTimeInterval, setSelectTimeInterval] = useState(null); 
+  const [startDate, setStartDate] = useState<Date>(props.algo? dateStrToDate(props.algo.test_start_default) : default_start_date);
+  const [endDate, setEndDate] = useState<Date>(props.algo? dateStrToDate(props.algo.test_end_default) : default_end_date);
 
-  const [startDate, setStartDate] = useState<Date | null>(null)
-  const [endDate, setEndDate] = useState<Date | null>(null)
-
-  const [minDate, setMinDate] = useState<Date | null>(null)
-  const [maxDate, setMaxDate] = useState<Date | null>(null)
-
-  const [runPopoverOpen, setRunPopoverOpen] = useState(false)
+  const [minDate, setMinDate] = useState<Date | null>(null);
+  const [maxDate, setMaxDate] = useState<Date | null>(null);
+  const [runPopoverOpen, setRunPopoverOpen] = useState(false);
 
   const clickRunCallback = () => {
     setRunPopoverOpen(true)
@@ -151,6 +156,11 @@ const Editor = (props: EditorProps) => {
     setSelectTimeInterval(timeInterval)
   }
 
+  useEffect(()=> {
+    //@ts-ignore
+    setSelectTimeInterval(props.algo? props.algo.test_interval_default : timeIntervalsArr[0]);
+  }, [timeIntervalsArr])
+
   useEffect(() => {
     //@ts-ignore
     setTimeIntervalsArr(Object.keys(timeIntervals ?? {}))
@@ -165,11 +175,13 @@ const Editor = (props: EditorProps) => {
   }, [])
 
   const onStartDateChange = (date: Date) => {
-    setStartDate(date)
+    setStartDate(date);
+    setAlgoState({...algoState, test_start_default: date});
   }
 
   const onEndDateChange = (date: Date) => {
-    setEndDate(date)
+    setEndDate(date);
+    setAlgoState({...algoState, test_end_default: date})
   }
 
   const [startDateOpen, setStartDateOpen] = useState(false)
@@ -188,24 +200,29 @@ const Editor = (props: EditorProps) => {
     setEndDateOpen(true)
   }
 
-  const [isNewAlgo, setIsNewAlgo] = useState(props.algo ? false : true)
+  const [isNewAlgo, setIsNewAlgo] = useState(props.algo ? false : true);
 
-  const [algoState, setAlgoState] = useState<Algo>(
-    props.algo ?? {
-      id: -1,
-      owner: -1,
-      //@ts-ignore
-      title: props.algo ? props.algo.title : '',
-      //@ts-ignore
-      code: props.algo ? props.algo.code : defaultValue,
-      //@ts-ignore
-      created: props.algo ? props.algo.created : '',
-      //@ts-ignore
-      edited_at: props.algo ? props.algo.edited_at : '',
-      //@ts-ignore
-      public: false,
-    }
-  )
+  const [algoState, setAlgoState] = useState<Algo>(props.algo ?? 
+  {
+    id: -1, 
+    owner: -1, 
+    //@ts-ignore
+    title: props.algo ? props.algo.title : '', 
+    //@ts-ignore
+    code: props.algo ? props.algo.code : defaultValue, 
+    //@ts-ignore
+    created: props.algo ? props.algo.created : '', 
+    //@ts-ignore
+    test_start_default: props.algo ? props.algo.test_start_default : default_start_date,
+    //@ts-ignore
+    test_end_default: props.algo ? props.algo.test_end_default : default_end_date,
+    //@ts-ignore
+    test_interval_default : props.algo ? props.algo.test_interval_default : selectTimeInterval,
+    //@ts-ignore
+    edited_at: props.algo ? props.algo.edited_at : '', 
+    //@ts-ignore
+    public: props.algo ? props.algo.public : false,
+  })
 
   const [editorState, setEditorState] = useState({
     // fontSize: 14,
@@ -359,15 +376,15 @@ const Editor = (props: EditorProps) => {
     console.log(algoState)
 
     if (isNewAlgo) {
-      dispatch(
-        createAlgo(
-          {
-            title: algoState.title,
-            code: algoState.code,
-          },
-          createAlgoCallBack
-        )
-      )
+      dispatch(createAlgo({
+        title: algoState.title,
+        code: algoState.code,
+        test_start_default: dateToUnix(startDate),
+        test_end_default: dateToUnix(endDate),
+        //@ts-ignore
+        test_interval_default: selectTimeInterval,
+        public: algoState.public,
+      }, createAlgoCallBack))
     } else {
       dispatch(updateAlgo(algoState, updateAlgoCallBack))
     }

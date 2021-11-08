@@ -2,6 +2,21 @@ import userService from '../../services/userService';
 import { getErrorMsg, handleError, genericErrorHandler } from "../utils/other";
 import {USER_FETCH_SUCCESS, USER_FETCH_FAIL} from '../types/auth';
 
+
+export const fetchUserById = (userID: number, callBack?: any) => (dispatch: any) => {
+    return userService.getUserByID(userID).then(
+        (res) => {
+            if (callBack) {
+                callBack(res.data);
+            }
+        },
+        (error) => {
+            genericErrorHandler(error, dispatch);
+        }
+    )
+}
+
+
 export const fetchUser = (username: string, callBack: any) => (dispatch: any) => {
 
     return userService.getUser(username).then(
