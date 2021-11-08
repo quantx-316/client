@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Tab,
     Tabs,
@@ -15,6 +15,7 @@ import { Backtest } from '../../features/types/backtest';
 import BacktestPerformance from './BacktestPerformance';
 import {dateStrToDate} from '../../features/utils/time';
 import { Classes, Popover2 } from "@blueprintjs/popover2";
+import {fetchUserById} from '../../features/actions/users';
 
 import {
     addBacktest,
@@ -48,8 +49,17 @@ const BacktestComp = (props: BacktestProps) => {
         } else {
             dispatch(addBacktest(props.backtest));
         }
-
     }
+
+    const [owner, setOwner] = useState(null);
+
+    useEffect(() => {
+
+        if (props.backtest && props.backtest.owner) {
+            dispatch(fetchUserById(props.backtest.owner, setOwner));
+        }
+
+    }, [props.backtest])
 
     return (
         <div
@@ -91,8 +101,14 @@ const BacktestComp = (props: BacktestProps) => {
                 </div>
 
             </div>
+
+            <div>
+                <p><b>Submitted:</b> {props.backtest && props.backtest.created ? dateStrToDate(props.backtest.created).toString() : ""}</p>
+
+                {/* @ts-ignore */}
+                <p><b>By:</b> {owner && owner.username ? owner.username : "N/A"}</p>
+            </div>
             
-            <p><b>Submitted:</b> {props.backtest && props.backtest.created ? dateStrToDate(props.backtest.created).toString() : ""}</p>
 
             {
                 props.backtest && 

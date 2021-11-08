@@ -69,7 +69,7 @@ export const getBacktestByAlgo = (algoID: number, page: number, size: number, at
     )
 }
 
-export const getBacktestByID = (backtestID: number, getBacktestCallback: any) => (dispatch: any) => {
+export const getBacktestByID = (backtestID: number, getBacktestCallback: any, failCallBack?: any) => (dispatch: any) => {
 
     return backtestService.getBacktestByID(backtestID).then(
         (res) => {
@@ -77,6 +77,7 @@ export const getBacktestByID = (backtestID: number, getBacktestCallback: any) =>
         },
         (error) => {
             genericErrorHandler(error, dispatch);
+            failCallBack();
         }
     )
 
