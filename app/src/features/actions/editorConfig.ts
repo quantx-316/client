@@ -1,45 +1,74 @@
-import { editorConfigState, SAVE_EDITOR_CONFIG } from "../types/editorConfig"
+import {
+  FETCH_EDITOR_CONFIG_FAIl,
+  FETCH_EDITOR_CONFIG_SUCCESS,
+  SAVE_EDITOR_CONFIG_FAIL,
+  SAVE_EDITOR_CONFIG_SUCCESS,
+} from '../types/editorConfig'
 
-
-
-
-export default class editorConfigHandler {
-  dispatch
-
-  constructor(dispatch: Function) {
-    this.dispatch = dispatch
+export const saveEditorConfig = (
+  fontSize: number,
+  theme: string,
+  tabSize: number,
+  timeInterval: string,
+  startTime: any,
+  endTime: any
+) => (dispatch: any) => {
+  let editorConfig
+  try {
+    //@ts-ignore
+    editorConfig = JSON.parse(localStorage.getItem('editorConfig'))
+  } catch (error) {
+    console.log(error)
   }
 
-  // get(state: editorConfigState) {
-  //   return this.getAttrFromEditorConfigState(state, 'status')
-  // }
+  const {
+    fontSize,
+    theme,
+    tabSize,
+    timeInterval,
+    startTime,
+    endTime,
+  } = editorConfig
 
-  saveEditorConfigState(state: editorConfigState, attr: any) {
-    const editorConfigState = state 
-    this.handleDispatchSaveEditorConfig(editorConfigState.fontSize, editorConfigState.theme, editorConfigState.tabSize, editorConfigState.timeInterval, editorConfigState.startTime, editorConfigState.endTime)
-
-  }
-// fontSize: number
-//   theme: string
-//   tabSize: number
-//   timeInterval: string
-//   startTime: any
-//   endTime: any
-
-  handleDispatchSaveEditorConfig(fontSize: number, theme: string, tabSize: number, timeInterval: string, startTime: any, endTime: any) {
-
-    let configState: editorConfigState = {
-      fontSize: fontSize,
-      theme: theme,
-      tabSize: tabSize,
-      timeInterval: timeInterval,
-      startTime: startTime,
-      endTime: endTime
-    }
-
-    this.dispatch({
-      type: SAVE_EDITOR_CONFIG,
-      payload: configState
+  if (
+    !fontSize ||
+    !theme ||
+    !tabSize ||
+    !timeInterval ||
+    !startTime ||
+    !endTime
+  ) {
+    dispatch({
+      type: SAVE_EDITOR_CONFIG_FAIL,
     })
+    return Promise.reject()
   }
+
+  dispatch({
+    type: SAVE_EDITOR_CONFIG_SUCCESS,
+    payload: {
+      editorConfig: editorConfig,
+    },
+  })
+
+  //maybe dispatch success msg?
+
+  return Promise.resolve()
+}
+
+export const fetchEditorConfig = (editorConfig: any) => (dispatch: any) => {
+  return new Promise((resolve, reject) => {
+    dispatch({
+      type: FETCH_EDITOR_CONFIG_SUCCESS,
+      payload: editorConfig,
+    })
+      .then((res: any) => {
+        resolve(res)
+      })
+      .catch((err: any) => {
+        dispatch({
+          type: FETCH_EDITOR_CONFIG_FAIl,
+        })
+      })
+  })
 }
