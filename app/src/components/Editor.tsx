@@ -9,7 +9,7 @@ import { Classes, Popover2 } from "@blueprintjs/popover2";
 import TimeSelectDialog from './TimeSelectDialog';
 import {fetchQuoteAllowedTimes, fetchQuoteIntervals} from '../features/actions/quotes';
 import { dispatchErrorMsg, dispatchSuccessMsg } from '../features/utils/notifs';
-import {dateToUnix} from '../features/utils/time';
+import {dateToUnix, dateStrToDate} from '../features/utils/time';
 
 import 'ace-builds/src-noconflict/mode-jsx'
 import 'ace-builds/src-min-noconflict/ext-searchbox'
@@ -50,6 +50,12 @@ const Editor = (props: EditorProps) => {
   const defaultValue = `def helloworld():
     print('hello world')
   `
+  const default_end_date = new Date();
+  default_end_date.setHours(0, 0, 0);
+  const default_start_date = new Date();
+  default_start_date.setHours(0, 0, 0);
+  default_start_date.setDate(default_end_date.getDate()-30);
+
 
   const [popOverOpen, setPopoverOpen] = useState(false);
 
@@ -57,13 +63,11 @@ const Editor = (props: EditorProps) => {
   const [timeIntervals, setTimeIntervals] = useState(null);
   const [timeIntervalsArr, setTimeIntervalsArr] = useState([]);
   const [selectTimeInterval, setSelectTimeInterval] = useState(null); 
-
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date>(props.algo? dateStrToDate(props.algo.test_start_default) : default_start_date);
+  const [endDate, setEndDate] = useState<Date>(props.algo? dateStrToDate(props.algo.test_end_default) : default_end_date);
 
   const [minDate, setMinDate] = useState<Date | null>(null);
   const [maxDate, setMaxDate] = useState<Date | null>(null);
-
   const [runPopoverOpen, setRunPopoverOpen] = useState(false);
 
   const clickRunCallback = () => {
@@ -142,6 +146,10 @@ const Editor = (props: EditorProps) => {
     setSelectTimeInterval(item)
   }
 
+  useEffect(()=> {
+    //@ts-ignore
+    setSelectTimeInterval(props.algo? props.algo.test_interval_default : timeIntervalsArr[0]);
+  }, [timeIntervalsArr])
 
   useEffect(() => {
     //@ts-ignore
@@ -158,10 +166,12 @@ const Editor = (props: EditorProps) => {
 
   const onStartDateChange = (date: Date) => {
     setStartDate(date);
+    setAlgoState({...algoState, test_start_default: date});
   }
 
   const onEndDateChange = (date: Date) => {
     setEndDate(date);
+    setAlgoState({...algoState, test_end_default: date})
   }
 
   const [startDateOpen, setStartDateOpen] = useState(false);
@@ -193,9 +203,15 @@ const Editor = (props: EditorProps) => {
     //@ts-ignore
     created: props.algo ? props.algo.created : '', 
     //@ts-ignore
+    test_start_default: props.algo ? props.algo.test_start_default : default_start_date,
+    //@ts-ignore
+    test_end_default: props.algo ? props.algo.test_end_default : default_end_date,
+    //@ts-ignore
+    test_interval_default : props.algo ? props.algo.test_interval_default : selectTimeInterval,
+    //@ts-ignore
     edited_at: props.algo ? props.algo.edited_at : '', 
-    //@ts-ignore 
-    public: false,
+    //@ts-ignore
+    public: props.algo ? props.algo.public : false,
   })
 
   const [editorState, setEditorState] = useState({
@@ -332,6 +348,11 @@ const Editor = (props: EditorProps) => {
       dispatch(createAlgo({
         title: algoState.title,
         code: algoState.code,
+        test_start_default: dateToUnix(startDate),
+        test_end_default: dateToUnix(endDate),
+        //@ts-ignore
+        test_interval_default: selectTimeInterval,
+        public: algoState.public,
       }, createAlgoCallBack))
     } else {
       dispatch(updateAlgo(algoState, updateAlgoCallBack))
