@@ -218,7 +218,7 @@ const BacktestPerformance = (props: BacktestProps) => {
                     >
                         <Spinner 
                             intent={"primary"}
-                            size={200}
+                            size={100}
                         />
                     </div>
                 </div>

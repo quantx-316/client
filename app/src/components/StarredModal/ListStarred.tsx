@@ -1,14 +1,5 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import {
     Tab,
     Tabs,
@@ -16,43 +7,134 @@ import {
     Icon,
     Button,
     FormGroup,
+    Spinner, 
   } from '@blueprintjs/core';
-
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref,
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import ListBacktests from './ListBacktests';
+import ListComps from './ListComps';
 
 const ListStarred = () => {
 
     const dispatch = useDispatch();
+
+    const [loading, setLoading] = useState(true);
+    const [fakeLoading, setFakeLoading] = useState(true);
 
     //@ts-ignore 
     const backtests = useSelector(state => state.starred.backtests);
     //@ts-ignore 
     const competitions = useSelector(state => state.starred.competitions);
 
+    const [highBacktestLst, setHighBacktestLst] = useState([]);
+    const [restBacktestLst, setRestBacktestLst] = useState([]);
+    const [highCompLst, setHighCompLst] = useState([]);
+    const [restCompLst, setRestCompLst] = useState([]);
+
+    const processBacktestLst = () => {
+        if (!backtests) {
+            setHighBacktestLst([]);
+            setRestBacktestLst([]);
+        } else {
+            const backtestLst = Object.values(backtests);
+            //@ts-ignore 
+            const high = backtestLst.filter(backtest => backtest.result == null)
+            //@ts-ignore 
+            const rest = backtestLst.filter(backtest => backtest.result != null)
+            //@ts-ignore 
+            setHighBacktestLst(high);
+            //@ts-ignore 
+            setRestBacktestLst(rest);
+        }
+    }
+
+    const processCompLst = () => {
+        if (!competitions) {
+            setHighCompLst([]);
+            setRestCompLst([]);
+        } else {
+            const compLst = Object.values(competitions);
+            //@ts-ignore
+            setHighCompLst([]);
+            setRestCompLst([]);        
+        }
+    }
+
+    useEffect(() => {
+        processBacktestLst();
+        processCompLst();
+        if (fakeLoading) {
+            setFakeLoading(false);
+        }
+    }, [backtests, competitions])
+
+    useEffect(() => {
+        if (fakeLoading) {
+            setLoading(true);
+        } else {
+            const timeoutId = setTimeout(() => setLoading(false), 500);
+            return function cleanup() {
+                clearTimeout(timeoutId);
+            }
+        }
+    }, [fakeLoading])
+
     return (
-        <Tabs
-            className="centered-top-col full"
-            renderActiveTabPanelOnly={true}
+        <div
+            style={{
+                padding: "20px"
+            }}
+            className="centered"
         >
 
-            <Tab
-                id="star-back"
-                title="Backtests"
-                panel={<div></div>}
-            />
+            {
+                loading && 
+                <div
+                    className="full centered"
+                >
+                    <div
+                        className="centered"
+                    >
+                        <Spinner 
+                            intent={"primary"}
+                            size={50}
+                        />
+                    </div>
+                </div>
+            }
 
-            <Tab 
-                id="star-comp"
-                title="Competitions"
-                panel={<div></div>}
-            />
+            {
+                !loading && 
+                <Tabs
+                    className="centered-top-col full"
+                    renderActiveTabPanelOnly={true}
+                >
 
-        </Tabs>
+                    <Tab
+                        id="star-back"
+                        title="Backtests"
+                        panel={
+                            <ListBacktests 
+                                highPriority={highBacktestLst}
+                                rest={restBacktestLst}
+                            />
+                        }
+                    />
+
+                    <Tab 
+                        id="star-comp"
+                        title="Competitions"
+                        panel={
+                            <ListComps 
+                                highPriority={highCompLst}
+                                rest={restCompLst}
+                            />
+                        }
+                    />
+
+                </Tabs>
+            }
+
+        </div>
+
     )
 
 }
