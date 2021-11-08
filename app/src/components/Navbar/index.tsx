@@ -4,7 +4,7 @@ import {useHistory, Link} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import UserDropdown from './UserDropdown';
 import Badge from '@mui/material/Badge';
-import NotifsModal from '../NotifsModal';
+import StarredModal from '../StarredModal';
 
 const ComposedNavbar: React.FC = () => {
 
@@ -14,14 +14,14 @@ const ComposedNavbar: React.FC = () => {
     history.push(link);
   }
   
-  const [notifsOpen, setNotifsOpen] = useState(false);
+  const [starOpen, setStarOpen] = useState(false);
 
-  const handleNotifsClose = () => {
-    setNotifsOpen(false);
+  const handleStarClose = () => {
+    setStarOpen(false);
   }
 
-  const handleNotifsOpen = () => {
-    setNotifsOpen(true);
+  const handleStarOpen = () => {
+    setStarOpen(true);
   }
 
   //@ts-ignore 
@@ -59,35 +59,17 @@ const ComposedNavbar: React.FC = () => {
 
         <Navbar.Divider /> 
         <UserDropdown />
-
-        {
-          notifs && notifs.length > 0 ? 
-
-            <Badge variant="dot" color="error">
-              <Button 
-                className="bp3-minimal" 
-                icon="notifications" 
-                onClick={() => handleNotifsOpen()}
-              />
-            </Badge>
-
-            :
-
-            <Button 
-              className="bp3-minimal" 
-              icon="notifications" 
-              onClick={() => handleNotifsOpen()}
-            />
-
-        }
-        
-        {/* <Button className="bp3-minimal" icon="cog" /> */}
+        <Button 
+          className="bp3-minimal" 
+          icon="star" 
+          onClick={() => handleStarOpen()}
+        />        
       </Navbar.Group>
 
-      <NotifsModal 
-        isOpen={notifsOpen}
-        handleClose={handleNotifsClose}
-        title="Notifications"
+      <StarredModal 
+        isOpen={starOpen}
+        handleClose={handleStarClose}
+        title="Starred"
       />
 
     </Navbar>
