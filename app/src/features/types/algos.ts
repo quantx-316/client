@@ -22,6 +22,7 @@ export interface Algo {
     code: string, 
     created: string, 
     edited_at: string, 
+    public: boolean,
 }
 
 interface AlgoSelectAction {

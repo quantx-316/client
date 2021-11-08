@@ -1,18 +1,20 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import { useParams, useLocation } from 'react-router-dom';
-import { Button, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch, H2 } from "@blueprintjs/core";
+import { Button, Card, Classes, H1, H5, TextArea} from "@blueprintjs/core";
 import {fetchUser, updateUser} from '../features/actions/users';
 import ProfileEdit from '../components/ProfileEdit';
 import {fetchPublicAlgos} from '../features/actions/algos';
 import Sorting from '../components/Sorting';
 import Pagination from '../components/Pagination';
+import Backtests from '../components/Backtests';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
+import { Classes as Popover2Classes, Popover2 } from "@blueprintjs/popover2";
 
 const Profile = () => {
 
@@ -133,9 +135,16 @@ const Profile = () => {
         dispatch(updateUser(user, userSaveCallback))
     }
 
+    const [viewPublicScore, setViewPublicScore] = useState(false);
+
 
     return (
-        <div>
+        <div
+            style={{
+                display: "flex",
+                gap: "10px"
+            }}
+        >
             {
                 user && 
 
@@ -165,31 +174,62 @@ const Profile = () => {
                                 </H1>
                                 
                                 <div
-                                    className="centered"
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignContent: "center",
+                                        gap: "10px"
+                                    }}                                
                                 >
-                                    {
-                                        //@ts-ignore 
-                                        user.email && 
-                                        (
-                                            editing ? 
+                                    <div
+                                        className="centered"
+                                    >
+                                        {
+                                            //@ts-ignore 
+                                            user.email && 
+                                            (
+                                                editing ? 
+                                                <Button
+                                                    className={Classes.BUTTON}
+                                                    icon={"saved"}
+                                                    onClick={() => onSaveClick()}
+                                                >
+                                                </Button>
+
+                                                :
+
+                                                <Button
+                                                    className={Classes.BUTTON}
+                                                    icon={"edit"}
+                                                    onClick={() => setEditing(true)}
+                                                >
+                                                </Button>
+                                            )
+
+                                        }
+                                    </div>
+
+                                    <div
+                                        className="centered"
+                                    >
+
+                                        <Popover2
+                                            interactionKind="hover" 
+                                            autoFocus={false}
+                                            popoverClassName={Popover2Classes.POPOVER2_CONTENT_SIZING} 
+                                            enforceFocus={false}
+                                            placement="right" 
+                                            content={viewPublicScore ? "Close" : "View Public Scores"}
+                                        >
                                             <Button
                                                 className={Classes.BUTTON}
-                                                icon={"saved"}
-                                                onClick={() => onSaveClick()}
+                                                icon={viewPublicScore ? "chevron-left" : "chevron-right"}
+                                                onClick={() => setViewPublicScore(viewPublicScore => !viewPublicScore)}
                                             >
                                             </Button>
+                                        </Popover2>
 
-                                            :
-
-                                            <Button
-                                                className={Classes.BUTTON}
-                                                icon={"edit"}
-                                                onClick={() => setEditing(true)}
-                                            >
-                                            </Button>
-                                        )
-
-                                    }
+                                    </div>
                                 </div>
                             </div>
 
@@ -221,75 +261,44 @@ const Profile = () => {
                                         <p>
                                             {/* @ts-ignore */}
                                             <b>Last Name: </b>{user.lastname ?? "N/A"}
-                                        </p>                         
+                                        </p>         
                                     </div>
                                     <div>
                                         <H5>
                                             Description
                                         </H5>
-                                        <p>
+                                        <TextArea
+                                            growVertically={true}
+                                            large={true}
+                                            fill={true}
+                                            readOnly={true}
+                                        >
                                             {/* @ts-ignore */}
                                             {user.description ?? "N/A"}
-                                        </p>
+                                        </TextArea>
                                     </div>
                                 </div>
                             }
 
-                            {
-                                //@ts-ignore 
-                                publicAlgosArr && publicAlgosArr.length && publicAlgosArr.length > 0 &&
-                                <div
-                                    className="full centered-top-col"
-                                >
-                                    <H5>
-                                        Best Backtests
-                                    </H5>
-
-                                    <Sorting 
-                                        attrsMapping={attrsMapping}
-                                        attr={attr}
-                                        onAttrChange={onAttrChange}
-                                        dir={dir}
-                                        onDirChange={onDirChange}
-                                    />
-                                    
-                                    <List 
-                                         sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-                                    >
-                                        {
-                                            publicAlgosArr.map((obj, idx) => {
-
-                                                return (
-                                                        <ListItem 
-                                                            alignItems="flex-start"
-                                                            //@ts-ignore 
-                                                        >
-
-                                                        </ListItem>
-                                                
-                                                )
-
-                                            })
-                                        }
-                                    </List>
-
-                                    {
-                                        //@ts-ignore
-                                        publicAlgos && publicAlgos.pagination &&
-
-                                        <Pagination 
-                                            //@ts-ignore
-                                            pagination={publicAlgos.pagination}
-                                            onPageChange={onPageChange}
-                                            page={page}
-                                        />
-
-                                    }
-
-                                </div>
-                            }
-
                     </Card>
+            }
+
+            {
+                 !editing && viewPublicScore && publicAlgosArr && publicAlgosArr.length && publicAlgosArr.length > 0 &&
+                 <Backtests 
+                    title={"Public Scores"}
+                    info={"Scores for the best performing backtest per algorithm that the user has made public"}
+                    backtests={publicAlgosArr}
+                    page={page}
+                    onPageChange={onPageChange}
+                    //@ts-ignore 
+                    pagination={publicAlgos.pagination}
+                    attrsMapping={attrsMapping}
+                    attr={attr}
+                    onAttrChange={onAttrChange}
+                    dir={dir}
+                    onDirChange={onDirChange}
+                 />
             }
 
             {

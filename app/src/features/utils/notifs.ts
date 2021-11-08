@@ -1,15 +1,27 @@
-import notifsActionsHandler from '../actions/notifs';
+import {
+    updateNotifState
+} from '../actions/notifs';
+
+
 
 export const dispatchSuccessMsg = (dispatch: any, msg: string) => {
 
-    const notifActionHandler = new notifsActionsHandler(dispatch);
+    const newNotif = {
+        status: "success",
+        msg: msg, 
+        visibility: true,
+    }
 
-    notifActionHandler.showSuccessNotif(msg);
+    dispatch(updateNotifState(newNotif));
 }
 
 export const dispatchErrorMsg = (dispatch: any, msg: string) => {
 
-    const notifActionHandler = new notifsActionsHandler(dispatch);
+    const newNotif = {
+        status: "error",
+        msg: msg,
+        visibility: false,
+    }
 
-    notifActionHandler.showErrorNotif(msg);
+    dispatch(updateNotifState(newNotif));
 }

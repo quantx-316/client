@@ -3,15 +3,19 @@ import { Button, Icon, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Sli
 import {fetchAlgos, deleteAlgo, selectAlgo} from '../features/actions/algos';
 import {useSelector, useDispatch} from 'react-redux';
 import {useHistory} from 'react-router-dom';
-
+import {deleteBacktest, getBacktestByAlgo} from '../features/actions/backtest';
 import AlgosList from '../components/AlgosList';
 import Backtests from '../components/Backtests';
 import HomeHeader from '../components/HomeHeader';
+import { PagesRounded } from '@mui/icons-material';
 
 export const Home: React.FC = () => {
     const history = useHistory();
 
     const dispatch = useDispatch();
+
+    //@ts-ignore 
+    const backtests = useSelector(state => state.backtests.backtests);
 
     //@ts-ignore 
     const algos = useSelector(state => state.algos.algos);
@@ -71,6 +75,60 @@ export const Home: React.FC = () => {
         fetchNextAlgos(algoPage, algoSize, algoAttr, algoDir);
     }, [])
 
+    //@ts-ignore 
+    const selectedAlgoId = useSelector(state => state.algos.selected_algo_id);
+    
+    const [backtestPage, setBacktestPage] = useState(1);
+    const [backtestSize, setBacktestSize] = useState(10);
+    //@ts-ignore 
+    const backPagination = useSelector(state => state.backtests.pagination);
+    const backAttrsMapping = {
+        "Score": "score",
+        "Test Interval": "test_interval", // this does not do a sort of 1 day vs 1 week, it sorts 1d vs 1w and 'groups' them
+        "Test Start": "test_start",
+        "Test End": "test_end",
+        "Created": "created",
+    };
+    const [backAttr, setBackAttr] = useState("Created");
+    const convertBackAttr = (attr: string) => {
+        //@ts-ignore
+        return backAttrsMapping[attr];
+    }
+    const onAttrChange = (newAttr: string) => {
+        setBackAttr(newAttr);
+        refreshNodes(backtestPage, newAttr, backDir);
+    }
+    const [backDir, setBackDir] = useState("desc");
+    const onDirChange = (newDir: string) => {
+        setBackDir(newDir);
+        refreshNodes(backtestPage, backAttr, newDir);
+    }
+
+    const onPageChange = (e: any, page: number) => {
+        setBacktestPage(page);
+        refreshNodes(page, backAttr, backDir);
+    }
+
+    useEffect(() => {
+        onPageChange(null, 1);
+    }, [selectedAlgoId])
+    const refreshNodes = (page: number, attr: string, dir: string, callBack?: any) => {
+        if (selectedAlgoId > 0) {
+            dispatch(getBacktestByAlgo(selectedAlgoId, page, backtestSize, convertBackAttr(attr), dir, callBack));
+        }
+    }
+
+    const pageAfterDelete = () => {
+        if (backtestPage > 1 && backtests.length === 1) {
+            onPageChange(null, backtestPage-1);
+         } else {
+            onPageChange(null, backtestPage);
+         }
+    }
+
+    const onRefreshClick = () => {
+        onPageChange(null, backtestPage);
+    }
 
     return (
         <div
@@ -109,7 +167,18 @@ export const Home: React.FC = () => {
                         />
 
                         <Backtests 
-                        
+                            backtests={backtests}
+                            info={"Execution results for chosen algorithm"}
+                            page={backtestPage}
+                            onPageChange={onPageChange}
+                            pageAfterDelete={pageAfterDelete}
+                            pagination={backPagination}
+                            attrsMapping={backAttrsMapping}
+                            attr={backAttr}
+                            onAttrChange={onAttrChange}
+                            dir={backDir}
+                            onDirChange={onDirChange}
+                            onRefresh={onRefreshClick}
                         />
                     </div>
 

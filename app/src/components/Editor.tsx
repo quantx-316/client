@@ -4,7 +4,7 @@ import { Select, ItemRenderer } from '@blueprintjs/select'
 import {useDispatch, useSelector} from 'react-redux';
 import {createAlgo, updateAlgo} from '../features/actions/algos';
 import {createBacktest} from '../features/actions/backtest';
-import { Button, EditableText, MenuItem } from '@blueprintjs/core'
+import { Button, EditableText, MenuItem, Switch } from '@blueprintjs/core'
 import { Classes, Popover2 } from "@blueprintjs/popover2";
 import TimeSelectDialog from './TimeSelectDialog';
 import {fetchQuoteAllowedTimes, fetchQuoteIntervals} from '../features/actions/quotes';
@@ -195,6 +195,8 @@ const Editor = (props: EditorProps) => {
     created: props.algo ? props.algo.created : '', 
     //@ts-ignore
     edited_at: props.algo ? props.algo.edited_at : '', 
+    //@ts-ignore 
+    public: false,
   })
 
   const [editorState, setEditorState] = useState({
@@ -281,6 +283,20 @@ const Editor = (props: EditorProps) => {
     })
   }
 
+  const handlePublicChange = (_public: boolean) => {
+
+    if (isNewAlgo) return;
+
+    const newState = {
+      ...algoState,
+      //@ts-ignore 
+      public: _public,
+    }
+
+    // setAlgoState(newState)
+
+    dispatch(updateAlgo(newState, updateAlgoCallBack))
+  }
 
 
   useEffect(() => {
@@ -299,6 +315,9 @@ const Editor = (props: EditorProps) => {
   }
 
   const updateAlgoCallBack = (algo: Algo) => {
+
+    console.log("UPDATE ALGO CALLBACK");
+
     setAlgoState(algo);
     setPopoverOpen(true);
   }
@@ -318,10 +337,9 @@ const Editor = (props: EditorProps) => {
     } else {
       dispatch(updateAlgo(algoState, updateAlgoCallBack))
     }
-
-
   }
 
+  
 
 
   return (
@@ -435,13 +453,29 @@ const Editor = (props: EditorProps) => {
         <div
           style={{
             marginBottom: '25px',
-            marginTop: '25px'
+            marginTop: '25px',
+            display: "flex",
+            justifyContent: "space-between"
           }}
-        ><label>Title: &nbsp;</label>
-          <EditableText placeholder="Enter the title of code" alwaysRenderInput={true} selectAllOnFocus={false} maxLength={100} onChange={e => handleTitleChange(e)} value={algoState.title}/>
+        >
+          <div>
+            <label>Title: &nbsp;
+              <EditableText placeholder="Enter the title of code" alwaysRenderInput={true} selectAllOnFocus={false} maxLength={100} onChange={e => handleTitleChange(e)} value={algoState.title}/>
+            </label>
+          </div>
+
+          <div>
+            {
+              algoState && !isNewAlgo && 
+              <Switch 
+                labelElement={<em>Public</em>}
+                //@ts-ignore 
+                checked={algoState.public}
+                onClick={() => handlePublicChange(algoState.public ? false : true)}
+              />
+            }
+          </div>
         </div>
-
-
 
         <div>
           <AceEditor

@@ -44,6 +44,7 @@ const ProfileEdit = (props: ProfileEditProps) => {
                     intent={Intent.PRIMARY}
                     value={props.user && props.user.description ? props.user.description : ""}
                     onChange={props.onDescChange}
+                    fill={true}
                 />
             </FormGroup>
         </div>

@@ -8,12 +8,18 @@ import {
     FormGroup,
   } from '@blueprintjs/core';
 import BacktestEditor from './BacktestEditor';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { dispatchErrorMsg } from '../../features/utils/notifs';
 import { Backtest } from '../../features/types/backtest';
 import BacktestPerformance from './BacktestPerformance';
 import {dateStrToDate} from '../../features/utils/time';
+import { Classes, Popover2 } from "@blueprintjs/popover2";
+
+import {
+    addBacktest,
+    removeBacktest,
+} from '../../features/actions/starred';
 
 import * as test_data from './test.json';
 import * as test_err_data from './test_error.json';
@@ -26,15 +32,24 @@ type BacktestProps = {
 
 const BacktestComp = (props: BacktestProps) => {
 
-    useEffect(() => {
-        console.log('backtest');
-        console.log(props.backtest);
-    }, [])
+    //@ts-ignore 
+    const backtests = useSelector(state => state.starred.backtests);
+
+    const dispatch = useDispatch();
 
     //@ts-ignore 
-    const test_info = test_data.default; 
-    //@ts-ignore 
-    const test_err_info = test_err_data.default;
+    const starred = backtests.hasOwnProperty(props.backtest ? props.backtest.id : -1);
+
+    const onStarClick = () => {
+        if (!props.backtest) return; 
+
+        if (starred) {
+            dispatch(removeBacktest(props.backtest.id));
+        } else {
+            dispatch(addBacktest(props.backtest));
+        }
+
+    }
 
     return (
         <div
@@ -43,14 +58,47 @@ const BacktestComp = (props: BacktestProps) => {
                 marginTop: "20px"
             }}
         >
-            <h1>Backtest</h1>
+            <div
+                style={{
+                    display: 'flex',
+                    gap: '10px'
+                }}
+            >
+                <div
+                    className='centered'
+                >
+                    <h1>Backtest</h1>
+                </div>
+
+                <div
+                    className='centered'
+                >
+                    <Popover2 
+                        interactionKind="hover" 
+                        popoverClassName={Classes.POPOVER2_CONTENT_SIZING} 
+                        autoFocus={false}
+                        enforceFocus={false}
+                        content={starred ? "Unstar" : "Star"}
+                    >
+                        <Button 
+                            minimal={true}
+                            large={true}
+                            intent="primary"
+                            icon={starred ? "star" : "star-empty"}
+                            onClick={() => onStarClick()}
+                        />
+                    </Popover2>
+                </div>
+
+            </div>
             
             <p><b>Submitted:</b> {props.backtest && props.backtest.created ? dateStrToDate(props.backtest.created).toString() : ""}</p>
-           
+
             {
                 props.backtest && 
                 <Tabs
                     className="centered-top-col-lite full"
+                    renderActiveTabPanelOnly={true}
                 >
                     <Tab id="code" title="Code Snapshot" panel = {<BacktestEditor backtest={props.backtest} />} />
                     <Tab id="perf" title="Performance" 
