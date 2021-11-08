@@ -41,38 +41,22 @@ function forNodeAtPath(nodes: TreeNodeInfo[], path: NodePath, callback: (node: T
 //     pagination: any,
 // }
 
-const Backtest = () => {
+type BacktestProps = {
+    title?: string,
+    backtests: any, 
+    page: number, 
+    onPageChange: any, 
+    pageAfterDelete?: any, // if not provided, no delete
+    pagination: any, 
+    attrsMapping: any, 
+    attr: any, 
+    onAttrChange: any, 
+    dir: any, 
+    onDirChange: any, 
+    onRefresh?: any, 
+}
 
-    //@ts-ignore 
-    const pagination = useSelector(state => state.backtests.pagination);
-
-    //@ts-ignore 
-    const backtests = useSelector(state => state.backtests.backtests);
-
-    const [page, setPage] = useState(1);
-    const [size, setSize] = useState(10);
-    const onPageChange = (e: any, page: number) => {
-        setPage(page);
-        refreshNodes(page, attr, dir);
-    }
-
-    const pageAfterDelete = () => {
-        if (page > 1 && backtests.length === 1) {
-            onPageChange(null, page-1);
-         } else {
-            onPageChange(null, page);
-         }
-    }
-
-    //@ts-ignore 
-    const selectedAlgoId = useSelector(state => state.algos.selected_algo_id);
-    useEffect(() => {
-
-        console.log("USE EFFECT REFRESH");
-        console.log(selectedAlgoId);
-
-        onPageChange(null, 1);
-    }, [selectedAlgoId])
+const Backtest = ({backtests, ...props}: BacktestProps) => {
 
     const history = useHistory();
 
@@ -192,7 +176,7 @@ const Backtest = () => {
         //@ts-ignore
         if (selectedInfo && selectedInfo.id) {
             //@ts-ignore
-            redDispatch(deleteBacktest(selectedInfo.id, pageAfterDelete))
+            redDispatch(deleteBacktest(selectedInfo.id, props.pageAfterDelete))
             return 
         }
 
@@ -209,38 +193,6 @@ const Backtest = () => {
     
         return () => clearTimeout(timer);
     }, [refreshOpen])
-
-    const refreshNodes = (page: number, attr: string, dir: string, callBack?: any) => {
-        if (selectedAlgoId > 0) {
-            redDispatch(getBacktestByAlgo(selectedAlgoId, page, size, convertAttr(attr), dir, callBack));
-        }
-    }
-
-    const onRefreshClick = () => {
-        onPageChange(null, page);
-    }
-
-    const attrsMapping = {
-        "Score": "score",
-        "Test Interval": "test_interval", // this does not do a sort of 1 day vs 1 week, it sorts 1d vs 1w and 'groups' them
-        "Test Start": "test_start",
-        "Test End": "test_end",
-        "Created": "created",
-    };
-    const [attr, setAttr] = useState("Created");
-    const convertAttr = (attr: string) => {
-        //@ts-ignore
-        return attrsMapping[attr];
-    }
-    const onAttrChange = (newAttr: string) => {
-        setAttr(newAttr);
-        refreshNodes(page, newAttr, dir);
-    }
-    const [dir, setDir] = useState("desc");
-    const onDirChange = (newDir: string) => {
-        setDir(newDir);
-        refreshNodes(page, attr, newDir);
-    }
 
     return (
         <Card
@@ -266,33 +218,41 @@ const Backtest = () => {
                 }}
             >
                 <H1>
-                    Backtests
+                    {
+                        props.title ? 
+                        props.title :
+                        "Backtests"
+                    }
                 </H1>
-                <Popover2 
-                    interactionKind="click" 
-                    autoFocus={false}
-                    popoverClassName={Popover2Classes.POPOVER2_CONTENT_SIZING} 
-                    enforceFocus={false}
-                    placement="bottom-end" 
-                    isOpen={refreshOpen}
-                    content="Refreshed"
-                >
-                    <Button
-                        className={Classes.BUTTON}
-                        icon={"refresh"}
-                        // intent={"success"}
-                        onClick={() => onRefreshClick()}
+                {
+                    props.onRefresh &&
+                    
+                    <Popover2 
+                        interactionKind="click" 
+                        autoFocus={false}
+                        popoverClassName={Popover2Classes.POPOVER2_CONTENT_SIZING} 
+                        enforceFocus={false}
+                        placement="bottom-end" 
+                        isOpen={refreshOpen}
+                        content="Refreshed"
                     >
-                    </Button>
-                </Popover2>
+                        <Button
+                            className={Classes.BUTTON}
+                            icon={"refresh"}
+                            // intent={"success"}
+                            onClick={() => props.onRefresh()}
+                        >
+                        </Button>
+                    </Popover2>
+                }
             </div>
 
             <Sorting 
-                attrsMapping={attrsMapping}
-                attr={attr}
-                onAttrChange={onAttrChange}
-                dir={dir}
-                onDirChange={onDirChange}
+                attrsMapping={props.attrsMapping}
+                attr={props.attr}
+                onAttrChange={props.onAttrChange}
+                dir={props.dir}
+                onDirChange={props.onDirChange}
             />
 
             {
@@ -395,23 +355,27 @@ const Backtest = () => {
                         >
                             View
                         </Button>
-                        <Button
-                            className={Classes.BUTTON}
-                            icon={"trash"}
-                            onClick={() => onDeleteClick()}
-                        >
-                            Delete
-                        </Button>
+
+                        {
+                            props.pageAfterDelete && 
+                            <Button
+                                className={Classes.BUTTON}
+                                icon={"trash"}
+                                onClick={() => onDeleteClick()}
+                            >
+                                Delete
+                            </Button>
+                        }
                     </ButtonGroup>
                 
 
                 {
-                    !(pagination==null) &&
+                    !(props.pagination==null) &&
 
                     <Pagination 
-                        pagination={pagination}
-                        onPageChange={onPageChange}
-                        page={page}
+                        pagination={props.pagination}
+                        onPageChange={props.onPageChange}
+                        page={props.page}
                     />
 
                 }
