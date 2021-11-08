@@ -51,6 +51,7 @@ const BacktestComp = (props: BacktestProps) => {
                 props.backtest && 
                 <Tabs
                     className="centered-top-col-lite full"
+                    renderActiveTabPanelOnly={true}
                 >
                     <Tab id="code" title="Code Snapshot" panel = {<BacktestEditor backtest={props.backtest} />} />
                     <Tab id="perf" title="Performance" 

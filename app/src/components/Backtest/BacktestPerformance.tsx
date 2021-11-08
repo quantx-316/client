@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { Backtest } from '../../features/types/backtest';
 import { Line } from 'react-chartjs-2'; 
 import 'chartjs-adapter-moment';
+import { H5, Intent, Label, Slider, Spinner, SpinnerSize, Switch } from "@blueprintjs/core";
 import { Cell, Column, Table2, TruncatedFormat, JSONFormat } from "@blueprintjs/table";
 // import {dateStrToDate} from '../../features/utils/time';
 import {
@@ -41,21 +42,19 @@ const BacktestPerformance = (props: BacktestProps) => {
     const [rawData, setRawData] = useState({});
     const [errors, setErrors] = useState<null | []>(null);
     const [loading, setLoading] = useState(true);
+    const [fakeLoading, setFakeLoading] = useState(true);
     const [executing, setExecuting] = useState(true);
 
-    /* 
-        {
-            label: 'Cash',
-            data: [...],
+    useEffect(() => {
+        if (fakeLoading) {
+            setLoading(true);
+        } else {
+            const timeoutId = setTimeout(() => setLoading(false), 500);
+            return function cleanup() {
+                clearTimeout(timeoutId);
+            }
         }
-
-        {
-            label: 'Portfolio Value',
-            data: [...], 
-
-        }
-    
-    */
+    }, [fakeLoading])
 
     const processData = (portfolioArr: any) => {
 
@@ -109,7 +108,7 @@ const BacktestPerformance = (props: BacktestProps) => {
             ]
         })
 
-        setLoading(false);
+        setFakeLoading(false);
 
     }   
 
@@ -119,11 +118,11 @@ const BacktestPerformance = (props: BacktestProps) => {
         setRawData(rawJSON);
         if ('errors' in rawJSON) {
             setErrors(rawJSON['errors']);
-            setLoading(false);
+            setFakeLoading(false);
             return;
         } else { // no error 
             setErrors(null);
-            setLoading(true);
+            setFakeLoading(true);
             processData(rawJSON['portfolio_over_time']);
         }
     }
@@ -147,35 +146,68 @@ const BacktestPerformance = (props: BacktestProps) => {
 
             {
                 executing && 
-                <h1>
-                    Executing...
-                </h1>
+                <div
+                    className="full centered"
+                >
+                    <div
+                        className="centered"
+                    >
+                        <h1>
+                            Executing...
+                        </h1>
+                    </div>
+                </div>
             }
 
             {
                 !(errors == null) && !loading && 
-                <ul>
+                <div
+                    className="centered-top-col full"
+                >
+                    <div
+                        className="centered"
+                    >
+                        <h1>
+                            {/* @ts-ignore */}
+                            Fatal {errors.length > 1 ? "errors" : "error"} in execution.
+                        </h1>
+                    </div>
+
                     {
-                        errors.map((err) => {
+                        //@ts-ignore 
+                        errors.map((err, idx) => {
 
                             return (
-                                <li>
-                                    {/* @ts-ignore */}
-                                    {err.description}
-                                </li>
+                                <div
+                                    className="centered"
+                                >
+                                    <p>
+                                        {/* @ts-ignore */}
+                                        <b>{idx + 1}: </b>{err.description}
+                                    </p>
+                                </div>
                             )
+
                         })
                     }
-                </ul>
+
+                </div>
             }
 
             {
                 !executing && loading && 
-                <>
-                    <h1>
-                        Big fat loading. 
-                    </h1>
-                </>
+                <div
+                    className="full centered"
+                >
+                    <div
+                        className="centered"
+                    >
+                        <Spinner 
+                            intent={"primary"}
+                            size={200}
+                        />
+                    </div>
+                </div>
             }
 
             {
@@ -232,11 +264,17 @@ const SummaryPanel = ({graphData, graphOptions, rawData} : SummaryPanelProps) =>
             </div>
 
             <h2>Graph: </h2>
-            <Line
-                data={graphData}
-                //@ts-ignore 
-                options={graphOptions}
-            />
+            <div
+                style={{
+                    padding: "50px"
+                }}
+            >
+                <Line
+                    data={graphData}
+                    //@ts-ignore 
+                    options={graphOptions}
+                />
+            </div>
         </div>
     )
 }
