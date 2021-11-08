@@ -143,6 +143,20 @@ const BacktestPerformance = (props: BacktestProps) => {
                 minWidth: "100%"
             }}
         >
+            {
+                !executing && (errors == null) && !loading && rawData && 
+                <div
+                    className="centered"
+                >
+                    <span
+                        style={{
+                            fontSize: "10px"
+                        }}
+                    >
+                        All units in USD unless otherwise noted 
+                    </span>
+                </div>
+            }
 
             {
                 executing && 
@@ -254,16 +268,25 @@ const SummaryPanel = ({graphData, graphOptions, rawData} : SummaryPanelProps) =>
                 padding: "10px"
             }}
         >
-            <div>
-                <h5>
-                    Return On Investment (ROI): {rawData.roi}
-                </h5>
-                <h5>
-                    Final Portfolio Value: {rawData.final_value}
-                </h5>
+            <div
+                className="centered-col"
+            >
+                <div
+                    className="centered"
+                >
+                    <p>
+                        <b>Return On Investment:</b> {rawData.roi}
+                    </p>
+                </div>
+                <div
+                    className="centered"
+                >
+                    <p>
+                        <b>Final Portfolio Value:</b> {rawData.final_value}
+                    </p>
+                </div>
             </div>
 
-            <h2>Graph: </h2>
             <div
                 style={{
                     padding: "50px"

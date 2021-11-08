@@ -168,6 +168,7 @@ export const Home: React.FC = () => {
 
                         <Backtests 
                             backtests={backtests}
+                            info={"Execution results for chosen algorithm"}
                             page={backtestPage}
                             onPageChange={onPageChange}
                             pageAfterDelete={pageAfterDelete}

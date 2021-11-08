@@ -46,7 +46,7 @@ const BacktestComp = (props: BacktestProps) => {
             <h1>Backtest</h1>
             
             <p><b>Submitted:</b> {props.backtest && props.backtest.created ? dateStrToDate(props.backtest.created).toString() : ""}</p>
-           
+
             {
                 props.backtest && 
                 <Tabs
