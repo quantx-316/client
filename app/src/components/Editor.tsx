@@ -19,6 +19,15 @@ import {Algo} from '../features/types/algos';
 import {
   addBacktest,
 } from '../features/actions/starred';
+import {  
+  updateEndDate,
+  updateFontSize,
+  updateInterval,
+  updateStartDate,
+  updateTabSize,
+  updateTheme,
+} from '../features/actions/editor';
+import { Satellite } from '@mui/icons-material';
 
 const themes = [
   'monokai',
@@ -53,11 +62,6 @@ const Editor = (props: EditorProps) => {
   const defaultValue = `def helloworld():
     print('hello world')
   `
-  const default_end_date = new Date();
-  default_end_date.setHours(0, 0, 0);
-  const default_start_date = new Date();
-  default_start_date.setHours(0, 0, 0);
-  default_start_date.setDate(default_end_date.getDate()-30);
 
   //@ts-ignore 
   const algosPublic = useSelector(state => state.settings.algosPublic);
@@ -66,16 +70,27 @@ const Editor = (props: EditorProps) => {
 
   const [popOverOpen, setPopoverOpen] = useState(false);
 
-  // also need dropdown for time interval 
   const [timeIntervals, setTimeIntervals] = useState(null);
   const [timeIntervalsArr, setTimeIntervalsArr] = useState([]);
-  const [selectTimeInterval, setSelectTimeInterval] = useState(null); 
-  const [startDate, setStartDate] = useState<Date>(props.algo? dateStrToDate(props.algo.test_start_default) : default_start_date);
-  const [endDate, setEndDate] = useState<Date>(props.algo? dateStrToDate(props.algo.test_end_default) : default_end_date);
 
+  //@ts-ignore 
+  const selectTimeInterval = useSelector(state => state.editor.interval);
+  //@ts-ignore 
+  const startDate = useSelector(state => state.editor.startDate);
+  //@ts-ignore 
+  const endDate = useSelector(state=>state.editor.endDate);
   const [minDate, setMinDate] = useState<Date | null>(null);
   const [maxDate, setMaxDate] = useState<Date | null>(null);
   const [runPopoverOpen, setRunPopoverOpen] = useState(false);
+
+  useEffect(() => {
+    if (startDate && minDate && startDate < minDate) {
+      dispatch(updateStartDate(minDate));
+    }
+    if (endDate && maxDate && endDate > maxDate) {
+      dispatch(updateEndDate(maxDate));
+    }
+  }, [endDate, startDate])
 
   const clickRunCallback = (info: any) => {
     setRunPopoverOpen(true);
@@ -161,12 +176,16 @@ const Editor = (props: EditorProps) => {
     item: any,
     event?: React.SyntheticEvent<HTMLElement, Event> | undefined
   ) => {
-    setSelectTimeInterval(item)
+    dispatch(updateInterval(item));
   }
 
   useEffect(()=> {
-    //@ts-ignore
-    setSelectTimeInterval(props.algo? props.algo.test_interval_default : timeIntervalsArr[0]);
+
+    if (timeIntervalsArr && timeIntervalsArr.length > 0) {
+      if (!selectTimeInterval || !(selectTimeInterval in timeIntervalsArr)) {
+        dispatch(updateInterval(timeIntervalsArr[0]));
+      } 
+    }
   }, [timeIntervalsArr])
 
   useEffect(() => {
@@ -183,13 +202,11 @@ const Editor = (props: EditorProps) => {
   }, [])
 
   const onStartDateChange = (date: Date) => {
-    setStartDate(date);
-    setAlgoState({...algoState, test_start_default: date});
+    dispatch(updateStartDate(date));
   }
 
   const onEndDateChange = (date: Date) => {
-    setEndDate(date);
-    setAlgoState({...algoState, test_end_default: date})
+    dispatch(updateEndDate(date));
   }
 
   const [startDateOpen, setStartDateOpen] = useState(false);
@@ -221,22 +238,33 @@ const Editor = (props: EditorProps) => {
     //@ts-ignore
     created: props.algo ? props.algo.created : '', 
     //@ts-ignore
-    test_start_default: props.algo ? props.algo.test_start_default : default_start_date,
-    //@ts-ignore
-    test_end_default: props.algo ? props.algo.test_end_default : default_end_date,
-    //@ts-ignore
-    test_interval_default : props.algo ? props.algo.test_interval_default : selectTimeInterval,
-    //@ts-ignore
     edited_at: props.algo ? props.algo.edited_at : '', 
     //@ts-ignore
     public: props.algo ? props.algo.public : algosPublic,
   })
 
-  const [editorState, setEditorState] = useState({
-    fontSize: 14,
-    theme: 'solarized_dark',
-    tabSize: 4,
-  })
+  //@ts-ignore 
+  const fontSize = useSelector(state=>state.editor.fontSize);
+  //@ts-ignore 
+  const theme = useSelector(state=>state.editor.theme);
+  //@ts-ignore 
+  const tabSize = useSelector(state=>state.editor.tabSize);
+
+  useEffect(() => {
+    if (theme && !(themes.includes(theme))) {
+      dispatch(updateTheme(themes[0]));
+    }
+  }, [theme])
+  useEffect(() => {
+    if (fontSize && !(fontsize.includes(fontSize))) {
+      dispatch(updateFontSize(fontsize[0]));
+    }
+  }, [fontSize])
+  useEffect(() => {
+    if (tabSize && !(tabsize.includes(tabSize))) {
+      dispatch(updateTabSize(tabsize[0]));
+    }
+  }, [tabSize])
 
   const onEditorChange = (newValue: string) => {
     setAlgoState({
@@ -249,10 +277,7 @@ const Editor = (props: EditorProps) => {
     item: any,
     event?: React.SyntheticEvent<HTMLElement, Event> | undefined
   ) => {
-    setEditorState({
-      ...editorState,
-      fontSize: item,
-    })
+    dispatch(updateFontSize(item));
   }
 
   const renderFontSize: ItemRenderer<number> = (
@@ -276,10 +301,7 @@ const Editor = (props: EditorProps) => {
     item: any,
     event?: React.SyntheticEvent<HTMLElement, Event> | undefined
   ) => {
-    setEditorState({
-      ...editorState,
-      theme: item,
-    })
+    dispatch(updateTheme(item));
   }
 
   const renderTheme: ItemRenderer<string> = (
@@ -303,10 +325,7 @@ const Editor = (props: EditorProps) => {
     item: any,
     event?: React.SyntheticEvent<HTMLElement, Event> | undefined
   ) => {
-    setEditorState({
-      ...editorState,
-      tabSize: item,
-    })
+    dispatch(updateTabSize(item));
   }
 
   const handleTitleChange = (_title: string) => {
@@ -415,12 +434,12 @@ const Editor = (props: EditorProps) => {
                 <Select
                   items={themes}
                   itemRenderer={renderTheme}
-                  activeItem={editorState.theme}
+                  activeItem={theme}
                   onItemSelect={onThemeChange}
                   filterable={false}
                 >
                   <Button
-                    text={editorState.theme}
+                    text={theme}
                     rightIcon="double-caret-vertical"
                     outlined={true}
                   />
@@ -433,12 +452,12 @@ const Editor = (props: EditorProps) => {
                 <Select
                   items={fontsize}
                   itemRenderer={renderFontSize}
-                  activeItem={editorState.fontSize}
+                  activeItem={fontSize}
                   onItemSelect={onFontSizeChange}
                   filterable={false}
                 >
                   <Button
-                    text={editorState.fontSize}
+                    text={fontSize}
                     rightIcon="double-caret-vertical"
                     outlined={true}
                   />
@@ -451,12 +470,12 @@ const Editor = (props: EditorProps) => {
                 <Select
                   items={tabsize}
                   itemRenderer={renderFontSize}
-                  activeItem={editorState.tabSize}
+                  activeItem={tabSize}
                   onItemSelect={onTabSizeChange}
                   filterable={false}
                 >
                   <Button
-                    text={editorState.tabSize}
+                    text={tabSize}
                     rightIcon="double-caret-vertical"
                     outlined={true}
                   />
@@ -519,15 +538,15 @@ const Editor = (props: EditorProps) => {
           <AceEditor
             mode="python"
             // readOnly={true}
-            theme={editorState.theme}
-            fontSize={editorState.fontSize}
+            theme={theme}
+            fontSize={fontSize}
             value={algoState.code}
             onChange={onEditorChange}
             width={WIDTH}
             setOptions={{
               enableBasicAutocompletion: true,
               enableLiveAutocompletion: true,
-              tabSize: editorState.tabSize,
+              tabSize: tabSize,
             }}
           />
         </div>

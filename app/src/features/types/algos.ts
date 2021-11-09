@@ -25,9 +25,6 @@ export interface Algo {
     title: string, 
     code: string, 
     created: string, 
-    test_start_default: Date,
-    test_end_default: Date,
-    test_interval_default: string,
     edited_at: string, 
     public: Boolean,
 }

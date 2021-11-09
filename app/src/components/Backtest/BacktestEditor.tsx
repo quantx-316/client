@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Backtest } from '../../features/types/backtest';
 import { dispatchErrorMsg } from '../../features/utils/notifs';
@@ -11,6 +11,10 @@ import 'ace-builds/src-min-noconflict/ext-searchbox'
 import 'ace-builds/src-min-noconflict/ext-language_tools'
 
 import {Algo} from '../../features/types/algos';
+import {  
+  updateFontSize,
+  updateTheme,
+} from '../../features/actions/editor';
 
 const themes = [
   'monokai',
@@ -27,7 +31,6 @@ const themes = [
 
 const fontsize = [14, 16, 18, 20, 24, 28, 32, 40]
 
-const tabsize = [2, 4, 6]
 
 const WIDTH = '800px'
 
@@ -39,30 +42,30 @@ type BacktestProps = {
 
 const BacktestComp = (props: BacktestProps) => {
 
-    // export interface Backtest {
-    //     id: number, 
-    //     algo: number, 
-    //     owner: number, 
-    //     result: string, 
-    //     code_snapshot: string, 
-    //     test_interval: string,
-    //     test_start: Date,
-    //     test_end: Date, 
-    //     created: Date,
-    // }
-    const [editorState, setEditorState] = useState({
-        fontSize: 14,
-        theme: 'solarized_dark',
-      })
+    const dispatch = useDispatch();
+
+    //@ts-ignore 
+    const fontSize = useSelector(state => state.editor.fontSize);
+    //@ts-ignore 
+    const theme = useSelector(state => state.editor.theme);
+
+    useEffect(() => {
+      if (theme && !(themes.includes(theme))) {
+        dispatch(updateTheme(themes[0]));
+      }
+    }, [theme])
+    useEffect(() => {
+      if (fontSize && !(fontsize.includes(fontSize))) {
+        dispatch(updateFontSize(fontsize[0]));
+      }
+    }, [fontSize])
+
 
     const onThemeChange = (
         item: any,
         event?: React.SyntheticEvent<HTMLElement, Event> | undefined
       ) => {
-        setEditorState({
-          ...editorState,
-          theme: item,
-        })
+        dispatch(updateTheme(item));
       }
 
     const renderTheme: ItemRenderer<string> = (
@@ -86,10 +89,7 @@ const BacktestComp = (props: BacktestProps) => {
         item: any,
         event?: React.SyntheticEvent<HTMLElement, Event> | undefined
         ) => {
-        setEditorState({
-            ...editorState,
-            fontSize: item,
-        })
+        dispatch(updateFontSize(item));
     }
 
     const renderFontSize: ItemRenderer<number> = (
@@ -119,12 +119,12 @@ const BacktestComp = (props: BacktestProps) => {
                     <Select
                     items={themes}
                     itemRenderer={renderTheme}
-                    activeItem={editorState.theme}
+                    activeItem={theme}
                     onItemSelect={onThemeChange}
                     filterable={false}
                     >
                     <Button
-                        text={editorState.theme}
+                        text={theme}
                         rightIcon="double-caret-vertical"
                         outlined={true}
                     />
@@ -137,12 +137,12 @@ const BacktestComp = (props: BacktestProps) => {
                     <Select
                     items={fontsize}
                     itemRenderer={renderFontSize}
-                    activeItem={editorState.fontSize}
+                    activeItem={fontSize}
                     onItemSelect={onFontSizeChange}
                     filterable={false}
                     >
                     <Button
-                        text={editorState.fontSize}
+                        text={fontSize}
                         rightIcon="double-caret-vertical"
                         outlined={true}
                     />
@@ -153,8 +153,8 @@ const BacktestComp = (props: BacktestProps) => {
                 <AceEditor
                     mode="python"
                     readOnly={true}
-                    theme={editorState.theme}
-                    fontSize={editorState.fontSize}
+                    theme={theme}
+                    fontSize={fontSize}
                     //@ts-ignore
                     value={props.backtest.code_snapshot}
                     width={WIDTH}

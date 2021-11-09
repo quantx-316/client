@@ -7,3 +7,7 @@ export const dateToUnix = (date: any) => {
 export const dateStrToDate = (dateStr: any) => {
     return moment.utc(dateStr).toDate();
 }
+
+export const dateToStr = (date: any) => {
+    return moment(date).format();
+}

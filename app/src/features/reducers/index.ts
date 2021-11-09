@@ -5,6 +5,7 @@ import algosReducer from './algos';
 import backtestReducer from './backtest';
 import starredReducer from './starred';
 import settingsReducer from "./settings";
+import editorReducer from "./editor";
 
 export default combineReducers({
   auth: authReducer,
@@ -13,4 +14,5 @@ export default combineReducers({
   backtests: backtestReducer,
   starred: starredReducer,
   settings: settingsReducer,
+  editor: editorReducer, 
 });
