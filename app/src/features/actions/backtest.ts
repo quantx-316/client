@@ -114,10 +114,17 @@ export const deleteBacktest = (backtestID: number, callBack?: any) => (dispatch:
 
 }
 
-export const getBacktestLeaderboard = (page: number, size: number, attr: string, dir: string, callBack: any) => (dispatch: any) => {
+export const getBacktestLeaderboard = (
+    page: number, 
+    size: number, 
+    attr: string, 
+    dir: string, 
+    username_query: string, 
+    callBack: any
+    ) => (dispatch: any) => {
 
     return backtestService.backtestLeaderboard(
-        page, size, attr, dir 
+        page, size, attr, dir, username_query,
     ).then(
         (res) => {
             callBack(res.data);

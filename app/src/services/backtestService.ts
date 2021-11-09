@@ -26,9 +26,16 @@ class backtestService {
     }
 
     static backtestLeaderboard(
-        page: number, size: number, attr: string, dir: string
+        page: number, size: number, attr: string, dir: string, username_query: string
     ) {
-        const url = backtestURL + "leaderboard/" + "?page=" + page + "&size=" + size + "&sort_by=" + attr + "&sort_direction=" + dir;
+        const url = (backtestURL + 
+            "leaderboard/" + 
+            "?page=" + page + 
+            "&size=" + size + 
+            "&sort_by=" + attr + 
+            "&sort_direction=" + dir + 
+            "&username_query=" + username_query
+            )
 
         return requests.authGet(url);
     }

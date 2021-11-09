@@ -58,6 +58,12 @@ const Searching = (props: SearchingProps) => {
         props.onSubmit();
     }
 
+    const onKeyPress = (e: any) => {
+        if (e.which === 13) {
+            props.onSubmit();
+        }
+    }
+
     return (
         <div
             style={{
@@ -107,7 +113,7 @@ const Searching = (props: SearchingProps) => {
                         placeholder="Search" 
                         value={props.query}
                         onChange={onQueryChange}
-                        onSubmit={onSubmit}
+                        onKeyPress={onKeyPress}
                     />
                     <button className="bp3-button bp3-minimal bp3-intent-primary bp3-icon-arrow-right"
                         onClick={onSubmit}
