@@ -1,16 +1,18 @@
 import React from 'react'; 
 import { useSelector, useDispatch } from 'react-redux';
-import { Code, Label, Switch } from "@blueprintjs/core";
+import { Code, Label, Switch, Card } from "@blueprintjs/core";
 import {
     updateAlgosPublic,
     updateBackStarred,
     updateCompStarred,
 } from '../features/actions/settings';
+import { Popover2 } from '@blueprintjs/popover2';
 
 type SwitchingCompProps = {
     switched: boolean, 
     onSwitch: any, 
     desc: string, 
+    buttonDesc?: String
 }
 
 const SwitchingComp = (props: SwitchingCompProps) => {
@@ -36,12 +38,35 @@ const SwitchingComp = (props: SwitchingCompProps) => {
             <div
                 className="centered"
             >
-                <Switch 
-                    checked={props.switched}
-                    onChange={() => props.onSwitch()}
-                    innerLabel="false"
-                    innerLabelChecked="true"
-                />
+                {
+                    props.buttonDesc &&
+                    <Popover2
+                        interactionKind="hover"
+                        autoFocus={false}
+                        enforceFocus={false}
+                        content={
+                            <Card>
+                                {props.buttonDesc}
+                            </Card>
+                        }
+                    >
+                        <Switch 
+                            checked={props.switched}
+                            onChange={() => props.onSwitch()}
+                            innerLabel="false"
+                            innerLabelChecked="true"
+                        />
+                    </Popover2>
+                }
+                {
+                    !props.buttonDesc &&
+                    <Switch 
+                        checked={props.switched}
+                        onChange={() => props.onSwitch()}
+                        innerLabel="false"
+                        innerLabelChecked="true"
+                    />
+                }
             </div>
         </div>
     )

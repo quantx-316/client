@@ -54,11 +54,13 @@ const SettingsModal = (props: SettingsModalProps) => {
                     switched={pendingBackStarred}
                     onSwitch={onPendingBackClick}
                     desc={"New backtests are starred by default"}
+                    buttonDesc={"Starring tracks the executing backtests"}
                 />
                 <BoolSwitch 
                     switched={pendingCompStarred}
                     onSwitch={onPendingCompClick}
                     desc={"Entered competitions are starred by default"}
+                    buttonDesc={"Starring tracks the in progress competitions"}
                 />
             </div>
         </Modal>
