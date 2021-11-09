@@ -52,7 +52,10 @@ export default function (state = initialState, action: BacktestTypes) {
                 pagination: action.payload.pagination,
             }
         case BACKTEST_FETCH_FAIL:
-            return state 
+
+            console.log("backtest fetch fail");
+
+            return initialState
         default:
             return state 
     }

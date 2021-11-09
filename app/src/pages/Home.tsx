@@ -28,15 +28,39 @@ export const Home: React.FC = () => {
         });
     }
 
-    const fetchNextAlgos = (page: number, size: number, algoAttr: string, algoDir: string) => {
-        dispatch(fetchAlgos(page, size, convertAlgoAttr(algoAttr), algoDir));
+    const fetchNextAlgos = (
+        page: number, 
+        size: number, 
+        algoAttr: string, 
+        algoDir: string,
+        search_by: string, 
+        search_query: string, 
+        exclusive: boolean, 
+    ) => {
+        dispatch(fetchAlgos(
+            page, 
+            size, 
+            convertAlgoAttr(algoAttr), 
+            algoDir,
+            convertAlgoSearchAttr(search_by), 
+            search_query, 
+            exclusive, 
+        ));
     }
 
     const [algoPage, setAlgoPage] = useState(1);
     const [algoSize, setAlgoSize] = useState(10);
     const onAlgoPageChange = (e: any, page: number) => {
         setAlgoPage(page);
-        fetchNextAlgos(page, algoSize, algoAttr, algoDir);
+        fetchNextAlgos(
+            page, 
+            algoSize, 
+            algoAttr, 
+            algoDir, 
+            algoSearchAttr, 
+            algoSearchQuery, 
+            algoSearchExclusive,
+        )
     }
 
     const algoPageAfterDelete = () => {
@@ -56,6 +80,46 @@ export const Home: React.FC = () => {
         "Last Edited": "edited_at",
         "Title": "title"
     };
+    const algoSearchAttrsMapping = {
+        "Title": "title",
+        "Code": "code",
+    }
+    const [algoSearchAttr, setAlgoSearchAttr] = useState("Title");
+    const convertAlgoSearchAttr = (searchAttr: string) => {
+        //@ts-ignore 
+        return algoSearchAttrsMapping[searchAttr];
+    }
+    const [algoSearchQuery, setAlgoSearchQuery] = useState("");
+    const [algoSearchExclusive, setAlgoSearchExclusive] = useState(false);
+    const onSearchAttrChange = (searchAttr: string) => {
+        setAlgoSearchAttr(searchAttr);
+        fetchNextAlgos(
+            algoPage, 
+            algoSize, 
+            algoAttr, 
+            algoDir, 
+            searchAttr, 
+            algoSearchQuery, 
+            algoSearchExclusive,
+        )
+    }
+    const onSearchQueryChange = (searchQuery: string) => {
+        setAlgoSearchQuery(searchQuery);
+    }
+    const onAlgoSearchExclusiveChange = () => {
+        const newExcl = !algoSearchExclusive;
+        setAlgoSearchExclusive(newExcl);
+        fetchNextAlgos(
+            algoPage, 
+            algoSize, 
+            algoAttr, 
+            algoDir, 
+            algoSearchAttr, 
+            algoSearchQuery, 
+            newExcl,
+        )
+    }
+
     const [algoAttr, setAlgoAttr] = useState("Last Edited");
     const convertAlgoAttr = (algoAttr: string) => {
         //@ts-ignore
@@ -63,16 +127,44 @@ export const Home: React.FC = () => {
     }
     const onAlgoAttrChange = (newAttr: string) => {
         setAlgoAttr(newAttr);
-        fetchNextAlgos(algoPage, algoSize, newAttr, algoDir);
+        fetchNextAlgos(
+            algoPage, 
+            algoSize, 
+            newAttr, 
+            algoDir, 
+            algoSearchAttr, 
+            algoSearchQuery, 
+            algoSearchExclusive,
+        )
     }
     const [algoDir, setAlgoDir] = useState("desc");
     const onAlgoDirChange = (newDir: string) => {
         setAlgoDir(newDir);
-        fetchNextAlgos(algoPage, algoSize, algoAttr, newDir);
+        fetchNextAlgos(
+            algoPage, 
+            algoSize, 
+            algoAttr, 
+            newDir, 
+            algoSearchAttr, 
+            algoSearchQuery, 
+            algoSearchExclusive,
+        )
+    }
+
+    const fetchAllAlgos = () => {
+        fetchNextAlgos(
+            algoPage, 
+            algoSize, 
+            algoAttr, 
+            algoDir, 
+            algoSearchAttr, 
+            algoSearchQuery, 
+            algoSearchExclusive,
+        )
     }
 
     useEffect(() => {
-        fetchNextAlgos(algoPage, algoSize, algoAttr, algoDir);
+        fetchAllAlgos();
     }, [])
 
     //@ts-ignore 
@@ -150,7 +242,7 @@ export const Home: React.FC = () => {
                 </div>
 
                 {
-                    algos && algos.length > 0 ? 
+                    true ? 
                     <div
                         className="full separated-row"
                     >
@@ -164,6 +256,15 @@ export const Home: React.FC = () => {
                             onAttrChange={onAlgoAttrChange}
                             dir={algoDir}
                             onDirChange={onAlgoDirChange}
+
+                            searchAttrsMapping={algoSearchAttrsMapping}
+                            searchAttr={algoSearchAttr}
+                            onSearchAttrChange={onSearchAttrChange}
+                            searchQuery={algoSearchQuery}
+                            onSearchQueryChange={onSearchQueryChange}
+                            searchExclusive={algoSearchExclusive}
+                            onExclusiveChange={onAlgoSearchExclusiveChange}
+                            onSearchSubmit={fetchAllAlgos}
                         />
 
                         <Backtests 

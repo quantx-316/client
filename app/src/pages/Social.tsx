@@ -33,7 +33,7 @@ const Social: React.FC = () => {
             <Tabs
                 className="centered-top-col full"
             >
-                <Tab id="lead" title="Global Leaderboard" panel = {<LeaderboardPanel />} />
+                <Tab id="lead" title="Users" panel = {<LeaderboardPanel />} />
                 <Tab id="comp" title="Competitions" panel = {<CompetitionPanel />} />
             </Tabs>
         </div>
@@ -158,9 +158,9 @@ const LeaderboardPanel = () => {
                                                         display: "flex",
                                                     }}
                                                 >
-                                                    <p>Score: </p>
+                                                    <p>Highest Score: &nbsp; </p>
                                                     {/* @ts-ignore */}
-                                                    <p>{obj.score}</p>
+                                                    <p> {obj.score}</p>
                                                 </div>
 
                                             </div>

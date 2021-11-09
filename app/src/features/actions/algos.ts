@@ -85,9 +85,9 @@ export const deleteAlgo = (algoID: number, callBack?: any) => (dispatch: any) =>
                 type: ALGO_DELETE_SUCCESS, 
                 payload: algoID,
             })
-
-            callBack();
-
+            if (callBack) {
+                callBack();
+            }
             dispatchSuccessMsg(dispatch, "Successfully deleted")
         },
         (error) => {
@@ -104,9 +104,26 @@ export const deleteAlgo = (algoID: number, callBack?: any) => (dispatch: any) =>
 
 }
 
-export const fetchAlgos = (page: number, size: number, attr: string, dir: string) => (dispatch: any) => {
+export const fetchAlgos = (
+    page: number, 
+    size: number, 
+    attr: string, 
+    dir: string,
+    search_by: string,
+    search_query: string,
+    search_exclusive: boolean,
+    callBack?: any,
+    ) => (dispatch: any) => {
 
-    return algoService.getAlgos(page, size, attr, dir).then(
+    return algoService.getAlgos(
+        page, 
+        size, 
+        attr, 
+        dir,
+        search_by, 
+        search_query, 
+        search_exclusive 
+        ).then(
         (res) => {
 
             dispatch({
@@ -117,6 +134,10 @@ export const fetchAlgos = (page: number, size: number, attr: string, dir: string
                     'pagination': getPagination(res.data)
                 }, 
             })
+
+            if (callBack) {
+                callBack();
+            }
 
         },
         (error) => {

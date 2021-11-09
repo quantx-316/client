@@ -115,9 +115,6 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
     const redDispatch = useDispatch();
 
     useEffect(() => {
-
-        console.log("USE EFFECT FETCHED NODES");
-
         dispatch({
             type: "FETCHED_NODES",
             payload: backtests,
@@ -126,9 +123,6 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
 
     const onNodeEnter = React.useCallback(
         (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
-            console.log("ON NODE ENTER");
-            console.log(nodePath);
-            console.log(node);
             //@ts-ignore 
             setHoveringInfo(node);
         },

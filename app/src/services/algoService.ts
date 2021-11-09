@@ -19,8 +19,25 @@ class algoService {
         return requests.authDelete(url);
     }
 
-    static getAlgos(page: number, size: number, attr: string, dir: string) {
-        const url = algoURL + "all/" + "?page=" + page + "&size=" + size + "&sort_by=" + attr + "&sort_direction=" + dir;
+    static getAlgos(
+        page: number, 
+        size: number, 
+        attr: string, 
+        dir: string,
+        search_by: string, 
+        search_query: string, 
+        search_exclusive: boolean,
+        ) {
+        const url = (
+            algoURL + "all/" + 
+            "?page=" + page + 
+            "&size=" + size + 
+            "&sort_by=" + attr + 
+            "&sort_direction=" + dir + 
+            "&search_by=" + search_by + 
+            "&search_query=" + search_query + 
+            "&exclusive=" + search_exclusive
+        );
         return requests.authGet(url);
     }
 

@@ -10,7 +10,8 @@ import {dispatchErrorMsg} from '../../features/utils/notifs';
 import {dateStrToDate} from '../../features/utils/time';
 import Pagination from '../Pagination';
 import Sorting from '../Sorting';
-
+import Searching from '../Searching';
+import { BACKTEST_FETCH_FAIL } from '../../features/types/backtest';
 
 type NodePath = number[];
 
@@ -44,9 +45,19 @@ type AlgosListProps = {
     onAttrChange: any, 
     dir: string,
     onDirChange: any,
+
+    searchAttrsMapping: any, 
+    searchAttr: any, 
+    onSearchAttrChange: any, 
+    searchQuery: string, 
+    onSearchQueryChange: any, 
+    searchExclusive: boolean, 
+    onExclusiveChange: any, 
+    onSearchSubmit: any, 
 }
 
 const AlgosList  = (props: AlgosListProps) => {
+    const redDispatch = useDispatch();
 
     const history = useHistory();
 
@@ -117,6 +128,11 @@ const AlgosList  = (props: AlgosListProps) => {
                     }
                     //@ts-ignore
                     setSelectedInfo(newState3[0])
+                } else {
+                    setSelectedInfo(null);
+                    redDispatch({
+                        type: BACKTEST_FETCH_FAIL,
+                    })
                 }
 
                 return newState3;
@@ -130,8 +146,6 @@ const AlgosList  = (props: AlgosListProps) => {
     //@ts-ignore
     const algos = useSelector(state => state.algos.algos);
     
-    const redDispatch = useDispatch();
-
     useEffect(() => {
         dispatch({
             type: "FETCHED_NODES",
@@ -184,6 +198,10 @@ const AlgosList  = (props: AlgosListProps) => {
         dispatchErrorMsg(redDispatch, "Invalid selected information");
     }
 
+
+
+
+
     return (
         <Card
             style={{
@@ -221,13 +239,33 @@ const AlgosList  = (props: AlgosListProps) => {
                 </Button>
             </div>
 
-            <Sorting 
-                attrsMapping={props.attrsMapping}
-                attr={props.attr}
-                onAttrChange={props.onAttrChange}
-                dir={props.dir}
-                onDirChange={props.onDirChange}
-            />
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'space-between'
+                }}
+            >
+                <Sorting 
+                    attrsMapping={props.attrsMapping}
+                    attr={props.attr}
+                    onAttrChange={props.onAttrChange}
+                    dir={props.dir}
+                    onDirChange={props.onDirChange}
+                />
+
+                <Searching 
+                    attrsMapping={props.searchAttrsMapping}
+                    attr={props.searchAttr}
+                    query={props.searchQuery}
+                    onQueryChange={props.onSearchQueryChange}
+                    onAttrChange={props.onSearchAttrChange}
+                    exclusive={props.searchExclusive}
+                    onExclusiveChange={props.onExclusiveChange}
+                    onSubmit={props.onSearchSubmit}
+                />
+            </div>
+
+
             
             {
                 nodes && nodes.length > 0 &&
