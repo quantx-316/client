@@ -57,7 +57,7 @@ const Editor = (props: EditorProps) => {
     print('hello world')
   `
   //@ts-ignore
-  const editorConfigState = useSelector(state => state.editorConfig)
+  const editorConfigState = useSelector(state => state.editorConfig).editorConfig
   console.log(editorConfigState)
 
   const default_end_date = new Date();
@@ -246,12 +246,12 @@ const Editor = (props: EditorProps) => {
     // fontSize: 14,
     // theme: 'solarized_dark',
     // tabSize: 4,
-    fontSize: editorConfigState.fontSize,
-    theme: editorConfigState.theme,
-    tabSize: editorConfigState.tabSize,
-    timeInterval: editorConfigState.timeInterval,
-    startTime: editorConfigState.startTime,
-    endTime: editorConfigState.endTime
+    fontSize: editorConfigState.fontSize || 14,
+    theme: editorConfigState.theme ||  'solarized_dark',
+    tabSize: editorConfigState.tabSize || 4,
+    timeInterval: editorConfigState.timeInterval || null,
+    startTime: editorConfigState.startTime || startDate,
+    endTime: editorConfigState.endTime || endDate
   })
 
   const onEditorChange = (newValue: string) => {
