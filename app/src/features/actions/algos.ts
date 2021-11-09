@@ -154,10 +154,17 @@ export const fetchAlgos = (
 
 }
 
-export const fetchPublicAlgos = (username: string, page: number, size: number, attr: string, dir: string, callBack: any) => (dispatch: any) => {
+export const fetchPublicAlgos = (
+    username: string, 
+    page: number, 
+    size: number, 
+    attr: string, 
+    dir: string, 
+    code_query: string, 
+    callBack: any) => (dispatch: any) => {
 
     return algoService.getPublicAlgos(
-        username, page, size, attr, dir
+        username, page, size, attr, dir, code_query, 
     ).then(
         (res) => {
             callBack(res.data);

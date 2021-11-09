@@ -181,6 +181,47 @@ export const Home: React.FC = () => {
         "Test End": "test_end",
         "Created": "created",
     };
+    const backSearchAttrsMapping = {
+        "Code": "code_snapshot",
+    }
+    const [backSearchAttr, setBackSearchAttr] = useState("Code");
+    const convertBackSearchAttr = (searchAttr: string) => {
+        //@ts-ignore 
+        return backSearchAttrsMapping[searchAttr];
+    }
+    const [backSearchQuery, setBackSearchQuery] = useState("");
+    const [backSearchExclusive, setBackSearchExclusive] = useState(false);
+    const onBackSearchAttrChange = (searchAttr: string) => {
+        return;
+        // setBackSearchAttr(searchAttr);
+        // fetchBacktestByAlgo(
+        //     selectedAlgoId, 
+        //     backtestPage, 
+        //     backtestSize,
+        //     backAttr, 
+        //     backDir, 
+        //     searchAttr, 
+        //     backSearchQuery, 
+        //     backSearchExclusive,
+        // )
+    }
+    const onBackSearchQueryChange = (searchQuery: string) => {
+        setBackSearchQuery(searchQuery);
+    }
+    const onBackSearchExclusiveChange = () => {
+        const newExcl = !backSearchExclusive;
+        setBackSearchExclusive(newExcl);
+        fetchBacktestByAlgo(
+            selectedAlgoId, 
+            backtestPage, 
+            backtestSize,
+            backAttr, 
+            backDir, 
+            backSearchAttr, 
+            backSearchQuery, 
+            newExcl,
+        )
+    }
     const [backAttr, setBackAttr] = useState("Created");
     const convertBackAttr = (attr: string) => {
         //@ts-ignore
@@ -201,13 +242,54 @@ export const Home: React.FC = () => {
         refreshNodes(page, backAttr, backDir);
     }
 
+    const fetchBacktestByAlgo = (
+        algoID: number, 
+        page: number, 
+        backtestSize: number, 
+        attr: string, 
+        dir: string, 
+        search_by: string,
+        search_query: string,
+        exclusive: boolean,
+        callBack?: any,
+    ) => {
+        dispatch(getBacktestByAlgo(
+            algoID, 
+            page, 
+            backtestSize, 
+            convertBackAttr(attr), 
+            dir, 
+            convertBackSearchAttr(search_by),
+            search_query,
+            exclusive,
+            callBack)
+        );
+    }
+
     useEffect(() => {
         onPageChange(null, 1);
     }, [selectedAlgoId])
+    
     const refreshNodes = (page: number, attr: string, dir: string, callBack?: any) => {
         if (selectedAlgoId > 0) {
-            dispatch(getBacktestByAlgo(selectedAlgoId, page, backtestSize, convertBackAttr(attr), dir, callBack));
+            fetchBacktestByAlgo(
+                selectedAlgoId, page, backtestSize, 
+                attr, dir, backSearchAttr, backSearchQuery, backSearchExclusive, callBack
+            )
         }
+    }
+
+    const fetchBacktests = () => {
+        fetchBacktestByAlgo(
+            selectedAlgoId, 
+            backtestPage, 
+            backtestSize,
+            backAttr, 
+            backDir, 
+            backSearchAttr, 
+            backSearchQuery, 
+            backSearchExclusive,
+        )
     }
 
     const pageAfterDelete = () => {
@@ -280,6 +362,15 @@ export const Home: React.FC = () => {
                             dir={backDir}
                             onDirChange={onDirChange}
                             onRefresh={onRefreshClick}
+                        
+                            searchAttrsMapping={backSearchAttrsMapping}
+                            searchAttr={backSearchAttr}
+                            onSearchAttrChange={onBackSearchAttrChange}
+                            searchQuery={backSearchQuery}
+                            onSearchQueryChange={onBackSearchQueryChange}
+                            searchExclusive={backSearchExclusive}
+                            onExclusiveChange={onBackSearchExclusiveChange}
+                            onSearchSubmit={fetchBacktests}
                         />
                     </div>
 

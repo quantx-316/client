@@ -9,8 +9,8 @@ type SearchingProps = {
     query: string,
     onQueryChange: any,
     onAttrChange: any,
-    exclusive: boolean, 
-    onExclusiveChange: any, 
+    exclusive?: boolean, 
+    onExclusiveChange?: any, 
     onSubmit: any, 
 }
 
@@ -84,20 +84,24 @@ const Searching = (props: SearchingProps) => {
                 />
             </Select>   
 
-            <Popover2
-                interactionKind="hover"
-                placement="right"
-                popoverClassName={Classes.POPOVER2_CONTENT_SIZING}
-                autoFocus={false}
-                enforceFocus={false}
-                content={props.exclusive ? "Exclude query" : "Include query"}
-            >
-                <Button 
-                    //@ts-ignore
-                    icon={props.exclusive ? "filter-remove" : "filter-keep"}
-                    onClick={() => props.onExclusiveChange()}
-                />
-            </Popover2>
+            {
+                props.onExclusiveChange && 
+
+                <Popover2
+                    interactionKind="hover"
+                    placement="right"
+                    popoverClassName={Classes.POPOVER2_CONTENT_SIZING}
+                    autoFocus={false}
+                    enforceFocus={false}
+                    content={props.exclusive ? "Exclude query" : "Include query"}
+                >
+                    <Button 
+                        //@ts-ignore
+                        icon={props.exclusive ? "filter-remove" : "filter-keep"}
+                        onClick={() => props.onExclusiveChange()}
+                    />
+                </Popover2>
+            }
 
             <div
                 style={{

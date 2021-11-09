@@ -30,6 +30,21 @@ const Profile = () => {
 
     const [editing, setEditing] = useState(false);
 
+
+    const backSearchAttrsMapping = {
+        "Code": "code_snapshot",
+    }
+    const [backSearchAttr, setBackSearchAttr] = useState("Code");
+    const convertBackSearchAttr = (searchAttr: string) => {
+        //@ts-ignore 
+        return backSearchAttrsMapping[searchAttr];
+    }
+    const [backSearchQuery, setBackSearchQuery] = useState("");
+    const onBackSearchQueryChange = (searchQuery: string) => {
+        setBackSearchQuery(searchQuery);
+    }
+ 
+
     const onUserChange = (user: any) => {
         setUser(user);
         setFakeLoading(false);
@@ -103,11 +118,26 @@ const Profile = () => {
         refreshPublicAlgos(page, size, newAttr, dir);
     }
 
-    const refreshPublicAlgos = (
+    const onBackSearchAttrChange = (newAttr: string) => {
+        return 
+    }
+
+    const refreshAllPublicAlgos = () => {
+        fetchNewPublicAlgos(
+            page, 
+            size, 
+            attr, 
+            dir, 
+            backSearchQuery
+        )
+    }
+
+    const fetchNewPublicAlgos = (
         page: number, 
         size: number, 
         attr: string, 
-        dir: string 
+        dir: string, 
+        query: string, 
     ) => {
         dispatch(fetchPublicAlgos(
             username, 
@@ -115,8 +145,24 @@ const Profile = () => {
             size,
             convertAttr(attr),
             dir,
-            setPublicAlgos
+            query,
+            setPublicAlgos,
         ))
+    }
+
+    const refreshPublicAlgos = (
+        page: number, 
+        size: number, 
+        attr: string, 
+        dir: string 
+    ) => {
+        fetchNewPublicAlgos(
+            page, 
+            size, 
+            attr, 
+            dir, 
+            backSearchQuery
+        )
     }
 
     useEffect(() => {
@@ -156,6 +202,9 @@ const Profile = () => {
     }
 
     const [viewPublicScore, setViewPublicScore] = useState(false);
+
+
+
 
     return (
         <div
@@ -303,7 +352,7 @@ const Profile = () => {
             }
 
             {
-                 !editing && viewPublicScore && publicAlgosArr && publicAlgosArr.length && publicAlgosArr.length > 0 &&
+                 !editing && viewPublicScore && !(publicAlgosArr===null) && 
                  <Backtests 
                     title={"Public Scores"}
                     info={"Scores for the best performing backtest per algorithm that the user has made public"}
@@ -317,6 +366,14 @@ const Profile = () => {
                     onAttrChange={onAttrChange}
                     dir={dir}
                     onDirChange={onDirChange}
+
+                    searchAttrsMapping={backSearchAttrsMapping}
+                    searchAttr={backSearchAttr}
+                    onSearchAttrChange={onBackSearchAttrChange}
+                    searchQuery={backSearchQuery}
+                    onSearchQueryChange={onBackSearchQueryChange}
+                    onSearchSubmit={refreshAllPublicAlgos}
+
                  />
             }
 

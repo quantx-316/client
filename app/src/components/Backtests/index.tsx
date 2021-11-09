@@ -11,6 +11,7 @@ import {dispatchErrorMsg, dispatchSuccessMsg} from '../../features/utils/notifs'
 import {dateStrToDate} from '../../features/utils/time';
 import Pagination from '../Pagination';
 import Sorting from '../Sorting';
+import Searching from '../Searching';
 
 type NodePath = number[];
 
@@ -55,6 +56,15 @@ type BacktestProps = {
     dir: any, 
     onDirChange: any, 
     onRefresh?: any, 
+
+    searchAttrsMapping: any, 
+    searchAttr: any, 
+    onSearchAttrChange: any, 
+    searchQuery: string, 
+    onSearchQueryChange: any, 
+    searchExclusive?: boolean, 
+    onExclusiveChange?: any, 
+    onSearchSubmit: any, 
 }
 
 const Backtest = ({backtests, ...props}: BacktestProps) => {
@@ -293,15 +303,33 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
                     </Popover2>
                 }
             </div>
+            <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between'
+                        }}
+            >
+                <Sorting 
+                    attrsMapping={props.attrsMapping}
+                    attr={props.attr}
+                    onAttrChange={props.onAttrChange}
+                    dir={props.dir}
+                    onDirChange={props.onDirChange}
+                />
 
-            <Sorting 
-                attrsMapping={props.attrsMapping}
-                attr={props.attr}
-                onAttrChange={props.onAttrChange}
-                dir={props.dir}
-                onDirChange={props.onDirChange}
-            />
+                <Searching 
+                    attrsMapping={props.searchAttrsMapping}
+                    attr={props.searchAttr}
+                    query={props.searchQuery}
+                    onQueryChange={props.onSearchQueryChange}
+                    onAttrChange={props.onSearchAttrChange}
+                    exclusive={props.searchExclusive}
+                    onExclusiveChange={props.onExclusiveChange}
+                    onSubmit={props.onSearchSubmit}
+                />
 
+            </div>
+        
             {
                 nodes && nodes.length > 0 && 
 
