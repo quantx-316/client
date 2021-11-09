@@ -9,17 +9,22 @@ export const saveEditorConfig = (
   fontSize: number,
   theme: string,
   tabSize: number,
+  timeInterval: any,
+  startTime: any,
+  endTime: any
 ) => (dispatch: any) => {
 
 
   const editorConfig = {
     fontSize: fontSize,
     theme: theme,
-    tabSize: tabSize
+    tabSize: tabSize,
+    timeInterval: timeInterval,
+    startTime: startTime,
+    endTime: endTime
   }
   try {
     //@ts-ignore
-    // editorConfig = JSON.parse(localStorage.getItem('editorConfig'))
     localStorage.setItem("editorConfig", JSON.stringify(editorConfig))
     console.log("try")
   } catch (error) {
@@ -29,7 +34,9 @@ export const saveEditorConfig = (
   if (
     !fontSize ||
     !theme ||
-    !tabSize 
+    !tabSize || 
+    !startTime || 
+    !endTime
   ) {
     dispatch({
       type: SAVE_EDITOR_CONFIG_FAIL,

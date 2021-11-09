@@ -6,7 +6,7 @@ import {
   FETCH_EDITOR_CONFIG_FAIl,
 } from '../types/editorConfig'
 
-let editorConfig: EditorConfigTypes
+let editorConfig
 
 try {
   editorConfig = JSON.parse(localStorage.getItem('editorConfig') || '{}')
@@ -19,9 +19,16 @@ try {
   editorConfig = null
 }
 
-const initialState: EditorConfigTypes = editorConfig
+const initialState = {
+  fontSize: 14,
+  theme: 'solarized_dark',
+  tabSize: 4,
+  timeInterval: null,
+  startTime: null,
+  endTime: null
+}
 
-export default function (state = initialState, action: EditorConfigTypes) {
+export default function editorConfigReducer (state = initialState, action: EditorConfigTypes) {
   switch (action.type) {
     case SAVE_EDITOR_CONFIG_SUCCESS:
       return {

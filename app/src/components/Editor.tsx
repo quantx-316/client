@@ -248,7 +248,10 @@ const Editor = (props: EditorProps) => {
     // tabSize: 4,
     fontSize: editorConfigState.fontSize,
     theme: editorConfigState.theme,
-    tabSize: editorConfigState.tabSize
+    tabSize: editorConfigState.tabSize,
+    timeInterval: editorConfigState.timeInterval,
+    startTime: editorConfigState.startTime,
+    endTime: editorConfigState.endTime
   })
 
   const onEditorChange = (newValue: string) => {
@@ -272,6 +275,9 @@ const Editor = (props: EditorProps) => {
         fontSize,
         editorState.theme,
         editorState.tabSize,
+        editorState.timeInterval,
+        editorState.startTime,
+        editorState.endTime
       )
     )
   }
@@ -305,7 +311,10 @@ const Editor = (props: EditorProps) => {
       saveEditorConfig(
         editorState.fontSize,
         theme,
-        editorState.tabSize
+        editorState.tabSize,
+        editorState.timeInterval,
+        editorState.startTime,
+        editorState.endTime
       )
     )
   }
@@ -339,7 +348,10 @@ const Editor = (props: EditorProps) => {
       saveEditorConfig(
         editorState.fontSize,
         editorState.theme,
-        tabSize
+        tabSize,
+        editorState.timeInterval,
+        editorState.startTime,
+        editorState.endTime
       )
     )
   }
@@ -448,7 +460,7 @@ const Editor = (props: EditorProps) => {
                   filterable={false}
                 >
                   <Button
-                    text={editorState.theme}
+                    text={editorConfigState.theme}
                     rightIcon="double-caret-vertical"
                     outlined={true}
                   />
