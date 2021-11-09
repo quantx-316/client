@@ -22,9 +22,9 @@ const BacktestPage = () => {
         if (location && location.state && location.state.starred) {
             // came from the starred list 
             dispatch(removeBacktest(backtest_id));
-            dispatchErrorMsg(dispatch, "You are unauthorized, it has been removed from your starred");
+            dispatchErrorMsg(dispatch, "You are unauthorized or this does not exist anymore, it has been removed from your starred.");
         } else {
-            dispatchErrorMsg(dispatch, "You are unauthorized");
+            dispatchErrorMsg(dispatch, "You are unauthorized or this does not exist anymore.");
         }
 
     }

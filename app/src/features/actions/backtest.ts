@@ -77,7 +77,10 @@ export const getBacktestByID = (backtestID: number, getBacktestCallback: any, fa
         },
         (error) => {
             genericErrorHandler(error, dispatch);
-            failCallBack();
+
+            if (failCallBack) {
+                failCallBack();
+            }
         }
     )
 

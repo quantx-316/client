@@ -20,7 +20,7 @@ import {dispatchErrorMsg} from './features/utils/notifs';
 import ProtectedRoute from './components/ProtectedRoute';
 import Backtest from './pages/Backtest';
 import {getBacktestByID} from './features/actions/backtest';
-import {addBacktest} from './features/actions/starred';
+import {addBacktest, removeBacktest} from './features/actions/starred';
 import {selectAlgo} from './features/actions/algos';
 
 const Routes: React.FC = () => {  
@@ -71,14 +71,18 @@ const Routes: React.FC = () => {
       dispatch(selectAlgo(-1));
       dispatch(selectAlgo(data.algo));
     }
+  }
 
+  const failCallback = (backtest_id: number) => {
+    dispatch(removeBacktest(backtest_id));
+    dispatchErrorMsg(dispatch, "Starred backtest deleted");
   }
 
   const pingBacktests = () => {
     if (backtestsToPing && backtestsToPing.length > 0) {
       backtestsToPing.forEach(backtest => {
         //@ts-ignore 
-        dispatch(getBacktestByID(backtest.id, getBacktestCallback))
+        dispatch(getBacktestByID(backtest.id, getBacktestCallback, () => failCallback(backtest.id)))
       })
     }
 
