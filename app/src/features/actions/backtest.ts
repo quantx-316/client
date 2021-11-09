@@ -23,7 +23,7 @@ export const createBacktest = (backtest: BacktestSubmit, createBacktestCallback:
                 payload: res.data,
             })
 
-            createBacktestCallback();
+            createBacktestCallback(res.data);
 
         },
         (err) => {

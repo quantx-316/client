@@ -30,15 +30,18 @@ const ListStarred = () => {
     const [restCompLst, setRestCompLst] = useState([]);
 
     const processBacktestLst = () => {
+
+        console.log('LIST STARRED PROCESS BACKTESTS');
+
         if (!backtests) {
             setHighBacktestLst([]);
             setRestBacktestLst([]);
         } else {
             const backtestLst = Object.values(backtests);
             //@ts-ignore 
-            const high = backtestLst.filter(backtest => backtest.result == null)
+            const high = backtestLst.filter(backtest => backtest.result === null)
             //@ts-ignore 
-            const rest = backtestLst.filter(backtest => backtest.result != null)
+            const rest = backtestLst.filter(backtest => backtest.result !== null)
             //@ts-ignore 
             setHighBacktestLst(high);
             //@ts-ignore 

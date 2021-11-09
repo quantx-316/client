@@ -1,6 +1,7 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { HashRouter, Switch, Route, Redirect } from 'react-router-dom'
 import {useSelector, useDispatch} from "react-redux";
+import { dispatchSuccessMsg } from './features/utils/notifs';
 import Dev from './pages/Dev'
 import { Home } from './pages/Home'
 import Backtests from './pages/Backtests';
@@ -18,11 +19,106 @@ import {logout} from './features/actions/auth';
 import {dispatchErrorMsg} from './features/utils/notifs';
 import ProtectedRoute from './components/ProtectedRoute';
 import Backtest from './pages/Backtest';
+import {getBacktestByID} from './features/actions/backtest';
+import {addBacktest} from './features/actions/starred';
+import {selectAlgo} from './features/actions/algos';
 
 const Routes: React.FC = () => {  
 
   //@ts-ignore 
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
+  //@ts-ignore 
+  const backtests = useSelector(state => state.starred.backtests);
+  //@ts-ignore 
+  const competitions = useSelector(state => state.starred.competitions);
+
+  const [backtestsToPing, setBacktestsToPing] = useState([]);
+  const [compToPing, setCompsToPing] = useState([]);
+
+  const processBacktests = (avoid_id?: number) => {
+    if (!backtests) {
+      setBacktestsToPing([]);
+    } else {
+      const backtestLst = Object.values(backtests);
+      //@ts-ignore 
+      let high = backtestLst.filter(backtest => backtest.result === null)
+      //@ts-ignore 
+      high = high.filter(backtest => backtest.id !== avoid_id)
+      //@ts-ignore 
+      setBacktestsToPing(high);
+    }
+  }
+
+  const processComps = () => {
+
+    if (!competitions) {
+      setCompsToPing([]);
+    } else {
+      const compLst = Object.values(competitions);
+      // //@ts-ignore 
+      // const high = compLst.filter(backtest => backtest.result == null)
+      //@ts-ignore 
+      setCompsToPing([]);
+    }
+  }
+
+  const getBacktestCallback = (data: any) => {
+    if (data && data.result) {
+      dispatchSuccessMsg(dispatch, "Starred backtest finished executing");
+      dispatch(addBacktest(data));
+      processBacktests(data.id);
+      dispatch(selectAlgo(-1));
+      dispatch(selectAlgo(data.algo));
+    }
+
+  }
+
+  const pingBacktests = () => {
+    if (backtestsToPing && backtestsToPing.length > 0) {
+      backtestsToPing.forEach(backtest => {
+        //@ts-ignore 
+        dispatch(getBacktestByID(backtest.id, getBacktestCallback))
+      })
+    }
+
+  }
+
+  const pingCompetitions = () => {
+
+    console.log("PINGING COMPETITIONS");
+    if (compToPing && compToPing.length > 0) {
+      console.log("pinging competitions");
+    }
+  }
+
+  useEffect(() => {
+
+    if (backtestsToPing && backtestsToPing.length > 0) {
+
+      const intervalId = setInterval(() => pingBacktests(), 1000 * 3) // 1000 is one second, so three seconds, backtests shouldnt take too long
+      // backtests require more frequent pinging than competitions, which is why they are separated
+      return function cleanup() {
+        clearInterval(intervalId);
+      }
+    }
+  }, [backtestsToPing])
+
+  useEffect(() => {
+
+    if (compToPing && compToPing.length > 0) {
+      const intervalId = setInterval(() => pingCompetitions(), 1000 * 60 * 10) // 1000 * 60 = 1 min, * 10 = 10 min
+      return function cleanup() {
+        clearInterval(intervalId);
+      }
+    }
+
+  }, [compToPing])
+
+  useEffect(() => {
+    processBacktests();
+    processComps();
+  }, [backtests, competitions])
 
   const dispatch = useDispatch();
 
@@ -35,13 +131,12 @@ const Routes: React.FC = () => {
   }
 
   useEffect(() => {
-    console.log('ROUTES USE EFFECT');
-
     if (isLoggedIn) {
       dispatch(getCurrentUser(onUserVerifyError))
     }
-
   }, [])
+
+
 
   return (
     <HashRouter>
