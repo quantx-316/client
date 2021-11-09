@@ -64,6 +64,19 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
     const [hoveringInfo, setHoveringInfo] = useState(null);
     const [selectedInfo, setSelectedInfo] = useState(null);
 
+    const [loading, setLoading] = useState(true);
+    const [fakeLoading, setFakeLoading] = useState(true);
+    useEffect(() => {
+        if (fakeLoading) {
+            setLoading(true);
+        } else {
+            const timeoutId = setTimeout(() => setLoading(false), 300);
+            return function cleanup() {
+                clearTimeout(timeoutId);
+            }
+        }
+    }, [fakeLoading])
+
     function treeExampleReducer(state: any, action: TreeAction) {
         switch (action.type) {
             case "DESELECT_ALL":
@@ -91,6 +104,7 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
                 });
                 return newState2;
             case "FETCHED_NODES":
+
                 const newState3 = action.payload.map((obj) => (
                     {
                         ...obj, 
@@ -104,6 +118,9 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
                             <b className="nice-green">{obj.score}</b>)
                     }
                 ))
+
+                setFakeLoading(false);
+
                 return newState3;
             default:
                 return state;
@@ -343,7 +360,7 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
                     <Tree
                         contents={nodes}
                         onNodeClick={handleNodeClick}
-                        className={Classes.ELEVATION_0}
+                        className={`${Classes.ELEVATION_0} ${loading ? "bp3-skeleton" : ""}`}
                         onNodeMouseEnter={onNodeEnter}
                         onNodeMouseLeave={onNodeLeave}
                     />
@@ -368,7 +385,7 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
             }
 
             {
-                nodes.length > 0 && 
+                nodes.length > 0 && !loading && 
 
                 <div
                     style={{
@@ -400,7 +417,7 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
                 
 
                 {
-                    !(props.pagination==null) &&
+                    !(props.pagination==null) && !loading &&
 
                     <Pagination 
                         pagination={props.pagination}

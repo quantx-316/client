@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import { useParams, useLocation } from 'react-router-dom';
-import { Button, Card, Classes, H1, H5, TextArea} from "@blueprintjs/core";
+import { Button, Card, Classes, H1, H5, TextArea, Slider, Spinner, SpinnerSize} from "@blueprintjs/core";
 import {fetchUser, updateUser} from '../features/actions/users';
 import ProfileEdit from '../components/ProfileEdit';
 import {fetchPublicAlgos} from '../features/actions/algos';
@@ -15,6 +15,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import { Classes as Popover2Classes, Popover2 } from "@blueprintjs/popover2";
+import { dispatchErrorMsg } from '../features/utils/notifs';
 
 const Profile = () => {
 
@@ -31,6 +32,25 @@ const Profile = () => {
 
     const onUserChange = (user: any) => {
         setUser(user);
+        setFakeLoading(false);
+    }
+
+    const [loading, setLoading] = useState(true);
+    const [fakeLoading, setFakeLoading] = useState(true);
+    useEffect(() => {
+        if (fakeLoading) {
+            setLoading(true);
+        } else {
+            const timeoutId = setTimeout(() => setLoading(false), 300);
+            return function cleanup() {
+                clearTimeout(timeoutId);
+            }
+        }
+    }, [fakeLoading])
+
+    const userFetchFail = () => {
+        dispatchErrorMsg(dispatch, "Failed to retrieve information on " + username);
+        setFakeLoading(false);
     }
 
     useEffect(() => {
@@ -41,7 +61,7 @@ const Profile = () => {
         } else {
             // api call for user info 
                 // if requesting user is not the owner, only get limited information
-            dispatch(fetchUser(username, onUserChange));
+            dispatch(fetchUser(username, onUserChange, userFetchFail));
         }
     }, [username])
 
@@ -137,7 +157,6 @@ const Profile = () => {
 
     const [viewPublicScore, setViewPublicScore] = useState(false);
 
-
     return (
         <div
             style={{
@@ -146,7 +165,7 @@ const Profile = () => {
             }}
         >
             {
-                user && 
+                user && !loading && 
 
                     <Card
                         style={{
@@ -302,8 +321,35 @@ const Profile = () => {
             }
 
             {
-                user == null && 
-                <H1>Loading</H1>
+                !loading && (!user) && 
+                <div
+                    className="full centered"
+                >
+                    <div
+                        className="centered"
+                    >
+                        <h1>
+                            Failed to load user.
+                        </h1>
+                    </div>
+
+                </div>
+            }
+
+            {
+                loading && 
+                <div
+                    className="full centered"
+                >
+                    <div
+                        className="centered"
+                    >
+                        <Spinner 
+                            intent={"primary"}
+                            size={100}
+                        />
+                    </div>
+                </div>
             }
         </div>
     )

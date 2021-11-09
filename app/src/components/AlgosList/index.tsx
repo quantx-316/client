@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Button, Card, Classes, ButtonGroup, Elevation, H1, H5, Label, Slider, Switch, H2 } from "@blueprintjs/core";
-import { Icon, Intent, TreeNodeInfo, Tree } from "@blueprintjs/core";
+import { Icon, Intent, TreeNodeInfo, Tree, Spinner } from "@blueprintjs/core";
 import {useSelector, useDispatch} from 'react-redux';
 import { Classes as Popover2Classes, Popover2 } from "@blueprintjs/popover2";
 import {Algo} from '../../features/types/algos';
@@ -64,6 +64,21 @@ const AlgosList  = (props: AlgosListProps) => {
     const [selectedInfo, setSelectedInfo] = useState(null);
 
     const [hoveringInfo, setHoveringInfo] = useState(null);
+
+
+    const [loading, setLoading] = useState(true);
+    const [fakeLoading, setFakeLoading] = useState(true);
+    useEffect(() => {
+        if (fakeLoading) {
+            setLoading(true);
+        } else {
+            const timeoutId = setTimeout(() => setLoading(false), 300);
+            return function cleanup() {
+                clearTimeout(timeoutId);
+            }
+        }
+    }, [fakeLoading])
+
 
     const onNodeEnter = React.useCallback(
         (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
@@ -135,6 +150,8 @@ const AlgosList  = (props: AlgosListProps) => {
                     })
                 }
 
+                setFakeLoading(false);
+
                 return newState3;
             default:
                 return state;
@@ -198,184 +215,183 @@ const AlgosList  = (props: AlgosListProps) => {
         dispatchErrorMsg(redDispatch, "Invalid selected information");
     }
 
-
-
-
-
     return (
-        <Card
-            style={{
-                minWidth: "550px",
-                minHeight: "500px",
-                maxHeight: "500px",
-                display: "flex",
-                justifyContent: "flex-start",
-                alignContent: "center",
-                flexDirection: "column",
-                gap: "10px"
-            }}
-            elevation={1}
-        >
-            <div
-                style={{
-                    height: "40px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    borderBottom: "1px solid #d9e1eb"
-                }}
-            >
-                <H1>
-                    Algorithms
-                </H1>
-
-                <Button
-                    className={Classes.BUTTON}
-                    icon={"new-link"}
-                    intent={"success"}
-                    onClick={() => onNewClick()}
-                >
-                    New
-                </Button>
-            </div>
-
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'space-between'
-                }}
-            >
-                <Sorting 
-                    attrsMapping={props.attrsMapping}
-                    attr={props.attr}
-                    onAttrChange={props.onAttrChange}
-                    dir={props.dir}
-                    onDirChange={props.onDirChange}
-                />
-
-                <Searching 
-                    attrsMapping={props.searchAttrsMapping}
-                    attr={props.searchAttr}
-                    query={props.searchQuery}
-                    onQueryChange={props.onSearchQueryChange}
-                    onAttrChange={props.onSearchAttrChange}
-                    exclusive={props.searchExclusive}
-                    onExclusiveChange={props.onExclusiveChange}
-                    onSubmit={props.onSearchSubmit}
-                />
-            </div>
-
-
-            
+        <div>
             {
-                nodes && nodes.length > 0 &&
-                <Popover2
-                    isOpen={!(hoveringInfo==null)}
-                    autoFocus={false}
-                    enforceFocus={false}
-                    content={
-                        <Card
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "10px",
-                            }}
-                        >
-                            {
-                                !(hoveringInfo==null) && 
-                                (
-                                    <>
-                                        <p>
-                                            <b>Title: </b>
-                                            {/* @ts-ignore */}
-                                            {hoveringInfo.title}
-                                        </p>
-                                        <p> 
-                                            <b>Created: </b>
-                                            {/* @ts-ignore */}
-                                            
-                                            {dateStrToDate(hoveringInfo.created).toString()}
-                                        </p>
-                                        <p>
-                                            <b>Edited: </b>
-                                            {/* @ts-ignore */}
-                                            
-                                            {dateStrToDate(hoveringInfo.edited_at).toString()}
-                                        </p>
-                                    </>                                
-                                )
-                            }
-                        </Card>
-                    }
-                    placement="left"
-                >
-                    <Tree
-                        contents={nodes}
-                        onNodeClick={handleNodeClick}
-                        className={Classes.ELEVATION_0}
-                        onNodeMouseEnter={onNodeEnter}
-                        onNodeMouseLeave={onNodeLeave}
-                    />
-                </Popover2>
-            }
-
-            {
-                nodes.length === 0 && 
-                <div
+                <Card
                     style={{
-                        height: "100%",
-                        width: "100%",
+                        minWidth: "550px",
+                        minHeight: "500px",
+                        maxHeight: "500px",
                         display: "flex",
-                        justifyContent: "center",
+                        justifyContent: "flex-start",
                         alignContent: "center",
+                        flexDirection: "column",
+                        gap: "10px"
                     }}
+                    elevation={1}
                 >
-                    <H2>
-                        No algos found
-                    </H2>
-                </div>
-            }
 
-            {
-                nodes.length > 0 && 
-                <div
-                    style={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "space-between"
-                    }}
-                >
-                    <ButtonGroup>
+                    <div
+                        style={{
+                            height: "40px",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            borderBottom: "1px solid #d9e1eb"
+                        }}
+                    >
+                        <H1>
+                            Algorithms
+                        </H1>
+
                         <Button
                             className={Classes.BUTTON}
-                            icon={"edit"}
-                            onClick={() => onEditClick()}
+                            icon={"new-link"}
+                            intent={"success"}
+                            onClick={() => onNewClick()}
                         >
-                            Edit
+                            New
                         </Button>
-                        <Button
-                            className={Classes.BUTTON}
-                            icon={"trash"}
-                            onClick={() => onDeleteClick()}
-                        >
-                            Delete
-                        </Button>
-                    </ButtonGroup>
+                    </div>
 
-                    {
-                        !(props.pagination==null) &&
-
-                        <Pagination 
-                            pagination={props.pagination}
-                            onPageChange={props.onPageChange}
-                            page={props.page}
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between'
+                        }}
+                    >
+                        <Sorting 
+                            attrsMapping={props.attrsMapping}
+                            attr={props.attr}
+                            onAttrChange={props.onAttrChange}
+                            dir={props.dir}
+                            onDirChange={props.onDirChange}
                         />
 
+                        <Searching 
+                            attrsMapping={props.searchAttrsMapping}
+                            attr={props.searchAttr}
+                            query={props.searchQuery}
+                            onQueryChange={props.onSearchQueryChange}
+                            onAttrChange={props.onSearchAttrChange}
+                            exclusive={props.searchExclusive}
+                            onExclusiveChange={props.onExclusiveChange}
+                            onSubmit={props.onSearchSubmit}
+                        />
+                    </div>
+                    
+                    {
+                        nodes && nodes.length > 0 &&
+                        <Popover2
+                            isOpen={!(hoveringInfo==null)}
+                            autoFocus={false}
+                            enforceFocus={false}
+                            content={
+                                <Card
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: "10px",
+                                    }}
+                                >
+                                    {
+                                        !(hoveringInfo==null) && 
+                                        (
+                                            <>
+                                                <p>
+                                                    <b>Title: </b>
+                                                    {/* @ts-ignore */}
+                                                    {hoveringInfo.title}
+                                                </p>
+                                                <p> 
+                                                    <b>Created: </b>
+                                                    {/* @ts-ignore */}
+                                                    
+                                                    {dateStrToDate(hoveringInfo.created).toString()}
+                                                </p>
+                                                <p>
+                                                    <b>Edited: </b>
+                                                    {/* @ts-ignore */}
+                                                    
+                                                    {dateStrToDate(hoveringInfo.edited_at).toString()}
+                                                </p>
+                                            </>                                
+                                        )
+                                    }
+                                </Card>
+                            }
+                            placement="left"
+                        >
+                            <Tree
+                                contents={nodes}
+                                onNodeClick={handleNodeClick}
+                                className={`${Classes.ELEVATION_0} ${loading ? "bp3-skeleton" : ""}`}
+                                onNodeMouseEnter={onNodeEnter}
+                                onNodeMouseLeave={onNodeLeave}
+                            />
+                        </Popover2>
                     }
-                </div>
-            }
 
-        </Card>
+                    {
+                        nodes.length === 0 && 
+                        <div
+                            style={{
+                                height: "100%",
+                                width: "100%",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignContent: "center",
+                            }}
+                        >
+                            <H2>
+                                No algos found
+                            </H2>
+                        </div>
+                    }
+
+                    {
+                        nodes.length > 0 && !loading && 
+                        <div
+                            style={{
+                                width: "100%",
+                                display: "flex",
+                                justifyContent: "space-between"
+                            }}
+                        >
+                            <ButtonGroup>
+                                <Button
+                                    className={Classes.BUTTON}
+                                    icon={"edit"}
+                                    onClick={() => onEditClick()}
+                                >
+                                    Edit
+                                </Button>
+                                <Button
+                                    className={Classes.BUTTON}
+                                    icon={"trash"}
+                                    onClick={() => onDeleteClick()}
+                                >
+                                    Delete
+                                </Button>
+                            </ButtonGroup>
+
+                            {
+                                !(props.pagination==null) && !loading && 
+
+                                <Pagination 
+                                    pagination={props.pagination}
+                                    onPageChange={props.onPageChange}
+                                    page={props.page}
+                                />
+
+                            }
+                        </div>
+                    }
+                
+                </Card>
+            }
+        </div>
     )
 }
 

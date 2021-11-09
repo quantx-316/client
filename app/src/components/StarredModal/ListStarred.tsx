@@ -73,7 +73,7 @@ const ListStarred = () => {
         if (fakeLoading) {
             setLoading(true);
         } else {
-            const timeoutId = setTimeout(() => setLoading(false), 500);
+            const timeoutId = setTimeout(() => setLoading(false), 300);
             return function cleanup() {
                 clearTimeout(timeoutId);
             }

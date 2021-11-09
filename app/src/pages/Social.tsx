@@ -8,6 +8,7 @@ import {
     Icon,
     Button,
     FormGroup,
+    Spinner,
   } from '@blueprintjs/core';
   import { Classes, Popover2 } from "@blueprintjs/popover2";
   import List from '@mui/material/List';
@@ -84,6 +85,11 @@ const LeaderboardPanel = () => {
         refreshLeaderboard(page, size, attr, dir, usernameQuery);
     }
 
+    const onLeaderBoardRefresh = (data: any) => {
+        setLeaderboard(data);
+        setFakeLoading(false);
+    }
+
     const refreshLeaderboard = (
         page: number, 
         size: number, 
@@ -97,7 +103,7 @@ const LeaderboardPanel = () => {
             convertAttr(attr),
             dir,
             usernameQuery,
-            setLeaderboard,
+            onLeaderBoardRefresh,
         ));
     }
 
@@ -117,127 +123,165 @@ const LeaderboardPanel = () => {
         }
     }
 
+    const [loading, setLoading] = useState(true);
+    const [fakeLoading, setFakeLoading] = useState(true);
+    useEffect(() => {
+        if (fakeLoading) {
+            setLoading(true);
+        } else {
+            const timeoutId = setTimeout(() => setLoading(false), 300);
+            return function cleanup() {
+                clearTimeout(timeoutId);
+            }
+        }
+    }, [fakeLoading])
+
     return (
         <div
-            className="centered-col"
-            style={{
-                gap: "10px"
-            }}
+            className="full"
         >
+            {
+                loading && 
+                <div
+                    className="full centered"
+                >
+                    <div
+                        className="centered"
+                    >
+                        <Spinner 
+                            intent={"primary"}
+                            size={100}
+                        />
+                    </div>
+                </div>
+            }
 
-                        <div
-                            style={{
-                                display: "flex",
-                                gap: "10px"
-                            }}
-                        >
-
-                            <div className="bp3-input-group .modifier">
-                                <span className="bp3-icon bp3-icon-search"></span>
-                                <input 
-                                    type="text" 
-                                    className="bp3-input" 
-                                    placeholder="Search by username" 
-                                    value={usernameQuery}
-                                    onChange={onUserNameChange}
-                                    onKeyPress={onKeyPress}
-                                />
-                                <button className="bp3-button bp3-minimal bp3-intent-primary bp3-icon-arrow-right"
-                                    onClick={onSearchSubmit}
-                                ></button>
-                            </div>
-
-                            <div>
-                                <Popover2
-                                    interactionKind="hover"
-                                    placement="right"
-                                    popoverClassName={Classes.POPOVER2_CONTENT_SIZING}
-                                    autoFocus={false}
-                                    enforceFocus={false}
-                                    content={dir === "asc" ? "Ascending Score" : "Descending Score"}
-                                >
-
-                                    <Button 
-                                        //@ts-ignore
-                                        icon={dir === "asc" ? "chevron-up" : "chevron-down"}
-                                        onClick={() => onDirChange()}
-                                    />
-                                
-                                </Popover2>
-
-                            </div>
-
-                        </div>
-
-            <List 
-                        sx={{bgcolor: 'background.paper' }}
+            {
+                !loading &&
+                    <div
+                        className="centered-col full"
+                        style={{
+                            gap: "10px"
+                        }}
                     >
 
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            gap: "10px"
+                                        }}
+                                    >
 
-                        {
-                            leaderboardArr.map((obj, idx) => {
+                                        <div className="bp3-input-group .modifier">
+                                            <span className="bp3-icon bp3-icon-search"></span>
+                                            <input 
+                                                type="text" 
+                                                className="bp3-input" 
+                                                placeholder="Search by username" 
+                                                value={usernameQuery}
+                                                onChange={onUserNameChange}
+                                                onKeyPress={onKeyPress}
+                                            />
+                                            <button className="bp3-button bp3-minimal bp3-intent-primary bp3-icon-arrow-right"
+                                                onClick={onSearchSubmit}
+                                            ></button>
+                                        </div>
 
-                                return (
-                                        <ListItem 
-                                            alignItems="flex-start"
-                                            //@ts-ignore 
-                                            key={obj.username}
-                                        >
-                                            <ListItemButton
-                                                //@ts-ignore 
-                                                onClick={() => onUserClick(obj.username)}
+                                        <div>
+                                            <Popover2
+                                                interactionKind="hover"
+                                                placement="right"
+                                                popoverClassName={Classes.POPOVER2_CONTENT_SIZING}
+                                                autoFocus={false}
+                                                enforceFocus={false}
+                                                content={dir === "asc" ? "Ascending Score" : "Descending Score"}
                                             >
-                                                <ListItemAvatar>
-                                                    <Avatar />
-                                                </ListItemAvatar>
-                                                <ListItemText
-                                                    //@ts-ignore 
-                                                    primary={obj.username}
-                                                    secondary={
-                                                        <div
-                                                            style={{
-                                                                display: "flex",
-                                                                flexDirection: "column"
-                                                            }}
-                                                        >
-                                                            <div
-                                                                style={{
-                                                                    display: "flex",
-                                                                }}
-                                                            >
-                                                                <p>Highest Score: &nbsp; </p>
-                                                                {/* @ts-ignore */}
-                                                                <p> {obj.score}</p>
-                                                            </div>
 
-                                                        </div>
-                                                    }
+                                                <Button 
+                                                    //@ts-ignore
+                                                    icon={dir === "asc" ? "chevron-up" : "chevron-down"}
+                                                    onClick={() => onDirChange()}
                                                 />
+                                            
+                                            </Popover2>
 
-                                            </ListItemButton>
-                                                
-                                        </ListItem>
-                                
-                                )
+                                        </div>
 
-                            })
-                        }
+                                    </div>
 
-                        {
-                            //@ts-ignore
-                            leaderboard && leaderboard.pagination &&
+                        <List 
+                                    sx={{bgcolor: 'background.paper' }}
+                                >
 
-                            <Pagination 
-                                //@ts-ignore
-                                pagination={leaderboard.pagination}
-                                onPageChange={onPageChange}
-                                page={page}
-                            />
 
-                        }
+                                    {
+                                        leaderboardArr.map((obj, idx) => {
 
-                </List>
+                                            return (
+                                                    <ListItem 
+                                                        alignItems="flex-start"
+                                                        //@ts-ignore 
+                                                        key={obj.username}
+                                                    >
+                                                        <ListItemButton
+                                                            //@ts-ignore 
+                                                            onClick={() => onUserClick(obj.username)}
+                                                        >
+                                                            <ListItemAvatar>
+                                                                <Avatar />
+                                                            </ListItemAvatar>
+                                                            <ListItemText
+                                                                //@ts-ignore 
+                                                                primary={obj.username}
+                                                                secondary={
+                                                                    <div
+                                                                        style={{
+                                                                            display: "flex",
+                                                                            flexDirection: "column"
+                                                                        }}
+                                                                    >
+                                                                        <div
+                                                                            style={{
+                                                                                display: "flex",
+                                                                            }}
+                                                                        >
+                                                                            <p>Highest Score: &nbsp; </p>
+                                                                            {/* @ts-ignore */}
+                                                                            <p> {obj.score}</p>
+                                                                        </div>
+
+                                                                    </div>
+                                                                }
+                                                            />
+
+                                                        </ListItemButton>
+                                                            
+                                                    </ListItem>
+                                            
+                                            )
+
+                                        })
+                                    }
+
+                                    {
+                                        //@ts-ignore
+                                        leaderboard && leaderboard.pagination &&
+
+                                        <Pagination 
+                                            //@ts-ignore
+                                            pagination={leaderboard.pagination}
+                                            onPageChange={onPageChange}
+                                            page={page}
+                                        />
+
+                                    }
+
+                            </List>
+                    </div>
+            }
+           
         </div>
+    
     
     )
 

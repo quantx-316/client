@@ -17,7 +17,7 @@ export const fetchUserById = (userID: number, callBack?: any) => (dispatch: any)
 }
 
 
-export const fetchUser = (username: string, callBack: any) => (dispatch: any) => {
+export const fetchUser = (username: string, callBack: any, failCallback?: any) => (dispatch: any) => {
 
     return userService.getUser(username).then(
         (res) => {
@@ -25,6 +25,10 @@ export const fetchUser = (username: string, callBack: any) => (dispatch: any) =>
         },
         (error) => {
             genericErrorHandler(error, dispatch);
+
+            if (failCallback) {
+                failCallback();
+            }
         }
     )
 
