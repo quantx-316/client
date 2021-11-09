@@ -5,6 +5,7 @@ import {useSelector} from 'react-redux';
 import UserDropdown from './UserDropdown';
 import Badge from '@mui/material/Badge';
 import StarredModal from '../StarredModal';
+import SettingsModal from '../SettingsModal';
 
 const ComposedNavbar: React.FC = () => {
 
@@ -12,6 +13,14 @@ const ComposedNavbar: React.FC = () => {
 
   const handleOnClick = (link: string) => {
     history.push(link);
+  }
+
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const handleSettingsClose = () => {
+    setSettingsOpen(false);
+  }
+  const handleSettingsOpen = () => {
+    setSettingsOpen(true);
   }
   
   const [starOpen, setStarOpen] = useState(false);
@@ -64,12 +73,23 @@ const ComposedNavbar: React.FC = () => {
           icon="star" 
           onClick={() => handleStarOpen()}
         />        
+        <Button 
+          className="bp3-minimal" 
+          icon="cog" 
+          onClick={() => handleSettingsOpen()}
+        />        
       </Navbar.Group>
 
       <StarredModal 
         isOpen={starOpen}
         handleClose={handleStarClose}
         title="Starred"
+      />
+
+      <SettingsModal 
+        isOpen={settingsOpen}
+        handleClose={handleSettingsClose}
+        title="Settings"
       />
 
     </Navbar>

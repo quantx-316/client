@@ -16,6 +16,9 @@ import 'ace-builds/src-min-noconflict/ext-searchbox'
 import 'ace-builds/src-min-noconflict/ext-language_tools'
 
 import {Algo} from '../features/types/algos';
+import {
+  addBacktest,
+} from '../features/actions/starred';
 
 const themes = [
   'monokai',
@@ -56,6 +59,10 @@ const Editor = (props: EditorProps) => {
   default_start_date.setHours(0, 0, 0);
   default_start_date.setDate(default_end_date.getDate()-30);
 
+  //@ts-ignore 
+  const algosPublic = useSelector(state => state.settings.algosPublic);
+  //@ts-ignore 
+  const pendingBackStarred = useSelector(state => state.settings.pendingBackStarred);
 
   const [popOverOpen, setPopoverOpen] = useState(false);
 
@@ -70,8 +77,19 @@ const Editor = (props: EditorProps) => {
   const [maxDate, setMaxDate] = useState<Date | null>(null);
   const [runPopoverOpen, setRunPopoverOpen] = useState(false);
 
-  const clickRunCallback = () => {
+  const clickRunCallback = (info: any) => {
     setRunPopoverOpen(true);
+
+    console.log("RUN CALLBACK");
+    console.log(info);
+    
+    if (pendingBackStarred && info && info.id) {
+      console.log("hello");
+
+      dispatch(addBacktest(info));
+      dispatchSuccessMsg(dispatch, "Backtest added to starred");
+    }
+
   }
 
   useEffect(() => {
@@ -211,7 +229,7 @@ const Editor = (props: EditorProps) => {
     //@ts-ignore
     edited_at: props.algo ? props.algo.edited_at : '', 
     //@ts-ignore
-    public: props.algo ? props.algo.public : false,
+    public: props.algo ? props.algo.public : algosPublic,
   })
 
   const [editorState, setEditorState] = useState({
@@ -352,7 +370,7 @@ const Editor = (props: EditorProps) => {
         test_end_default: dateToUnix(endDate),
         //@ts-ignore
         test_interval_default: selectTimeInterval,
-        public: algoState.public,
+        public: algosPublic,
       }, createAlgoCallBack))
     } else {
       dispatch(updateAlgo(algoState, updateAlgoCallBack))
