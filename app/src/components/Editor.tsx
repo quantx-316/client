@@ -12,7 +12,7 @@ import {
   fetchQuoteIntervals,
 } from '../features/actions/quotes'
 import { dispatchErrorMsg, dispatchSuccessMsg } from '../features/utils/notifs'
-import { saveEditorConfig } from '../features/actions/editorConfig'
+import { fetchEditorConfig, saveEditorConfig } from '../features/actions/editorConfig'
 import { dateToUnix, dateStrToDate } from '../features/utils/time'
 
 import 'ace-builds/src-noconflict/mode-jsx'
@@ -57,7 +57,7 @@ const Editor = (props: EditorProps) => {
     print('hello world')
   `
   //@ts-ignore
-  const editorConfigState = useSelector(state => state.editorConfig).editorConfig
+  const editorConfigState = JSON.parse(localStorage.getItem('editorConfig') || '{}')
   console.log(editorConfigState)
 
   const default_end_date = new Date();
@@ -172,6 +172,16 @@ const Editor = (props: EditorProps) => {
     event?: React.SyntheticEvent<HTMLElement, Event> | undefined
   ) => {
     setSelectTimeInterval(timeInterval)
+        dispatch(
+      saveEditorConfig(
+        editorState.fontSize,
+        editorState.theme,
+        editorState.tabSize,
+        timeInterval,
+        editorState.startTime,
+        editorState.endTime
+      )
+    )
   }
 
   useEffect(()=> {
@@ -195,11 +205,31 @@ const Editor = (props: EditorProps) => {
   const onStartDateChange = (date: Date) => {
     setStartDate(date);
     setAlgoState({...algoState, test_start_default: date});
+        dispatch(
+      saveEditorConfig(
+        editorState.fontSize,
+        editorState.theme,
+        editorState.tabSize,
+        editorState.timeInterval,
+        dateToUnix(date),
+        editorState.endTime
+      )
+    )
   }
 
   const onEndDateChange = (date: Date) => {
     setEndDate(date);
     setAlgoState({...algoState, test_end_default: date})
+    dispatch(
+      saveEditorConfig(
+        editorState.fontSize,
+        editorState.theme,
+        editorState.tabSize,
+        editorState.timeInterval,
+        editorState.startTime,
+        dateToUnix(date)
+      )
+    )
   }
 
   const [startDateOpen, setStartDateOpen] = useState(false)

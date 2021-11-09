@@ -56,19 +56,20 @@ export const saveEditorConfig = (
   return Promise.resolve()
 }
 
-// export const fetchEditorConfig = (editorConfig: any) => (dispatch: any) => {
-//   return new Promise((resolve, reject) => {
-//     dispatch({
-//       type: FETCH_EDITOR_CONFIG_SUCCESS,
-//       payload: editorConfig,
-//     })
-//       .then((res: any) => {
-//         resolve(res)
-//       })
-//       .catch((err: any) => {
-//         dispatch({
-//           type: FETCH_EDITOR_CONFIG_FAIl,
-//         })
-//       })
-//   })
-// }
+export const fetchEditorConfig = (editorConfig: any) => (dispatch: any) => {
+  return new Promise((resolve, reject) => {
+    console.log('fetchEditorConfig')
+    dispatch({
+      type: FETCH_EDITOR_CONFIG_SUCCESS,
+      payload: editorConfig,
+    })
+      .then((res: any) => {
+        resolve(res)
+      })
+      .catch((err: any) => {
+        dispatch({
+          type: FETCH_EDITOR_CONFIG_FAIl,
+        })
+      })
+  })
+}
