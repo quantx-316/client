@@ -78,13 +78,12 @@ export const Home: React.FC = () => {
     const algoAttrsMapping = {
         "Created": "created",
         "Last Edited": "edited_at",
-        "Title": "title"
     };
     const algoSearchAttrsMapping = {
         "Title": "title",
         "Code": "code",
     }
-    const [algoSearchAttr, setAlgoSearchAttr] = useState("Title");
+    const [algoSearchAttr, setAlgoSearchAttr] = useState("Last Edited");
     const convertAlgoSearchAttr = (searchAttr: string) => {
         //@ts-ignore 
         return algoSearchAttrsMapping[searchAttr];
@@ -176,7 +175,6 @@ export const Home: React.FC = () => {
     const backPagination = useSelector(state => state.backtests.pagination);
     const backAttrsMapping = {
         "Score": "score",
-        "Test Interval": "test_interval", // this does not do a sort of 1 day vs 1 week, it sorts 1d vs 1w and 'groups' them
         "Test Start": "test_start",
         "Test End": "test_end",
         "Created": "created",

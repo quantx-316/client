@@ -98,7 +98,6 @@ const Profile = () => {
     const [size, setSize] = useState(10);
     const attrsMapping = {
         "Score": "score",
-        "Test Interval": "test_interval",
         "Test Start": "test_start",
         "Test End": "test_end",
         "Created": "created"
