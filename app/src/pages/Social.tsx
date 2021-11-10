@@ -141,24 +141,7 @@ const LeaderboardPanel = () => {
         <div
             className="full"
         >
-            {
-                loading && 
-                <div
-                    className="full centered"
-                >
-                    <div
-                        className="centered"
-                    >
-                        <Spinner 
-                            intent={"primary"}
-                            size={100}
-                        />
-                    </div>
-                </div>
-            }
 
-            {
-                !loading &&
                     <div
                         className="centered-col full"
                         style={{
@@ -210,76 +193,95 @@ const LeaderboardPanel = () => {
 
                                     </div>
 
-                        <List 
-                                    sx={{bgcolor: 'background.paper' }}
-                                >
-
-
                                     {
-                                        leaderboardArr.map((obj, idx) => {
-
-                                            return (
-                                                    <ListItem 
-                                                        alignItems="flex-start"
-                                                        //@ts-ignore 
-                                                        key={obj.username}
-                                                    >
-                                                        <ListItemButton
-                                                            //@ts-ignore 
-                                                            onClick={() => onUserClick(obj.username)}
-                                                        >
-                                                            <ListItemAvatar>
-                                                                <Avatar />
-                                                            </ListItemAvatar>
-                                                            <ListItemText
+                                        loading && 
+                                        <div
+                                            className="full centered"
+                                        >
+                                            <div
+                                                className="centered"
+                                            >
+                                                <Spinner 
+                                                    intent={"primary"}
+                                                    size={100}
+                                                />
+                                            </div>
+                                        </div>
+                                    }
+                                        
+                                        {
+                                            !loading &&
+                                            <List 
+                                            sx={{bgcolor: 'background.paper' }}
+                                        >
+        
+        
+                                            {
+                                                leaderboardArr.map((obj, idx) => {
+        
+                                                    return (
+                                                            <ListItem 
+                                                                alignItems="flex-start"
                                                                 //@ts-ignore 
-                                                                primary={obj.username}
-                                                                secondary={
-                                                                    <div
-                                                                        style={{
-                                                                            display: "flex",
-                                                                            flexDirection: "column"
-                                                                        }}
-                                                                    >
-                                                                        <div
-                                                                            style={{
-                                                                                display: "flex",
-                                                                            }}
-                                                                        >
-                                                                            <p>Highest Score: &nbsp; </p>
-                                                                            {/* @ts-ignore */}
-                                                                            <p> {obj.score}</p>
-                                                                        </div>
-
-                                                                    </div>
-                                                                }
-                                                            />
-
-                                                        </ListItemButton>
-                                                            
-                                                    </ListItem>
-                                            
-                                            )
-
-                                        })
-                                    }
-
-                                    {
-                                        //@ts-ignore
-                                        leaderboard && leaderboard.pagination &&
-
-                                        <Pagination 
-                                            //@ts-ignore
-                                            pagination={leaderboard.pagination}
-                                            onPageChange={onPageChange}
-                                            page={page}
-                                        />
-
-                                    }
-
-                            </List>
+                                                                key={obj.username}
+                                                            >
+                                                                <ListItemButton
+                                                                    //@ts-ignore 
+                                                                    onClick={() => onUserClick(obj.username)}
+                                                                >
+                                                                    <ListItemAvatar>
+                                                                        <Avatar />
+                                                                    </ListItemAvatar>
+                                                                    <ListItemText
+                                                                        //@ts-ignore 
+                                                                        primary={obj.username}
+                                                                        secondary={
+                                                                            <div
+                                                                                style={{
+                                                                                    display: "flex",
+                                                                                    flexDirection: "column"
+                                                                                }}
+                                                                            >
+                                                                                <div
+                                                                                    style={{
+                                                                                        display: "flex",
+                                                                                    }}
+                                                                                >
+                                                                                    <p>Highest Score: &nbsp; </p>
+                                                                                    {/* @ts-ignore */}
+                                                                                    <p> {obj.score}</p>
+                                                                                </div>
+        
+                                                                            </div>
+                                                                        }
+                                                                    />
+        
+                                                                </ListItemButton>
+                                                                    
+                                                            </ListItem>
+                                                    
+                                                    )
+        
+                                                })
+                                            }
+        
+                                            {
+                                                //@ts-ignore
+                                                leaderboard && leaderboard.pagination &&
+        
+                                                <Pagination 
+                                                    //@ts-ignore
+                                                    pagination={leaderboard.pagination}
+                                                    onPageChange={onPageChange}
+                                                    page={page}
+                                                />
+        
+                                            }
+        
+                                    </List>
+                                        }
+                    
                     </div>
-            }
            
         </div>
     
