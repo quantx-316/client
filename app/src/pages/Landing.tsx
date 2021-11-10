@@ -1,19 +1,20 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@mui/styles'
-import AOS from "aos";
-import "aos/dist/aos.css";
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+// import FlashOnIcon from '@mui/icons-material/FlashOn';
+import {  Icon  } from "@blueprintjs/core";
 
 const Landing = () => {
-
-useEffect(() => {
+  useEffect(() => {
     AOS.init({
-            // initialise with other settings
-    duration : 2000,
-    once: true, // whether animation should happen only once - while scrolling down
-    mirror: true, // whether elements should animate out while scrolling past them
-    });
-    AOS.refresh();
-  }, []);
+      // initialise with other settings
+      duration: 2000,
+      once: true, // whether animation should happen only once - while scrolling down
+      mirror: true, // whether elements should animate out while scrolling past them
+    })
+    AOS.refresh()
+  }, [])
   const classes = useStyles()
   return (
     <div>
@@ -24,13 +25,23 @@ useEffect(() => {
               <span className={classes.title} data-aos="fade">
                 Create and Backtest Your Algorithms
               </span>
-              <span className={classes.subTitle} data-aos="fade" data-aos-delay="500">
+              <span
+                className={classes.subTitle}
+                data-aos="fade"
+                data-aos-delay="500"
+              >
                 Join the newest Quant Trading Platform
               </span>
             </h1>
           </div>
           <div>
-            <a href="#/auth" type="button" className={classes.button} data-aos="fade" data-aos-delay="1000">
+            <a
+              href="#/auth"
+              type="button"
+              className={classes.button}
+              data-aos="fade"
+              data-aos-delay="1000"
+            >
               Sign Up
             </a>
           </div>
@@ -40,29 +51,31 @@ useEffect(() => {
         <div className={classes.mainContainer}>
           <div className={classes.column}>
             <div className={classes.box} data-aos="fade">
-              {/* icon */}
-              <h3 className={classes.boxTitle} >EXECUTE ALGORITHMS</h3>
+              <Icon icon={"lightning"} size={60} />
+              <h3 className={classes.boxTitle}>EXECUTE ALGORITHMS</h3>
               <p className={classes.boxText}>
                 Deploy your algorithm for immediate, live backtesting on real
                 stock data
               </p>
             </div>
           </div>
-          <div className={classes.column}>
+          <div className={classes.midColumn}>
             <div className={classes.box} data-aos="fade" data-aos-delay="500">
-              {/* icon */}
-              <h3 className={classes.boxTitle} >VISUALIZE PERFORMANCE</h3>
+              <Icon icon={"chart"} size={60} />
+              <h3 className={classes.boxTitle}>VISUALIZE PERFORMANCE</h3>
               <p className={classes.boxText}>
-                View your algorithm's performance with portfolio summaries and detailed execution information
+                View your algorithm's performance with portfolio summaries and
+                detailed execution information
               </p>
             </div>
           </div>
           <div className={classes.column}>
             <div className={classes.box} data-aos="fade" data-aos-delay="1000">
-              {/* icon */}
-              <h3 className={classes.boxTitle} >PROVE YOURSELF</h3>
+              <Icon icon={"confirm"} size={60} />
+              <h3 className={classes.boxTitle}>PROVE YOURSELF</h3>
               <p className={classes.boxText}>
-                Compete with others in competitions to prove your algorithmic prowess and show off your best performances
+                Compete with others in competitions to prove your algorithmic
+                prowess and show off your best performances
               </p>
             </div>
           </div>
@@ -108,7 +121,7 @@ const useStyles = makeStyles({
   },
   button: {
     borderRadius: '4px',
-    backgroundColor: '#f5ae29',
+    backgroundColor: '#394A59',
     padding: '1rem 2rem',
     color: '#fff',
     outline: 'none',
@@ -131,13 +144,20 @@ const useStyles = makeStyles({
     borderBottom: '1px solid #edf3fb',
   },
   column: {
-    marginRight: '6rem',
-    width: 'calc((100% - 2 * 6rem) / 3)',
+    marginRight: '4rem',
+    width: 'calc((100% - 2 * 4rem) / 3)',
+    float: 'left',
+  },
+  midColumn: {
+    borderRight: '1px solid #e7eaec',
+    borderLeft: '1px solid #e7eaec',
+    marginRight: '4rem',
+    width: 'calc((100% - 2 * 4rem) / 3)',
     float: 'left',
   },
   box: {
     fontSize: '1.5rem',
-    padding: '2.5rem',
+    padding: '2.5rem 1.5rem',
     textAlign: 'center',
   },
   boxTitle: {
