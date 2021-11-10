@@ -8,6 +8,7 @@ import Backtests from './pages/Backtests';
 import Files from './pages/Files';
 import StockView from './pages/StockView';
 import Base from './pages/Base';
+import Navbar from './components/Navbar/index';
 import Landing from './pages/Landing';
 import Editor from "./pages/Editor";
 import Profile from './pages/Profile';
@@ -149,9 +150,10 @@ const Routes: React.FC = () => {
           path="/" 
           exact 
           render={() => (
-            <Base>
+            <>
+              <Navbar />      
               <Landing />
-            </Base>
+            </>
           )}
         />
         <ProtectedRoute 
