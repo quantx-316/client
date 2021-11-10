@@ -59,8 +59,8 @@ const Landing = () => {
               </p>
             </div>
           </div>
-          <div className={classes.midColumn}>
-            <div className={classes.box} data-aos="fade" data-aos-delay="500">
+          <div className={classes.midColumn} data-aos="fade" data-aos-delay="500">
+            <div className={classes.box}>
               <Icon icon={"chart"} size={60} />
               <h3 className={classes.boxTitle}>VISUALIZE PERFORMANCE</h3>
               <p className={classes.boxText}>
@@ -121,15 +121,17 @@ const useStyles = makeStyles({
   },
   button: {
     borderRadius: '4px',
-    backgroundColor: '#394A59',
+    backgroundColor: '#394A54',
     padding: '1rem 2rem',
     color: '#fff',
     outline: 'none',
-    fontSize: '20px',
+    fontSize: '22px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
+    fontFamily: 'Norpeth-DemiBold',
+    fontWeight: 'bold',
     '&:hover': {
       textDecoration: 'none',
       color: '#fff',
