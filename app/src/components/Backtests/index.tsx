@@ -87,6 +87,11 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
         }
     }, [fakeLoading])
 
+    const onSearchSubmit = () => {
+        setFakeLoading(true);
+        props.onSearchSubmit();
+    }
+
     function treeExampleReducer(state: any, action: TreeAction) {
         switch (action.type) {
             case "DESELECT_ALL":
@@ -325,7 +330,7 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
                     onAttrChange={props.onSearchAttrChange}
                     exclusive={props.searchExclusive}
                     onExclusiveChange={props.onExclusiveChange}
-                    onSubmit={props.onSearchSubmit}
+                    onSubmit={onSearchSubmit}
                 />
 
             </div>

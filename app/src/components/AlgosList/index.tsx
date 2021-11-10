@@ -79,6 +79,11 @@ const AlgosList  = (props: AlgosListProps) => {
         }
     }, [fakeLoading])
 
+    const onSearchSubmit = () => {
+        setFakeLoading(true);
+        props.onSearchSubmit();
+    }
+
 
     const onNodeEnter = React.useCallback(
         (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
@@ -277,7 +282,7 @@ const AlgosList  = (props: AlgosListProps) => {
                             onAttrChange={props.onSearchAttrChange}
                             exclusive={props.searchExclusive}
                             onExclusiveChange={props.onExclusiveChange}
-                            onSubmit={props.onSearchSubmit}
+                            onSubmit={onSearchSubmit}
                         />
                     </div>
                     

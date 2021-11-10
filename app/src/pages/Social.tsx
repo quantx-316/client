@@ -81,7 +81,7 @@ const LeaderboardPanel = () => {
     }
     const onSearchSubmit = (e: any) => {
         e.preventDefault();
-
+        setFakeLoading(true);
         refreshLeaderboard(page, size, attr, dir, usernameQuery);
     }
 
@@ -119,6 +119,7 @@ const LeaderboardPanel = () => {
 
     const onKeyPress = (e: any) => {
         if (e.which === 13) {
+            setFakeLoading(true);
             refreshLeaderboard(page, size, attr, dir, usernameQuery);
         }
     }
