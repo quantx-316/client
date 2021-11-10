@@ -110,7 +110,7 @@ const useStyles = makeStyles({
   textWrapper: {},
   title: {
     fontSize: '42px',
-    fontFamily: 'Norpeth-DemiBold',
+    // fontFamily: 'Norpeth-DemiBold',
     wordWrap: 'break-word',
   },
   subTitle: {
@@ -130,7 +130,7 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
-    fontFamily: 'Norpeth-DemiBold',
+    // fontFamily: 'Norpeth-DemiBold',
     fontWeight: 'bold',
     '&:hover': {
       textDecoration: 'none',
