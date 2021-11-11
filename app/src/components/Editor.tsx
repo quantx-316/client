@@ -402,8 +402,7 @@ def backtest_tick(quote_set, portfolio, quote_history):
     }
   }
 
-  
-
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   return (
     <div
@@ -644,7 +643,7 @@ def backtest_tick(quote_set, portfolio, quote_history):
       <TimeSelectDialog 
         isOpen={startDateOpen}
         handleClose={onStartDateClose}
-        title={"Select start date"}
+        title={`Select start date (${timezone})`}
         onDateChange={onStartDateChange}
         minDate={minDate}
         maxDate={maxDate}
@@ -653,7 +652,7 @@ def backtest_tick(quote_set, portfolio, quote_history):
       <TimeSelectDialog 
         isOpen={endDateOpen}
         handleClose={onEndDateClose}
-        title={"Select end date"}
+        title={`Select end date (${timezone})`}
         onDateChange={onEndDateChange}
         minDate={minDate}
         maxDate={maxDate}
