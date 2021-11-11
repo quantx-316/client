@@ -59,9 +59,15 @@ type EditorProps = {
 
 const Editor = (props: EditorProps) => {
 
-  const defaultValue = `def helloworld():
-    print('hello world')
-  `
+  const defaultValue = `
+# This function will be called for each candle
+def backtest_tick(quote_set, portfolio, quote_history):
+  actions = []
+
+  # write code here 
+
+  return actions
+`
 
   //@ts-ignore 
   const algosPublic = useSelector(state => state.settings.algosPublic);

@@ -55,7 +55,7 @@ const ComposedNavbar: React.FC = () => {
                 textDecoration: 'none'
               }}
             >
-              Quantx
+              QuantX
             </Link>
           </h2>
         </Navbar.Heading>

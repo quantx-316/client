@@ -83,7 +83,7 @@ export const Home: React.FC = () => {
         "Title": "title",
         "Code": "code",
     }
-    const [algoSearchAttr, setAlgoSearchAttr] = useState("Last Edited");
+    const [algoSearchAttr, setAlgoSearchAttr] = useState("Title");
     const convertAlgoSearchAttr = (searchAttr: string) => {
         //@ts-ignore 
         return algoSearchAttrsMapping[searchAttr];
