@@ -15,12 +15,17 @@ const ComposedNavbar: React.FC = () => {
     history.push(link);
   }
 
+  //@ts-ignore 
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
   const [settingsOpen, setSettingsOpen] = useState(false);
   const handleSettingsClose = () => {
     setSettingsOpen(false);
   }
   const handleSettingsOpen = () => {
-    setSettingsOpen(true);
+    if (isLoggedIn) {
+      setSettingsOpen(true);
+    }
   }
   
   const [starOpen, setStarOpen] = useState(false);
@@ -30,14 +35,10 @@ const ComposedNavbar: React.FC = () => {
   }
 
   const handleStarOpen = () => {
-    setStarOpen(true);
+    if (isLoggedIn) {
+      setStarOpen(true);
+    }
   }
-
-  //@ts-ignore 
-  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
-
-  //@ts-ignore 
-  const notifs = useSelector(state => state.notif.listNotif);
 
   return (
     <Navbar className="bp3-dark">

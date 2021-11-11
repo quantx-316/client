@@ -7,7 +7,7 @@ import starredReducer from './starred';
 import settingsReducer from "./settings";
 import editorReducer from "./editor";
 
-export default combineReducers({
+const appReducer = combineReducers({
   auth: authReducer,
   notif: notifReducer,
   algos: algosReducer,
@@ -16,3 +16,17 @@ export default combineReducers({
   settings: settingsReducer,
   editor: editorReducer, 
 });
+
+const rootReducer = (state: any, action: any) => {
+
+  if (action.type === "LOGOUT") {
+    localStorage.clear();
+    //@ts-ignore 
+    window.location.reload(true);
+    return appReducer(undefined, action);
+  }
+
+  return appReducer(state, action);
+}
+
+export default rootReducer; 

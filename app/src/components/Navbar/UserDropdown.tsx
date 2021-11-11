@@ -1,7 +1,7 @@
 import React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import { useHistory } from 'react-router';
-import {Button, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+import {Button, Menu, MenuDivider, MenuItem, Card } from '@blueprintjs/core';
 import { Popover2 } from "@blueprintjs/popover2";
 
 import {logout} from '../../features/actions/auth';
@@ -52,10 +52,26 @@ const UserDropdown: React.FC = () => {
                 text="Profile" 
                 onClick={() => goToProfile()}
             />
-            <MenuItem 
-                text="Logout" 
-                onClick={() => onLogout()}
-            />
+            <Popover2
+                interactionKind="hover"
+                placement="left"
+                autoFocus={false}
+                enforceFocus={false}
+                content={
+                    <Card>
+                        All local saved information will be cleared.
+                    </Card>
+                }
+                className="full-width"
+            >
+                <MenuItem 
+                    text="Logout" 
+                    onClick={() => onLogout()}
+                    style={{
+                        width: "100%"
+                    }}
+                />
+            </Popover2>
         </Menu>
 
         :
