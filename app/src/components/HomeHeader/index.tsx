@@ -1,8 +1,17 @@
 import React from 'react';
 import { Button, Card, Icon, IconSize, ButtonGroup, Elevation, H1, H3, H4, H5, Label, Slider, Switch } from "@blueprintjs/core";
 import {useSelector} from 'react-redux';
+import { NoEncryption } from '@mui/icons-material';
+import { Classes as PopoverClasses, Popover2 } from "@blueprintjs/popover2";
 
-const HomeHeader: React.FC = () => {
+type HomeHeaderProps = {
+    competitionShow: boolean, 
+    onCompetitionShow: any, 
+    backtestShow: boolean, 
+    onBacktestShow: any, 
+}
+
+const HomeHeader = (props: HomeHeaderProps) => {
 
 
     //@ts-ignore 
@@ -41,9 +50,26 @@ const HomeHeader: React.FC = () => {
                 <div
                     className="centered-top-col"
                 >
-                    <H3>
-                        Algorithms
-                    </H3>
+                    <Popover2
+                        interactionKind="click"
+                        popoverClassName={PopoverClasses.POPOVER2_CONTENT_SIZING}
+                        autoFocus={false}
+                        enforceFocus={false}
+                        content={"Algorithms cannot be disabled"}
+                    >
+                        <Button
+                            className="centered"
+                            style={{
+                                fontSize: "16px"
+                            }}
+                            onClick={() => {}}
+                        >
+                            <b>
+                                Algorithms 
+                            </b>
+                        </Button>
+                    </Popover2>
+
                     <div
                         style={{
                             display: "flex",
@@ -77,9 +103,24 @@ const HomeHeader: React.FC = () => {
                 <div
                     className="centered-top-col"
                 >
-                    <H3>
-                        Competitions 
-                    </H3>
+                    <Button
+                        className="centered"
+                        style={{
+                            fontSize: "16px"
+                        }}
+                        onClick={() => props.onCompetitionShow()}
+                    >
+                        {
+                            props.competitionShow ?
+                            <b>
+                                Competitions 
+                            </b>
+
+                            :
+
+                            'Competitions'
+                        }
+                    </Button>
                     <div
                         style={{
                             display: "flex",
@@ -103,9 +144,22 @@ const HomeHeader: React.FC = () => {
                 <div
                     className="centered-top-col"
                 >
-                    <H3>
-                        Backtests
-                    </H3>
+                    <Button
+                        className="centered"
+                        style={{
+                            fontSize: "16px"
+                        }}
+                        onClick={() => props.onBacktestShow()}
+                    >
+                        {
+                            props.backtestShow ? 
+                            <b>
+                                Backtest
+                            </b>
+                            :
+                            'Backtest'
+                        }
+                    </Button>
                     <div
                         style={{
                             display: "flex",

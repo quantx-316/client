@@ -302,6 +302,25 @@ export const Home: React.FC = () => {
         onPageChange(null, backtestPage);
     }
 
+    const [competitionShow, setCompetitionShow] = useState(false);
+    const [backtestShow, setBacktestShow] = useState(true);
+    const onCompetitionShow = () => {
+        if (backtestShow && !competitionShow) {
+            setBacktestShow(false);
+            setCompetitionShow(true);
+        } else {
+            setCompetitionShow(compShow => !compShow);
+        }
+    }
+    const onBacktestShow = () => {
+        if (competitionShow && !backtestShow) {
+            setCompetitionShow(false);
+            setBacktestShow(true);
+        } else {
+            setBacktestShow(backtestShow => !backtestShow);
+        }
+    }
+
     return (
         <div
             className="full centered-top-col"
@@ -318,35 +337,40 @@ export const Home: React.FC = () => {
                 <div
                     className="navbar-like"
                 >
-                    <HomeHeader />
+                    <HomeHeader 
+                        competitionShow={competitionShow}
+                        onCompetitionShow={onCompetitionShow}
+                        backtestShow={backtestShow}
+                        onBacktestShow={onBacktestShow}
+                    />
                 </div>
 
-                {
-                    true ? 
-                    <div
-                        className="full separated-row"
-                    >
-                        <AlgosList 
-                            page={algoPage}
-                            onPageChange={onAlgoPageChange}
-                            pageAfterDelete={algoPageAfterDelete}
-                            pagination={pagination}
-                            attrsMapping={algoAttrsMapping}
-                            attr={algoAttr}
-                            onAttrChange={onAlgoAttrChange}
-                            dir={algoDir}
-                            onDirChange={onAlgoDirChange}
+                <div
+                    className="full separated-row"
+                >
+                    <AlgosList 
+                        page={algoPage}
+                        onPageChange={onAlgoPageChange}
+                        pageAfterDelete={algoPageAfterDelete}
+                        pagination={pagination}
+                        attrsMapping={algoAttrsMapping}
+                        attr={algoAttr}
+                        onAttrChange={onAlgoAttrChange}
+                        dir={algoDir}
+                        onDirChange={onAlgoDirChange}
 
-                            searchAttrsMapping={algoSearchAttrsMapping}
-                            searchAttr={algoSearchAttr}
-                            onSearchAttrChange={onSearchAttrChange}
-                            searchQuery={algoSearchQuery}
-                            onSearchQueryChange={onSearchQueryChange}
-                            searchExclusive={algoSearchExclusive}
-                            onExclusiveChange={onAlgoSearchExclusiveChange}
-                            onSearchSubmit={fetchAllAlgos}
-                        />
+                        searchAttrsMapping={algoSearchAttrsMapping}
+                        searchAttr={algoSearchAttr}
+                        onSearchAttrChange={onSearchAttrChange}
+                        searchQuery={algoSearchQuery}
+                        onSearchQueryChange={onSearchQueryChange}
+                        searchExclusive={algoSearchExclusive}
+                        onExclusiveChange={onAlgoSearchExclusiveChange}
+                        onSearchSubmit={fetchAllAlgos}
+                    />
 
+                    {
+                        backtestShow && 
                         <Backtests 
                             backtests={backtests}
                             info={"Execution results for chosen algorithm"}
@@ -370,35 +394,17 @@ export const Home: React.FC = () => {
                             onExclusiveChange={onBackSearchExclusiveChange}
                             onSearchSubmit={fetchBacktests}
                         />
-                    </div>
+                    }
 
-                    :
+                    {
 
-                    <div
-                        className="full centered-col"
-                    >
-                        <h1
-                            className="centered"
-                        >
-                            Start with an idea.
-                        </h1>
+                    }
 
-                        <div
-                            className="centered"
-                        >
 
-                            <Button
-                                className={Classes.BUTTON}
-                                icon={"new-link"}
-                                intent={"success"}
-                                onClick={() => onNewClick()}
-                            >
-                                New Algorithm
-                            </Button>
 
-                        </div>
-                    </div>
-                }
+                </div>
+
+               
             </div>
         </div>
     )

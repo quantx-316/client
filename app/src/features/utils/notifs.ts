@@ -20,7 +20,7 @@ export const dispatchErrorMsg = (dispatch: any, msg: string) => {
     const newNotif = {
         status: "error",
         msg: msg,
-        visibility: false,
+        visibility: true,
     }
 
     dispatch(updateNotifState(newNotif));

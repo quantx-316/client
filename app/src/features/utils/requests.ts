@@ -8,7 +8,7 @@ class requests {
         return axios.get(url, authConfig());
     }
 
-    static authPost(url: string, data: any) {
+    static authPost(url: string, data?: any) {
         //@ts-ignore 
         return axios.post(url, data, authConfig());
     }

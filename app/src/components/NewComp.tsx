@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import TimeSelectDialog from './TimeSelectDialog'
-import { dateToUnix } from '../features/utils/time'
 import { Button, FormGroup, InputGroup, TextArea } from '@blueprintjs/core'
 import { dispatchErrorMsg } from '../features/utils/notifs'
 import { useDispatch } from 'react-redux'
 import { Classes, Popover2 } from '@blueprintjs/popover2'
 import { fetchQuoteAllowedTimes } from '../features/actions/quotes'
-import {dateStrToDate} from '../features/utils/time'
+import {dateStrToDate, dateToUnix} from '../features/utils/time'
+import {createCompetition} from '../features/actions/comps';
+import Modal from './Modal';
 
-const Competition: React.FC = () => {
+type CompetitionProps = {
+  isOpen: boolean, 
+  handleClose: any, 
+  onNewComp: any, 
+}
+
+const Competition = (props: CompetitionProps) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
 
@@ -79,38 +86,44 @@ const Competition: React.FC = () => {
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
 
-    if (startDate === null || endDate === null || compEndDate === null) {
-      dispatchErrorMsg(dispatch, 'Start/End date & Time Interval required')
-      return
+    if (!title || !description || !startDate || !endDate || !compEndDate) {
+      dispatchErrorMsg(dispatch, 'Not all required fields filled out')
+      return 
     }
 
-    // if (compEndDate <= new Date()) {
-    //   dispatchErrorMsg(
-    //     dispatch,
-    //     'Competition end date must be greater than today'
-    //   )
-    //   return
-    // }
-
+    //@ts-ignore 
     if (startDate >= endDate) {
       dispatchErrorMsg(
         dispatch,
         'End date must be strictly greater than end date'
       )
+      return 
     }
 
     const startTime = dateToUnix(startDate)
     const endTime = dateToUnix(endDate)
+    const compEndTime = dateToUnix(compEndDate);
+    dispatch(
+      createCompetition(
+        {
+          title: title, 
+          description: description,
+          end_time: compEndTime, 
+          test_start: startTime, 
+          test_end: endTime, 
+        },
+        props.onNewComp, 
+      )
+    )
 
-    if (title && description && startTime && endTime) {
-      return
-    }
-
-    dispatchErrorMsg(dispatch, 'Not all fields filled out')
   }
 
   return (
-    <>
+    <Modal
+      isOpen={props.isOpen}
+      handleClose={props.handleClose}
+      title={"New Competition"}
+    >
       <div
         className="full"
         style={{
@@ -221,14 +234,23 @@ const Competition: React.FC = () => {
                   fill={true}
                 />
               </FormGroup>
-              <Popover2
+              <Button
+                  rightIcon="tick-circle"
+                  intent="success"
+                  text="Create"
+                  type="submit"
+                  large={true}
+                  outlined={false}
+                  onClick={handleSubmit}
+                />
+              {/* <Popover2
                 interactionKind="click"
                 popoverClassName={Classes.POPOVER2_CONTENT_SIZING}
                 autoFocus={false}
                 enforceFocus={false}
                 placement="bottom-end"
                 isOpen={runPopoverOpen}
-                content="Run started"
+                content="Created"
               >
                 <Button
                   rightIcon="tick-circle"
@@ -237,8 +259,9 @@ const Competition: React.FC = () => {
                   type="submit"
                   large={true}
                   outlined={false}
+                  onClick={handleSubmit}
                 />
-              </Popover2>
+              </Popover2> */}
             </div>
           </div>
         </form>
@@ -270,7 +293,7 @@ const Competition: React.FC = () => {
           maxDate={maxCompEndDate}
         />
       </div>
-    </>
+    </Modal>
   )
 }
 

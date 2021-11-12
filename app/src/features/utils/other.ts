@@ -35,3 +35,62 @@ export const genericErrorHandler = (error: any, dispatch: any) => {
     dispatchErrorMsg(dispatch, msg);
 
 }
+
+export const padSortURL = (
+    url: string, 
+    attr: string, 
+    dir: string, 
+) => {
+    return url + "&sort_by" + attr + "&sort_direction" + dir;
+}
+
+export const padSearchURL = (
+    url: string, 
+    search_by: string, 
+    search_query: string, 
+    search_exclusive?: boolean, 
+) => {
+
+    let newURL = url + "&search_by=" + search_by + "&search_query=" + search_query;
+    if (search_exclusive) {
+        newURL = newURL + "&exclusive=" + search_exclusive;
+    }
+
+    return newURL;
+}   
+
+export const padSearchSortURL = (
+    url: string,
+    attr: string, 
+    dir: string, 
+    search_by: string, 
+    search_query: string, 
+    search_exclusive?: boolean, 
+) => {
+    return padSearchURL(
+        padSortURL(
+            url, 
+            attr, dir, 
+        ),
+        search_by, search_query, search_exclusive
+    )
+}
+
+export const padPageSearchSortURL = (
+    url: string, 
+    page: number, 
+    size: number, 
+    attr: string, 
+    dir: string,
+    search_by: string, 
+    search_query: string, 
+    search_exclusive: boolean,
+) => {
+    let newURL = url + "?page=" + page + "&size=" + size; 
+    newURL = padSearchSortURL(
+        url, 
+        attr, dir, 
+        search_by, search_query, search_exclusive
+    )
+    return newURL; 
+}

@@ -42,6 +42,9 @@ const InitNotification = () => {
                 anchorOrigin={{ vertical, horizontal }}
                 open={notif.visibility}
                 onClose={handleClose}
+                style={{
+                    zIndex: 1000000000,
+                }}
             >
                 {
                     notif.status === "success" ? 

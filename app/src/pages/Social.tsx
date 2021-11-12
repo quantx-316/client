@@ -9,8 +9,9 @@ import {
     Button,
     FormGroup,
     Spinner,
+    Classes, 
   } from '@blueprintjs/core';
-  import { Classes, Popover2 } from "@blueprintjs/popover2";
+  import { Classes as PopoverClasses, Popover2 } from "@blueprintjs/popover2";
   import List from '@mui/material/List';
   import ListItem from '@mui/material/ListItem';
   import Divider from '@mui/material/Divider';
@@ -22,6 +23,7 @@ import {
   import {getBacktestLeaderboard} from '../features/actions/backtest';
   import {dateStrToDate} from '../features/utils/time';
   import Pagination from '../components/Pagination';
+  import NewComp from '../components/NewComp';
 
 const Social: React.FC = () => {
     return (
@@ -33,12 +35,53 @@ const Social: React.FC = () => {
         >
             <Tabs
                 className="centered-top-col full"
+                renderActiveTabPanelOnly={true}
             >
                 <Tab id="lead" title="Users" panel = {<LeaderboardPanel />} />
                 <Tab id="comp" title="Competitions" panel = {<CompetitionPanel />} />
             </Tabs>
         </div>
     )
+}
+
+const CompetitionPanel = () => {
+
+    const [newIsOpen, setNewIsOpen] = useState(false);
+    const handleNewClose = () => {
+        setNewIsOpen(false);
+    }
+
+    const onNewClick = () => {
+        setNewIsOpen(true);
+    }
+
+    const onNewComp = (data?: any) => {
+        handleNewClose();
+    }
+
+    return (
+        <div
+            className="full centered-top-col"
+        >
+            <div>
+                <Button
+                    className={Classes.BUTTON}
+                    icon={"add"}
+                    intent={"success"}
+                    onClick={() => onNewClick()}
+                >
+                    New
+                </Button>
+            </div>
+
+            <NewComp 
+                isOpen={newIsOpen}
+                handleClose={handleNewClose}
+                onNewComp={onNewComp}
+            />
+        </div>
+    )
+
 }
 
 const LeaderboardPanel = () => {
@@ -175,7 +218,7 @@ const LeaderboardPanel = () => {
                                             <Popover2
                                                 interactionKind="hover"
                                                 placement="right"
-                                                popoverClassName={Classes.POPOVER2_CONTENT_SIZING}
+                                                popoverClassName={PopoverClasses.POPOVER2_CONTENT_SIZING}
                                                 autoFocus={false}
                                                 enforceFocus={false}
                                                 content={dir === "asc" ? "Ascending Score" : "Descending Score"}
@@ -289,16 +332,5 @@ const LeaderboardPanel = () => {
     )
 
 }
-
-const CompetitionPanel = () => {
-
-    return (
-        <div>
-            
-        </div>
-    )
-
-}
-
 
 export default Social; 

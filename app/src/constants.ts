@@ -7,4 +7,4 @@ export const quotesIntervalsURL = `${baseURL}/quote/intervals/`
 
 export const backtestURL = `${baseURL}/backtest/`
 
-export const notifsURL = 'ws://localhost:80/ws/'
+export const compURL = `${baseURL}/comps/`

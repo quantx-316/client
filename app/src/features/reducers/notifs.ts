@@ -19,6 +19,7 @@ const initialState: NotifState = initialSingleNotifState;
 export default function notifsReducer(state = initialState, action: GenericUpdateNotif): NotifState {
     switch(action.type) {
         case UPDATE_NOTIF_STATE:
+
             return { 
                 ...state,
                 ...action.payload
