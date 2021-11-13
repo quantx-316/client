@@ -16,11 +16,18 @@ export interface CompetitionTabState {
     defaultTab: string, // see backtestabstate above 
 }
 
+export interface UserProfileState {
+    tabShow: boolean, 
+    competitionShow: boolean, 
+    competitionParticipationShow: boolean, 
+}
+
 export interface SettingsState {
     algosPublic: boolean,
     pendingBackStarred: boolean, 
     pendingCompStarred: boolean, 
     homeTab: HomeTabState, 
+    profileTab: UserProfileState, 
     socialTabUsersShow: boolean, 
     starredTabCompsShow: boolean, 
     backtestDefaultTab: string, 
@@ -30,8 +37,9 @@ export interface SettingsState {
 export type SettingsActions = (
     UpdateSettings | UpdateAlgosPub | UpdatePendingBackStarred | UpdatePendingCompStarred
     | UpdateCompParticipation | UpdateCompShow | UpdateUsersShow | UpdateDefaultBacktestTab | UpdateDefaultCompTab
-    | UpdateStarredCompShow
+    | UpdateStarredCompShow | UpdateProfileCompPartShow | UpdateProfileCompShow | UpdateProfileTabShow
 )
+
 interface UpdateSettings {
     type: typeof UPDATE_SETTINGS, 
     payload: SettingsState,
@@ -82,6 +90,21 @@ interface UpdateStarredCompShow {
     payload: boolean, 
 }
 
+interface UpdateProfileTabShow {
+    type: typeof UPDATE_PROFILE_TAB_SHOW,
+    payload: boolean, 
+}
+
+interface UpdateProfileCompShow {
+    type: typeof UPDATE_PROFILE_COMP_SHOW, 
+    payload: boolean, 
+}
+
+interface UpdateProfileCompPartShow {
+    type: typeof UPDATE_PROFILE_COMP_PART_SHOW,
+    payload: boolean, 
+}
+
 export const UPDATE_SETTINGS = 'UPDATE_SETTINGS';
 export const UPDATE_ALGOS_PUBLIC = 'UPDATE_ALGOS_PUBLIC';
 export const UPDATE_PENDING_BACK_STARRED = 'UPDATE_PENDING_BACK_STARRED';
@@ -92,3 +115,6 @@ export const UPDATE_USERS_SHOW = 'UPDATE_USERS_SHOW';
 export const UPDATE_DEFAULT_BACKTEST_TAB = 'UPDATE_DEFAULT_BACKTEST_TAB';
 export const UPDATE_DEFAULT_COMP_TAB = 'UPDATE_DEFAULT_COMP_TAB';
 export const UPDATE_STARRED_COMP_SHOW = 'UPDATE_STARRED_COMP_SHOW';
+export const UPDATE_PROFILE_TAB_SHOW = 'UPDATE_PROFILE_TAB_SHOW';
+export const UPDATE_PROFILE_COMP_SHOW = 'UPDATE_PROFILE_COMP_SHOW';
+export const UPDATE_PROFILE_COMP_PART_SHOW = 'UPDATE_PROFILE_COMP_PART_SHOW';

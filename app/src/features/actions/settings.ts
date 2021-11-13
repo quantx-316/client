@@ -9,6 +9,9 @@ import {
     UPDATE_USERS_SHOW,
     UPDATE_DEFAULT_COMP_TAB,
     UPDATE_STARRED_COMP_SHOW,
+    UPDATE_PROFILE_COMP_PART_SHOW,
+    UPDATE_PROFILE_COMP_SHOW,
+    UPDATE_PROFILE_TAB_SHOW,
     SettingsState
 } from '../types/settings';
 
@@ -81,6 +84,30 @@ export const updateDefaultCompTab = (tab: string) => (dispatch: any) => {
 export const showStarredComp = (show: boolean) => (dispatch: any) => {
     dispatch({
         type: UPDATE_STARRED_COMP_SHOW,
+        payload: show 
+    })
+}
+
+
+export const showProfileCompPart = (show: boolean) => (dispatch: any) => {
+    dispatch({
+        type: UPDATE_PROFILE_COMP_PART_SHOW,
+        payload: show 
+    })
+}
+
+
+export const showProfileComp = (show: boolean) => (dispatch: any) => {
+    dispatch({
+        type: UPDATE_PROFILE_COMP_SHOW,
+        payload: show 
+    })
+}
+
+
+export const showProfileTab = (show: boolean) => (dispatch: any) => {
+    dispatch({
+        type: UPDATE_PROFILE_TAB_SHOW,
         payload: show 
     })
 }

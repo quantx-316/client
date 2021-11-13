@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { useParams, useLocation } from 'react-router-dom';
-import { Button, Card, Classes, H1, H5, TextArea, Slider, Spinner, SpinnerSize} from "@blueprintjs/core";
+import { Button, Card, Classes, H1, H5, TextArea, Slider, Spinner, SpinnerSize, Menu, MenuItem,} from "@blueprintjs/core";
 import {fetchUser, updateUser} from '../features/actions/users';
 import ProfileEdit from '../components/ProfileEdit';
 import {fetchPublicAlgos} from '../features/actions/algos';
@@ -18,11 +18,19 @@ import { Classes as Popover2Classes, Popover2 } from "@blueprintjs/popover2";
 import { dispatchErrorMsg } from '../features/utils/notifs';
 import UserComps from '../components/UserComps';
 import {truncateUsername, truncateName} from '../features/utils/text';
+import {
+    showProfileCompPart, 
+    showProfileComp, 
+    showProfileTab
+} from '../features/actions/settings';
 
 const Profile = () => {
 
     //@ts-ignore 
     const { username } = useParams();
+
+    //@ts-ignore 
+    const profileTab = useSelector(state => state.settings.profileTab);
 
     const location = useLocation();
 
@@ -45,7 +53,6 @@ const Profile = () => {
     const onBackSearchQueryChange = (searchQuery: string) => {
         setBackSearchQuery(searchQuery);
     }
- 
 
     const onUserChange = (user: any) => {
         setUser(user);
@@ -202,28 +209,58 @@ const Profile = () => {
         dispatch(updateUser(user, userSaveCallback))
     }
 
-    const [viewPublicScore, setViewPublicScore] = useState(false);
+    const viewPublicScore = profileTab.tabShow && !profileTab.competitionShow; 
+    const viewComps = profileTab.tabShow && profileTab.competitionShow; 
 
-
-    const [viewComps, setViewComps] = useState(false);
+    const showTab = () => {
+        dispatch(showProfileTab(true));
+    }
+    const hideTab = () => {
+        dispatch(showProfileTab(false));
+    }
 
     const onViewPubScoreClick = () => {
-        if (viewComps) {
-            setViewComps(false);
-            setViewPublicScore(true);
-        } else {
-            setViewPublicScore(viewPub => !viewPub);
+
+        // below can be prettier for sure, but not worth spending time on 
+        if (!profileTab.tabShow) {
+            showTab();
+            dispatch(showProfileComp(false));
+        } else if (profileTab.competitionShow) { // profiletab.show && ...
+            dispatch(showProfileComp(false));
+        } else { // only other poss. 
+            hideTab();
         }
     }
 
     const onViewCompClick = () => {
-        if (viewPublicScore) {
-            setViewPublicScore(false);
-            setViewComps(true);
+
+        // read above 
+        if (!profileTab.tabShow) {
+            showTab();
+            dispatch(showProfileComp(true));
+        } else if (!profileTab.competitionShow) {
+            dispatch(showProfileComp(true));
         } else {
-            setViewComps(viewComp => !viewComp);
+            hideTab();
         }
     }
+
+    const onCompParticipated = (part: boolean) => {
+        dispatch(showProfileCompPart(part))
+    }
+
+    const CompMenu = (
+        <Menu>
+            <MenuItem 
+                text="Participated"
+                onClick={() => onCompParticipated(true)}
+            />
+            <MenuItem 
+                text="Created"
+                onClick={() => onCompParticipated(false)}
+            />
+        </Menu>
+    )
 
     return (
         <div
@@ -325,21 +362,41 @@ const Profile = () => {
                                         <div
                                             className="centered"
                                         >
-                                            <Popover2
-                                                interactionKind="hover" 
-                                                autoFocus={false}
-                                                popoverClassName={Popover2Classes.POPOVER2_CONTENT_SIZING} 
-                                                enforceFocus={false}
-                                                placement="top" 
-                                                content={viewComps ? "Close" : "View Competitions"}
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    gap: "3px"
+                                                }}
                                             >
-                                                <Button
-                                                    className={Classes.BUTTON}
-                                                    icon={"social-media"}
-                                                    onClick={() => onViewCompClick()}
+                                                <Popover2
+                                                    interactionKind="hover" 
+                                                    autoFocus={false}
+                                                    popoverClassName={Popover2Classes.POPOVER2_CONTENT_SIZING} 
+                                                    enforceFocus={false}
+                                                    placement="top" 
+                                                    content={viewComps ? "Close" : "View Competitions"}
                                                 >
-                                                </Button>
-                                            </Popover2>
+                                                    <Button
+                                                        className={Classes.BUTTON}
+                                                        icon={"social-media"}
+                                                        onClick={() => onViewCompClick()}
+                                                    >
+                                                    </Button>
+                                                </Popover2>
+
+
+                                                <Popover2
+                                                    content={CompMenu}
+                                                    placement="bottom"
+                                                    autoFocus={false}
+                                                    enforceFocus={false}
+                                                >
+                                                    <Button
+                                                        icon="chevron-down"
+                                                    >
+                                                    </Button>
+                                                </Popover2>
+                                            </div>
                                         </div>
 
 
@@ -398,7 +455,7 @@ const Profile = () => {
             }
 
             {
-                 !editing && viewPublicScore && !(publicAlgosArr===null) && 
+                 !loading && !editing && viewPublicScore && !(publicAlgosArr===null) && 
                  <Backtests 
                     title={"Public Scores"}
                     info={"Scores for the best performing backtest per algorithm that the user has made public"}
@@ -424,11 +481,12 @@ const Profile = () => {
             }
 
             {
-                !editing && viewComps && username && 
+                !loading && !editing && viewComps && username && 
                 <UserComps 
-                    username={username}
-                    title="Participated"
-                    info="Competitions this user participated in"
+                title={profileTab.competitionParticipationShow ? "Participated" : "Created"}
+                info={profileTab.competitionParticipationShow  ? "Competitions this user has participated in" : "Competitions this user has created"}
+                username={profileTab.competitionParticipationShow  && username ? username : null}
+                owner={!profileTab.competitionParticipationShow  && username ? username : null}
                 />
             }
 

@@ -11,6 +11,9 @@ import {
     UPDATE_USERS_SHOW,
     UPDATE_DEFAULT_COMP_TAB,
     UPDATE_STARRED_COMP_SHOW,
+    UPDATE_PROFILE_COMP_PART_SHOW,
+    UPDATE_PROFILE_COMP_SHOW,
+    UPDATE_PROFILE_TAB_SHOW,
 } from '../types/settings';
 
 let initialState: SettingsState = {
@@ -19,6 +22,11 @@ let initialState: SettingsState = {
     pendingCompStarred: true,
     homeTab: {
         competitionShow: false,
+        competitionParticipationShow: true, 
+    },
+    profileTab: {
+        tabShow: false,
+        competitionShow: false, 
         competitionParticipationShow: true, 
     },
     socialTabUsersShow: true, 
@@ -56,6 +64,48 @@ const saveNewState = (newState: SettingsState) => {
 export default function settingsReducer(state = initialState, action : SettingsActions): SettingsState {
 
     switch(action.type) {
+
+        case UPDATE_PROFILE_TAB_SHOW: 
+
+            const newState13 = {
+                ...state, 
+                profileTab: {
+                    ...state.profileTab, 
+                    tabShow: action.payload, 
+                }
+            }
+
+            saveNewState(newState13);
+
+            return newState13; 
+
+        case UPDATE_PROFILE_COMP_SHOW: 
+
+            const newState12 = {
+                ...state, 
+                profileTab: {
+                    ...state.profileTab, 
+                    competitionShow: action.payload, 
+                }
+            }
+
+            saveNewState(newState12);
+
+            return newState12; 
+
+        case UPDATE_PROFILE_COMP_PART_SHOW: 
+
+            const newState11 = {
+                ...state, 
+                profileTab: {
+                    ...state.profileTab, 
+                    competitionParticipationShow: action.payload, 
+                }
+            }
+
+            saveNewState(newState11);
+
+            return newState11; 
 
         case UPDATE_STARRED_COMP_SHOW:
 
