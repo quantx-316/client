@@ -5,12 +5,24 @@ import {
     UPDATE_ALGOS_PUBLIC,
     UPDATE_PENDING_BACK_STARRED,
     UPDATE_PENDING_COMP_STARRED,
+    UPDATE_COMP_PARTICIPATION,
+    UPDATE_COMP_SHOW,
+    UPDATE_DEFAULT_BACKTEST_TAB,
+    UPDATE_USERS_SHOW,
+    UPDATE_DEFAULT_COMP_TAB,
 } from '../types/settings';
 
 let initialState: SettingsState = {
     algosPublic: true,
     pendingBackStarred: true,
     pendingCompStarred: true,
+    homeTab: {
+        competitionShow: false,
+        competitionParticipationShow: true, 
+    },
+    socialTabUsersShow: true, 
+    backtestDefaultTab: "Code",
+    compDefaultTab: "",
 }
 
 try {
@@ -42,6 +54,68 @@ const saveNewState = (newState: SettingsState) => {
 export default function settingsReducer(state = initialState, action : SettingsActions): SettingsState {
 
     switch(action.type) {
+
+        case UPDATE_DEFAULT_COMP_TAB: 
+
+            const newState9 = {
+                ...state, 
+                compDefaultTab: action.payload, 
+            }
+
+            saveNewState(newState9);
+
+            return newState9;
+
+        case UPDATE_DEFAULT_BACKTEST_TAB: 
+
+            const newState8 = {
+                ...state, 
+                backtestDefaultTab: action.payload, 
+            }
+
+            saveNewState(newState8);
+
+            return newState8;
+
+        case UPDATE_USERS_SHOW:
+
+            const newState7 = {
+                ...state, 
+                socialTabUsersShow: action.payload, 
+            }
+
+            saveNewState(newState7);
+
+            return newState7; 
+
+        case UPDATE_COMP_SHOW: 
+
+            const newState6 = {
+                ...state, 
+                homeTab: {
+                    ...state.homeTab, 
+                    competitionShow: action.payload, 
+                }
+            }
+
+            saveNewState(newState6);
+
+            return newState6; 
+
+        case UPDATE_COMP_PARTICIPATION: 
+
+            const newState5 = {
+                ...state, 
+                homeTab: {
+                    ...state.homeTab, 
+                    competitionParticipationShow: action.payload, 
+                }
+            }
+
+            saveNewState(newState5);
+
+            return newState5; 
+
         case UPDATE_ALGOS_PUBLIC: 
 
             const newState2 = {

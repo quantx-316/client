@@ -370,11 +370,11 @@ const Profile = () => {
                                     <div>
                                         <p>
                                             {/* @ts-ignore */}
-                                            <b>First Name: </b>{truncateName(user.firstname) ?? "N/A"}
+                                            <b>First Name: </b>{user.firstname ? truncateName(user.firstname) : "N/A"}
                                         </p>    
                                         <p>
                                             {/* @ts-ignore */}
-                                            <b>Last Name: </b>{truncateName(user.lastname) ?? "N/A"}
+                                            <b>Last Name: </b>{user.lastname ? truncateName(user.lastname) : "N/A"}
                                         </p>         
                                     </div>
                                     <div>

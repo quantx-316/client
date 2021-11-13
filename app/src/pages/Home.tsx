@@ -8,12 +8,18 @@ import AlgosList from '../components/AlgosList';
 import Backtests from '../components/Backtests';
 import HomeHeader from '../components/HomeHeader';
 import Comp from '../components/UserComps';
-import { PagesRounded } from '@mui/icons-material';
+import {
+    showCompParticipation, 
+    showComp, 
+} from '../features/actions/settings';
 
 export const Home: React.FC = () => {
     const history = useHistory();
 
     const dispatch = useDispatch();
+
+    //@ts-ignore 
+    const homeTabState = useSelector(state => state.settings.homeTab);
 
     //@ts-ignore 
     const backtests = useSelector(state => state.backtests.backtests);
@@ -306,28 +312,19 @@ export const Home: React.FC = () => {
         onPageChange(null, backtestPage);
     }
 
-    const [competitionShow, setCompetitionShow] = useState(false);
-    const [backtestShow, setBacktestShow] = useState(true);
-    const onCompetitionShow = () => {
-        if (backtestShow && !competitionShow) {
-            setBacktestShow(false);
-            setCompetitionShow(true);
-        } else {
-            setCompetitionShow(compShow => !compShow);
-        }
-    }
-    const onBacktestShow = () => {
-        if (competitionShow && !backtestShow) {
-            setCompetitionShow(false);
-            setBacktestShow(true);
-        } else {
-            setBacktestShow(backtestShow => !backtestShow);
-        }
+    const toggleCompShow = () => {
+        dispatch(showComp(!homeTabState.competitionShow));
     }
 
-    const [compParticipated, setCompParticipated] = useState(true);
+    const onCompetitionShow = () => {
+        toggleCompShow();
+    }
+    const onBacktestShow = () => {
+        toggleCompShow();
+    }
+
     const onCompParticipated = (newCompPart: boolean) => {
-        setCompParticipated(newCompPart);
+        dispatch(showCompParticipation(newCompPart));
     }
 
     return (
@@ -347,11 +344,11 @@ export const Home: React.FC = () => {
                     className="navbar-like"
                 >
                     <HomeHeader 
-                        competitionShow={competitionShow}
+                        competitionShow={homeTabState.competitionShow}
                         onCompetitionShow={onCompetitionShow}
-                        backtestShow={backtestShow}
+                        backtestShow={!homeTabState.competitionShow}
                         onBacktestShow={onBacktestShow}
-                        compParticipated={compParticipated}
+                        compParticipated={homeTabState.competitionParticipationShow}
                         onCompParticipated={onCompParticipated}
                     />
                 </div>
@@ -381,7 +378,7 @@ export const Home: React.FC = () => {
                     />
 
                     {
-                        backtestShow && 
+                        !homeTabState.competitionShow && 
                         <Backtests 
                             backtests={backtests}
                             info={"Execution results for chosen algorithm"}
@@ -408,12 +405,12 @@ export const Home: React.FC = () => {
                     }
 
                     {
-                        competitionShow && 
+                        homeTabState.competitionShow && 
                         <Comp 
-                            title={compParticipated ? "Participated" : "Created"}
-                            info={compParticipated ? "Competitions you have participated in" : "Competitions you have created"}
-                            username={compParticipated && user && user.username ? user.username : null}
-                            owner={!compParticipated && user && user.username ? user.username : null}
+                            title={homeTabState.competitionParticipationShow ? "Participated" : "Created"}
+                            info={homeTabState.competitionParticipationShow  ? "Competitions you have participated in" : "Competitions you have created"}
+                            username={homeTabState.competitionParticipationShow  && user && user.username ? user.username : null}
+                            owner={!homeTabState.competitionParticipationShow  && user && user.username ? user.username : null}
                         />
                     }
 

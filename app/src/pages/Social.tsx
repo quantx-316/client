@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {
     Tab,
@@ -26,8 +26,23 @@ import {
   import NewComp from '../components/NewComp';
   import UserComps from '../components/UserComps';
   import {truncateUsername} from '../features/utils/text';
+  import {
+    showUsers
+  } from '../features/actions/settings';
 
 const Social: React.FC = () => {
+
+    //@ts-ignore 
+    const socialTabUsersShow = useSelector(state => state.settings.socialTabUsersShow);
+
+    const dispatch = useDispatch();
+
+    const onTabChange = (newTabID: string) => {
+        dispatch(showUsers(
+            newTabID === "lead"
+        ))
+    }
+
     return (
         <div
             className="full centered-top-col"
@@ -38,6 +53,8 @@ const Social: React.FC = () => {
             <Tabs
                 className="centered-top-col full"
                 renderActiveTabPanelOnly={true}
+                selectedTabId={socialTabUsersShow ? "lead" : "comp"}
+                onChange={onTabChange}
             >
                 <Tab id="lead" title="Users" panel = {<LeaderboardPanel />} />
                 <Tab id="comp" title="Competitions" panel = {<CompetitionPanel />} />
