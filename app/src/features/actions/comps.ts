@@ -227,9 +227,28 @@ export const getUserEntryToComp = (compID: number, username: string, createCallB
 
 }
 
-export const getUsersSubmittedComps = (username: string, createCallBack?: any, createFailCallBack?: any) => (dispatch: any) => {
+export const getUsersSubmittedComps = (
+    username: string, 
+    page: number, 
+    size: number, 
+    attr: string, 
+    dir: string,
+    search_by: string, 
+    search_query: string, 
+    search_exclusive: boolean,
+    createCallBack?: any, 
+    createFailCallBack?: any) => (dispatch: any) => {
 
-    return compService.getUsersSubmittedComps(username).then(
+    return compService.getUsersSubmittedComps(
+        username,
+        page, 
+        size,
+        attr, 
+        dir,
+        search_by,
+        search_query,
+        search_exclusive,
+    ).then(
         (res) => {
             if (createCallBack) {
                 createCallBack(res.data);
@@ -283,9 +302,29 @@ export const getBackSubmittedComps = (backID: number, createCallBack?: any, crea
 }
 
 
-export const getUserOwnedComps = (username: string, createCallBack?: any, createFailCallBack?: any) => (dispatch: any) => {
+export const getUserOwnedComps = (
+    username: string, 
+    page: number, 
+    size: number, 
+    attr: string, 
+    dir: string,
+    search_by: string, 
+    search_query: string, 
+    search_exclusive: boolean,
+    createCallBack?: any, 
+    createFailCallBack?: any
+    ) => (dispatch: any) => {
 
-    return compService.getUserOwnedComps(username).then(
+    return compService.getUserOwnedComps(
+        username,
+        page, 
+        size, 
+        attr, 
+        dir,
+        search_by, 
+        search_query, 
+        search_exclusive,
+    ).then(
         (res) => {
             if (createCallBack) {
                 createCallBack(res.data);

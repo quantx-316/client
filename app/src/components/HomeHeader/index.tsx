@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Icon, IconSize, ButtonGroup, Elevation, H1, H3, H4, H5, Label, Slider, Switch } from "@blueprintjs/core";
+import { Button, Card, Menu, MenuItem, Elevation, H1, H3, H4, H5, Label, Slider, Switch } from "@blueprintjs/core";
 import {useSelector} from 'react-redux';
 import { NoEncryption } from '@mui/icons-material';
 import { Classes as PopoverClasses, Popover2 } from "@blueprintjs/popover2";
@@ -7,6 +7,8 @@ import { Classes as PopoverClasses, Popover2 } from "@blueprintjs/popover2";
 type HomeHeaderProps = {
     competitionShow: boolean, 
     onCompetitionShow: any, 
+    compParticipated: boolean, 
+    onCompParticipated: any, 
     backtestShow: boolean, 
     onBacktestShow: any, 
 }
@@ -19,6 +21,19 @@ const HomeHeader = (props: HomeHeaderProps) => {
     //@ts-ignore 
     const backTestPagination = useSelector(state => state.backtests.pagination);
 
+
+    const CompMenu = (
+        <Menu>
+            <MenuItem 
+                text="Participated"
+                onClick={() => props.onCompParticipated(true)}
+            />
+            <MenuItem 
+                text="Created"
+                onClick={() => props.onCompParticipated(false)}
+            />
+        </Menu>
+    )
 
     return (
         <Card
@@ -103,24 +118,43 @@ const HomeHeader = (props: HomeHeaderProps) => {
                 <div
                     className="centered-top-col"
                 >
-                    <Button
-                        className="centered"
+                    <div
                         style={{
-                            fontSize: "16px"
+                            display: "flex", 
+                            gap: "5px"
                         }}
-                        onClick={() => props.onCompetitionShow()}
                     >
-                        {
-                            props.competitionShow ?
-                            <b>
-                                Competitions 
-                            </b>
+                        <Button
+                            className="centered"
+                            style={{
+                                fontSize: "16px"
+                            }}
+                            onClick={() => props.onCompetitionShow()}
+                        >
+                            {
+                                props.competitionShow ?
+                                <b>
+                                    Competitions 
+                                </b>
 
-                            :
+                                :
 
-                            'Competitions'
-                        }
-                    </Button>
+                                'Competitions'
+                            }
+                        </Button>
+
+                        <Popover2
+                            content={CompMenu}
+                            placement="bottom"
+                            autoFocus={false}
+                            enforceFocus={false}
+                        >
+                            <Button
+                                icon="chevron-down"
+                            >
+                            </Button>
+                        </Popover2>
+                    </div>
                     <div
                         style={{
                             display: "flex",
@@ -138,7 +172,7 @@ const HomeHeader = (props: HomeHeaderProps) => {
                             fontSize: "10px"
                         }}
                     >
-                        Total Participated
+                        Total {props.compParticipated ? "Participated" : "Created"}
                     </span>
                 </div>
                 <div

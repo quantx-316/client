@@ -24,6 +24,7 @@ import {
   import {dateStrToDate} from '../features/utils/time';
   import Pagination from '../components/Pagination';
   import NewComp from '../components/NewComp';
+  import UserComps from '../components/UserComps';
 
 const Social: React.FC = () => {
     return (
@@ -62,6 +63,9 @@ const CompetitionPanel = () => {
     return (
         <div
             className="full centered-top-col"
+            style={{
+                gap: "20px"
+            }}
         >
             <div>
                 <Button
@@ -72,6 +76,24 @@ const CompetitionPanel = () => {
                 >
                     New
                 </Button>
+            </div>
+
+            <div
+                className="full separated-row"
+                style={{
+                    gap: "20px"
+                }}
+            >
+                <UserComps 
+                    title="Finished"
+                    finished={true}
+                />
+
+                <UserComps 
+                    title="In Progress"
+                    finished={false}
+                />
+
             </div>
 
             <NewComp 

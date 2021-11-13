@@ -41,7 +41,7 @@ export const padSortURL = (
     attr: string, 
     dir: string, 
 ) => {
-    return url + "&sort_by" + attr + "&sort_direction" + dir;
+    return url + "&sort_by=" + attr + "&sort_direction=" + dir;
 }
 
 export const padSearchURL = (
@@ -52,7 +52,7 @@ export const padSearchURL = (
 ) => {
 
     let newURL = url + "&search_by=" + search_by + "&search_query=" + search_query;
-    if (search_exclusive) {
+    if (search_exclusive !== null) {
         newURL = newURL + "&exclusive=" + search_exclusive;
     }
 
@@ -87,8 +87,9 @@ export const padPageSearchSortURL = (
     search_exclusive: boolean,
 ) => {
     let newURL = url + "?page=" + page + "&size=" + size; 
+
     newURL = padSearchSortURL(
-        url, 
+        newURL, 
         attr, dir, 
         search_by, search_query, search_exclusive
     )

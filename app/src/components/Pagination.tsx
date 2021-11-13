@@ -6,7 +6,7 @@ type PaginationProps = {
     // total: number,
     // page: number, 
     // size: number,
-    pagination: PageState,
+    pagination: PageState | null,
     page: number, 
     onPageChange: any,
 }

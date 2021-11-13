@@ -111,9 +111,27 @@ class compService {
     }
 
     static getUsersSubmittedComps(
-        username: string
+        username: string,
+        page: number, 
+        size: number, 
+        attr: string, 
+        dir: string,
+        search_by: string, 
+        search_query: string, 
+        search_exclusive: boolean,
     ) {
-        let url = compURL + "submitted/?username=" + username; 
+        let url = compURL + "submitted/";
+        url = padPageSearchSortURL(
+            url, 
+            page, size, 
+            attr, dir, 
+            search_by, search_query, search_exclusive,
+        )
+        url = url + "&username=" + username;   
+        
+        console.log("GET USERS SUBMITTED COMPS");
+        console.log(url);
+
         return requests.authGet(url);
     }
 
@@ -133,8 +151,23 @@ class compService {
 
     static getUserOwnedComps(
         username: string, 
+        page: number, 
+        size: number, 
+        attr: string, 
+        dir: string,
+        search_by: string, 
+        search_query: string, 
+        search_exclusive: boolean,
     ) {
-        let url = compURL + "owned/?username=" + username;
+        let url = compURL + "owned/";
+        url = padPageSearchSortURL(
+            url, 
+            page, size, 
+            attr, dir, 
+            search_by, search_query, search_exclusive,
+        )
+        url = url + "&username=" + username;   
+
         return requests.authGet(url);
     }
 

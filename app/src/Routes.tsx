@@ -4,7 +4,6 @@ import {useSelector, useDispatch} from "react-redux";
 import { dispatchSuccessMsg } from './features/utils/notifs';
 import Dev from './pages/Dev'
 import { Home } from './pages/Home'
-import Backtests from './pages/Backtests';
 import Files from './pages/Files';
 import StockView from './pages/StockView';
 import Base from './pages/Base';
@@ -20,6 +19,7 @@ import {logout} from './features/actions/auth';
 import {dispatchErrorMsg} from './features/utils/notifs';
 import ProtectedRoute from './components/ProtectedRoute';
 import Backtest from './pages/Backtest';
+import Competition from './pages/Competition';
 import {getBacktestByID} from './features/actions/backtest';
 import {addBacktest, removeBacktest} from './features/actions/starred';
 import {selectAlgo} from './features/actions/algos';
@@ -172,6 +172,17 @@ const Routes: React.FC = () => {
           render={() => (
             <Base>
               <Dev />
+            </Base>
+          )}
+        />
+        <ProtectedRoute 
+          path="/competition/:comp_id"
+          exact 
+          isAuthenticated={isLoggedIn}
+          //@ts-ignore 
+          render={routeProps => (
+            <Base>
+              <Competition {...routeProps} />
             </Base>
           )}
         />

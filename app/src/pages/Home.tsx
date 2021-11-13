@@ -7,6 +7,7 @@ import {deleteBacktest, getBacktestByAlgo} from '../features/actions/backtest';
 import AlgosList from '../components/AlgosList';
 import Backtests from '../components/Backtests';
 import HomeHeader from '../components/HomeHeader';
+import Comp from '../components/UserComps';
 import { PagesRounded } from '@mui/icons-material';
 
 export const Home: React.FC = () => {
@@ -21,6 +22,9 @@ export const Home: React.FC = () => {
     const algos = useSelector(state => state.algos.algos);
     //@ts-ignore 
     const pagination = useSelector(state => state.algos.pagination);
+
+    //@ts-ignore 
+    const user = useSelector(state => state.auth.user);
 
     const onNewClick = () => {
         history.push({
@@ -321,6 +325,11 @@ export const Home: React.FC = () => {
         }
     }
 
+    const [compParticipated, setCompParticipated] = useState(true);
+    const onCompParticipated = (newCompPart: boolean) => {
+        setCompParticipated(newCompPart);
+    }
+
     return (
         <div
             className="full centered-top-col"
@@ -342,6 +351,8 @@ export const Home: React.FC = () => {
                         onCompetitionShow={onCompetitionShow}
                         backtestShow={backtestShow}
                         onBacktestShow={onBacktestShow}
+                        compParticipated={compParticipated}
+                        onCompParticipated={onCompParticipated}
                     />
                 </div>
 
@@ -397,10 +408,14 @@ export const Home: React.FC = () => {
                     }
 
                     {
-
+                        competitionShow && 
+                        <Comp 
+                            title={compParticipated ? "Participated" : "Created"}
+                            info={compParticipated ? "Competitions you have participated in" : "Competitions you have created"}
+                            username={compParticipated && user && user.username ? user.username : null}
+                            owner={!compParticipated && user && user.username ? user.username : null}
+                        />
                     }
-
-
 
                 </div>
 
