@@ -17,6 +17,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { Classes as Popover2Classes, Popover2 } from "@blueprintjs/popover2";
 import { dispatchErrorMsg } from '../features/utils/notifs';
 import UserComps from '../components/UserComps';
+import {truncateUsername, truncateName} from '../features/utils/text';
 
 const Profile = () => {
 
@@ -256,7 +257,7 @@ const Profile = () => {
                             >
                                 <H1>
                                     {/* @ts-ignore */}
-                                    {user.username}
+                                    {truncateUsername(user.username)}
                                 </H1>
                                 
                                 <div
@@ -369,11 +370,11 @@ const Profile = () => {
                                     <div>
                                         <p>
                                             {/* @ts-ignore */}
-                                            <b>First Name: </b>{user.firstname ?? "N/A"}
+                                            <b>First Name: </b>{truncateName(user.firstname) ?? "N/A"}
                                         </p>    
                                         <p>
                                             {/* @ts-ignore */}
-                                            <b>Last Name: </b>{user.lastname ?? "N/A"}
+                                            <b>Last Name: </b>{truncateName(user.lastname) ?? "N/A"}
                                         </p>         
                                     </div>
                                     <div>

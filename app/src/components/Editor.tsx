@@ -522,7 +522,13 @@ def backtest_tick(quote_set, portfolio, quote_history):
         >
           <div>
             <label>Title: &nbsp;
-              <EditableText placeholder="Enter the title of code" alwaysRenderInput={true} selectAllOnFocus={false} maxLength={100} onChange={e => handleTitleChange(e)} value={algoState.title}/>
+              <EditableText 
+                placeholder="Enter the title of code" 
+                alwaysRenderInput={true} 
+                selectAllOnFocus={false} 
+                maxLength={50} 
+                onChange={e => handleTitleChange(e)} 
+                value={algoState.title}/>
             </label>
           </div>
 

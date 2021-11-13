@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import {useHistory} from 'react-router-dom';
 import TimeSelectDialog from './TimeSelectDialog'
 import { Button, FormGroup, InputGroup, TextArea } from '@blueprintjs/core'
 import { dispatchErrorMsg } from '../features/utils/notifs'
@@ -6,22 +7,30 @@ import { useDispatch } from 'react-redux'
 import { Classes, Popover2 } from '@blueprintjs/popover2'
 import { fetchQuoteAllowedTimes } from '../features/actions/quotes'
 import {dateStrToDate, dateToUnix} from '../features/utils/time'
-import {createCompetition} from '../features/actions/comps';
+import {createCompetition, updateCompetition} from '../features/actions/comps';
 import Modal from './Modal';
 
 type CompetitionProps = {
-  isOpen: boolean, 
-  handleClose: any, 
-  onNewComp: any, 
+  compForm?: any, 
 }
 
 const Competition = (props: CompetitionProps) => {
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
 
-  const [startDate, setStartDate] = useState<Date | null>(null)
-  const [endDate, setEndDate] = useState<Date | null>(null)
-  const [compEndDate, setCompEndDate] = useState<Date | null>(null)
+  const history = useHistory();
+
+  const defCompForm = {
+    title: '',
+    description: '',
+    startDate: null, 
+    endDate: null, 
+    compEndDate: null, 
+  };
+
+  const [compForm, setCompForm] = useState(props.compForm ?? defCompForm);
+
+  useEffect(() => {
+    setCompForm(props.compForm ?? defCompForm);
+  }, [props.compForm])
 
   const [minDate, setMinDate] = useState<Date | null>(null)
   const [maxDate, setMaxDate] = useState<Date | null>(null)
@@ -64,35 +73,76 @@ const Competition = (props: CompetitionProps) => {
   }
 
   const onStartDateChange = (date: Date) => {
-    setStartDate(date)
+    if (props.compForm) {
+      dispatchErrorMsg(dispatch, "You cannot change this.");
+      return;
+    }
+
+    setCompForm({
+      ...compForm, 
+      startDate: date, 
+    })
   }
 
   const onEndDateChange = (date: Date) => {
-    setEndDate(date)
+    if (props.compForm) {
+      dispatchErrorMsg(dispatch, "You cannot change this.");
+      return;
+    }
+
+    setCompForm({
+      ...compForm, 
+      endDate: date, 
+    })
   }
 
   const onCompEndDateChange = (date: Date) => {
-    setCompEndDate(date)
+    if (props.compForm) {
+      dispatchErrorMsg(dispatch, "You cannot change this.");
+      return;
+    }
+
+    setCompForm({
+      ...compForm,
+      compEndDate: date, 
+    })
   }
 
   const onChangeTitle = (e: React.FormEvent<HTMLInputElement>) => {
-    setTitle(e.currentTarget.value)
+    setCompForm({
+      ...compForm,
+      title: e.currentTarget.value,
+    })
   }
 
   const onChangeDescription = (e: React.FormEvent<HTMLTextAreaElement>) => {
-    setDescription(e.currentTarget.value)
+    setCompForm({
+      ...compForm, 
+      description: e.currentTarget.value,
+    })
+  }
+
+
+  const onCreateNewComp = (data: any) => {
+    if (data && data.id) {
+      history.push("/competition/" + data.id);
+    }
+  }
+
+  const onUpdateComp = (data: any) => {
+
   }
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
 
-    if (!title || !description || !startDate || !endDate || !compEndDate) {
+    if (!compForm.title || !compForm.description || !compForm.startDate || !compForm.endDate || !compForm.compEndDate) {
       dispatchErrorMsg(dispatch, 'Not all required fields filled out')
       return 
     }
 
     //@ts-ignore 
-    if (startDate >= endDate) {
+    if (compForm.startDate >= compForm.endDate) {
       dispatchErrorMsg(
         dispatch,
         'End date must be strictly greater than end date'
@@ -100,46 +150,60 @@ const Competition = (props: CompetitionProps) => {
       return 
     }
 
-    const startTime = dateToUnix(startDate)
-    const endTime = dateToUnix(endDate)
-    const compEndTime = dateToUnix(compEndDate);
-    dispatch(
-      createCompetition(
-        {
-          title: title, 
-          description: description,
-          end_time: compEndTime, 
-          test_start: startTime, 
-          test_end: endTime, 
-        },
-        props.onNewComp, 
+    const startTime = dateToUnix(compForm.startDate)
+    const endTime = dateToUnix(compForm.endDate)
+    const compEndTime = dateToUnix(compForm.compEndDate);
+
+    if (props.compForm) {
+      dispatch(
+        updateCompetition(
+          {
+            id: props.compForm.id, 
+            owner: props.compForm.owner, 
+            created: props.compForm.created, 
+            edited_at: props.compForm.edited_at, 
+            end_time: compEndTime, 
+            test_start: startTime, 
+            test_end: endTime, 
+            title: compForm.title, 
+            description: compForm.description, 
+          },
+          onUpdateComp,
+        )
       )
-    )
+    } else {
+      dispatch(
+        createCompetition(
+          {
+            ...compForm, 
+            end_time: compEndTime, 
+            test_start: startTime, 
+            test_end: endTime, 
+          },
+          onCreateNewComp, 
+        )
+      )
+    }
 
   }
 
   return (
-    <Modal
-      isOpen={props.isOpen}
-      handleClose={props.handleClose}
-      title={"New Competition"}
-    >
       <div
-        className="full"
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          padding: '25px',
-        }}
+        className="full centered"
       >
         <form onSubmit={handleSubmit}>
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              maxWidth: '800px',
+              width: "600px",
             }}
           >
+
+            <h1>
+              New Competition
+            </h1>
+
             <FormGroup
               disabled={true}
               inline={false}
@@ -153,7 +217,7 @@ const Competition = (props: CompetitionProps) => {
                 placeholder="Enter your title"
                 // leftIcon="edit"
                 onChange={onChangeTitle}
-                value={title}
+                value={compForm.title}
               ></InputGroup>
             </FormGroup>
 
@@ -165,12 +229,11 @@ const Competition = (props: CompetitionProps) => {
               labelInfo={true && '(required)'}
             >
               <TextArea
-                // growVertically={true}
                 fill={true}
                 large={true}
                 placeholder="Enter your description"
                 onChange={onChangeDescription}
-                value={description}
+                value={compForm.description}
               />
             </FormGroup>
             <div
@@ -187,12 +250,12 @@ const Competition = (props: CompetitionProps) => {
                 disabled={true}
                 inline={false}
                 labelFor="text-input"
-                label={true && 'Test Start'}
-                labelInfo={true && '(required)'}
+                label={'Test Start'}
+                labelInfo={'(required)'}
               >
                 <Button
                   rightIcon="calendar"
-                  text={startDate ? startDate.toString() : 'No test start date'}
+                  text={compForm.startDate ? compForm.startDate.toString() : 'No test start date'}
                   onClick={() => onStartDateOpen()}
                   outlined={true}
                   fill={true}
@@ -203,12 +266,12 @@ const Competition = (props: CompetitionProps) => {
                 disabled={true}
                 inline={false}
                 labelFor="text-input"
-                label={true && 'Test End'}
-                labelInfo={true && '(required)'}
+                label={'Test End'}
+                labelInfo={'(required)'}
               >
                 <Button
                   rightIcon="calendar"
-                  text={endDate ? endDate.toString() : 'No test end date'}
+                  text={compForm.endDate ? compForm.endDate.toString() : 'No test end date'}
                   onClick={() => onEndDateOpen()}
                   outlined={true}
                   fill={true}
@@ -219,14 +282,14 @@ const Competition = (props: CompetitionProps) => {
                 disabled={true}
                 inline={false}
                 labelFor="text-input"
-                label={true && 'Competition End'}
-                labelInfo={true && '(required)'}
+                label={'Competition End'}
+                labelInfo={'(required)'}
               >
                 <Button
                   rightIcon="calendar"
                   text={
-                    compEndDate
-                      ? compEndDate.toString()
+                    compForm.compEndDate
+                      ? compForm.compEndDate.toString()
                       : 'No competition end date'
                   }
                   onClick={() => onCompEndDateOpen()}
@@ -234,34 +297,20 @@ const Competition = (props: CompetitionProps) => {
                   fill={true}
                 />
               </FormGroup>
-              <Button
-                  rightIcon="tick-circle"
-                  intent="success"
-                  text="Create"
-                  type="submit"
-                  large={true}
-                  outlined={false}
-                  onClick={handleSubmit}
-                />
-              {/* <Popover2
-                interactionKind="click"
-                popoverClassName={Classes.POPOVER2_CONTENT_SIZING}
-                autoFocus={false}
-                enforceFocus={false}
-                placement="bottom-end"
-                isOpen={runPopoverOpen}
-                content="Created"
+
+              <div
+                className="centered"
               >
                 <Button
-                  rightIcon="tick-circle"
-                  intent="success"
-                  text="Create"
-                  type="submit"
-                  large={true}
-                  outlined={false}
-                  onClick={handleSubmit}
-                />
-              </Popover2> */}
+                    rightIcon="tick-circle"
+                    intent="success"
+                    text={props.compForm ? "Save" : "Create"}
+                    type="submit"
+                    large={true}
+                    outlined={false}
+                    onClick={handleSubmit}
+                  />
+              </div>
             </div>
           </div>
         </form>
@@ -293,7 +342,6 @@ const Competition = (props: CompetitionProps) => {
           maxDate={maxCompEndDate}
         />
       </div>
-    </Modal>
   )
 }
 

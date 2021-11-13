@@ -20,6 +20,7 @@ import {dispatchErrorMsg} from './features/utils/notifs';
 import ProtectedRoute from './components/ProtectedRoute';
 import Backtest from './pages/Backtest';
 import Competition from './pages/Competition';
+import NewCompetition from './pages/NewCompetition';
 import {getBacktestByID} from './features/actions/backtest';
 import {addBacktest, removeBacktest} from './features/actions/starred';
 import {selectAlgo} from './features/actions/algos';
@@ -175,7 +176,17 @@ const Routes: React.FC = () => {
             </Base>
           )}
         />
-        
+        <ProtectedRoute 
+          path="/competition/editor"
+          exact 
+          isAuthenticated={isLoggedIn}
+          //@ts-ignore 
+          render={routeProps => (
+            <Base>
+              <NewCompetition {...routeProps} />
+            </Base>
+          )}
+        />
         <ProtectedRoute 
           path="/competition/:comp_id"
           exact 

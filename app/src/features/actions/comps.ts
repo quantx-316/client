@@ -28,6 +28,8 @@ export const updateCompetition = (comp: Comp, createCallBack?: any, createFailCa
 
     return compService.updateCompetition(comp).then(
         (res) => {
+            dispatchSuccessMsg(dispatch, "Successfully updated competition");
+
             if (createCallBack) {
                 createCallBack(res.data);
             }

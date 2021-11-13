@@ -39,7 +39,7 @@ const ProfileEdit = (props: ProfileEditProps) => {
             >
                 <TextArea
                     id="description-input"
-                    growVertically={true}
+                    growVertically={false}
                     large={true}
                     intent={Intent.PRIMARY}
                     value={props.user && props.user.description ? props.user.description : ""}

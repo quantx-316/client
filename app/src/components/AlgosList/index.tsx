@@ -12,6 +12,7 @@ import Pagination from '../Pagination';
 import Sorting from '../Sorting';
 import Searching from '../Searching';
 import { BACKTEST_FETCH_FAIL } from '../../features/types/backtest';
+import {truncateTitle, truncateDesc} from '../../features/utils/text'; 
 
 type NodePath = number[];
 
@@ -136,7 +137,7 @@ const AlgosList  = (props: AlgosListProps) => {
                     {
                         ...obj, 
                         icon: "code",
-                        label: obj.title,
+                        label: truncateTitle(obj.title),
                     }
                 ))
 
@@ -307,7 +308,7 @@ const AlgosList  = (props: AlgosListProps) => {
                                                 <p>
                                                     <b>Title: </b>
                                                     {/* @ts-ignore */}
-                                                    {hoveringInfo.title}
+                                                    {truncateTitle(hoveringInfo.title)}
                                                 </p>
                                                 <p> 
                                                     <b>Created: </b>

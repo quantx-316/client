@@ -16,6 +16,7 @@ import BacktestPerformance from './BacktestPerformance';
 import {dateStrToDate} from '../../features/utils/time';
 import { Classes, Popover2 } from "@blueprintjs/popover2";
 import {fetchUserById} from '../../features/actions/users';
+import {truncateUsername} from '../../features/utils/text';
 
 import {
     addBacktest,
@@ -107,7 +108,7 @@ const BacktestComp = (props: BacktestProps) => {
                 <p><b>Submitted:</b> {props.backtest && props.backtest.created ? dateStrToDate(props.backtest.created).toString() : ""}</p>
 
                 {/* @ts-ignore */}
-                <p><b>By:</b> {owner && owner.username ? owner.username : "N/A"}</p>
+                <p><b>By:</b> {owner && owner.username ? truncateUsername(owner.username) : "N/A"}</p>
             </div>
             
 

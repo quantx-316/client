@@ -25,6 +25,7 @@ import {
   import Pagination from '../components/Pagination';
   import NewComp from '../components/NewComp';
   import UserComps from '../components/UserComps';
+  import {truncateUsername} from '../features/utils/text';
 
 const Social: React.FC = () => {
     return (
@@ -47,17 +48,10 @@ const Social: React.FC = () => {
 
 const CompetitionPanel = () => {
 
-    const [newIsOpen, setNewIsOpen] = useState(false);
-    const handleNewClose = () => {
-        setNewIsOpen(false);
-    }
+    const history = useHistory();
 
     const onNewClick = () => {
-        setNewIsOpen(true);
-    }
-
-    const onNewComp = (data?: any) => {
-        handleNewClose();
+        history.push('/competition/editor')
     }
 
     return (
@@ -95,12 +89,6 @@ const CompetitionPanel = () => {
                 />
 
             </div>
-
-            <NewComp 
-                isOpen={newIsOpen}
-                handleClose={handleNewClose}
-                onNewComp={onNewComp}
-            />
         </div>
     )
 
@@ -299,7 +287,7 @@ const LeaderboardPanel = () => {
                                                                     </ListItemAvatar>
                                                                     <ListItemText
                                                                         //@ts-ignore 
-                                                                        primary={obj.username}
+                                                                        primary={truncateUsername(obj.username)}
                                                                         secondary={
                                                                             <div
                                                                                 style={{

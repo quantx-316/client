@@ -21,6 +21,7 @@ import {
     getBackSubmittedComps,
 } from '../../features/actions/comps';
 import {getPagination} from '../../features/utils/pages';
+import {truncateTitle, truncateDesc} from '../../features/utils/text'; 
 
 type NodePath = number[];
 
@@ -61,7 +62,37 @@ const UserComps = ({title, info, username, owner, selectedAlgoID, selectedBackID
     //@ts-ignore 
     const user = useSelector(state => state.auth.user);
 
+    const onNewClick = () => {
+        history.push('/competition/editor')
+    }
+    const onEditClick = () => {
 
+        console.log("ON EDIT CLICK");
+        console.log(selectedInfo);
+
+        if (selectedInfo) {
+
+            console.log("if selected info");
+
+            const compForm = {
+                //@ts-ignore 
+                ...selectedInfo, 
+                //@ts-ignore 
+                startDate: dateStrToDate(selectedInfo.test_start),
+                //@ts-ignore  
+                endDate: dateStrToDate(selectedInfo.test_end),
+                //@ts-ignore  
+                compEndDate: dateStrToDate(selectedInfo.end_time), 
+            }
+
+            history.push({
+                pathname: "/competition/editor",
+                state: {
+                    compForm: compForm,
+                }
+            })
+        }
+    }
 
     const [hoveringInfo, setHoveringInfo] = useState(null);
     const [selectedInfo, setSelectedInfo] = useState(null);
@@ -198,7 +229,7 @@ const UserComps = ({title, info, username, owner, selectedAlgoID, selectedBackID
                     {
                         ...obj, 
                         icon: "social-media",
-                        label: obj.title,
+                        label: truncateTitle(obj.title),
                         // //@ts-ignore
                         // secondaryLabel: (obj.result == null ? 
                         //     <b className="nice-red">Executing</b>
@@ -475,23 +506,50 @@ const UserComps = ({title, info, username, owner, selectedAlgoID, selectedBackID
                     
 
                 </div>
-                    <Popover2 
-                        interactionKind="click" 
-                        autoFocus={false}
-                        popoverClassName={Popover2Classes.POPOVER2_CONTENT_SIZING} 
-                        enforceFocus={false}
-                        placement="bottom-end" 
-                        isOpen={refreshOpen}
-                        content="Refreshed"
-                    >
-                        <Button
-                            className={Classes.BUTTON}
-                            icon={"refresh"}
-                            // intent={"success"}
-                            onClick={() => onRefresh()}
+                <div
+                    style={{
+                        display: "flex",
+                        gap: "10px"
+                    }}
+                >
+                    {
+                        owner && user && user.username && user.username === owner &&
+                        <div
+                            className="centered"
                         >
-                        </Button>
-                    </Popover2>
+                            <Button
+                                className={Classes.BUTTON}
+                                icon={"add"}
+                                intent={"success"}
+                                onClick={() => onNewClick()}
+                            >
+                                New
+                            </Button>
+                        </div>
+                    }
+
+                    <div
+                        className="centered"
+                    >
+                        <Popover2 
+                            interactionKind="click" 
+                            autoFocus={false}
+                            popoverClassName={Popover2Classes.POPOVER2_CONTENT_SIZING} 
+                            enforceFocus={false}
+                            placement="bottom-end" 
+                            isOpen={refreshOpen}
+                            content="Refreshed"
+                        >
+                            <Button
+                                className={Classes.BUTTON}
+                                icon={"refresh"}
+                                // intent={"success"}
+                                onClick={() => onRefresh()}
+                            >
+                            </Button>
+                        </Popover2>
+                    </div>
+                </div>
             </div>
             <div
                         style={{
@@ -542,12 +600,12 @@ const UserComps = ({title, info, username, owner, selectedAlgoID, selectedBackID
                                         <p>
                                             <b>Title: </b>
                                             {/* @ts-ignore */}
-                                            {hoveringInfo.title ?? "N/A"}
+                                            {truncateTitle(hoveringInfo.title) ?? "N/A"}
                                         </p>
                                         <p>
                                             <b>Description: </b> 
                                             {/* @ts-ignore */}
-                                            {hoveringInfo.description ?? "N/A"}
+                                            {truncateDesc(hoveringInfo.description) ?? "N/A"}
                                         </p>
                                         <p>
                                             <b>Owner: </b> 
@@ -624,6 +682,16 @@ const UserComps = ({title, info, username, owner, selectedAlgoID, selectedBackID
                     }}
                 >
                     <ButtonGroup>
+                        {
+                            owner && user && user.username && user.username === owner && 
+                            <Button
+                                className={Classes.BUTTON}
+                                icon={"edit"}
+                                onClick={() => onEditClick()}
+                            >
+                                Edit
+                            </Button>
+                        }
                         <Button
                             className={Classes.BUTTON}
                             icon={"eye-open"}
