@@ -7,6 +7,7 @@ import {
     Button,
     FormGroup,
   } from '@blueprintjs/core';
+import NewComp from '../NewComp';
 import {useDispatch, useSelector} from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { dispatchErrorMsg } from '../../features/utils/notifs';
@@ -134,7 +135,28 @@ const Competition = (props: CompProps) => {
                     renderActiveTabPanelOnly={true}
                     defaultSelectedTabId={"overview"}
                 >
-                    <Tab id="overview" title="Overview" panel = {<div />} />
+                    <Tab id="overview" title="Overview" panel = {
+                        <NewComp 
+                            compForm={
+                                props.competition ? 
+
+                                {
+                                    title: props.competition.title, 
+                                    description: props.competition.description, 
+                                    startDate: dateStrToDate(props.competition.test_start),
+                                    endDate: dateStrToDate(props.competition.test_end),
+                                    compEndDate: dateStrToDate(props.competition.end_time),
+                                }
+
+                                :
+
+                                null
+                            }
+                            enabled={false}
+                            title={"Form"}
+                        />
+
+                    } />
                     <Tab id="submissions" title="Submissions" // your submission vs other submissions
                         panel = {<div />} />
                 </Tabs>

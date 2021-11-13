@@ -39,6 +39,9 @@ const ProfileEdit = (props: ProfileEditProps) => {
             >
                 <TextArea
                     id="description-input"
+                    style={{
+                        height: "200px"
+                    }}
                     growVertically={false}
                     large={true}
                     intent={Intent.PRIMARY}

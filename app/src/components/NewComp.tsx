@@ -11,10 +11,18 @@ import {createCompetition, updateCompetition} from '../features/actions/comps';
 import Modal from './Modal';
 
 type CompetitionProps = {
+  title?: string, 
   compForm?: any, 
+  enabled?: boolean, 
 }
 
 const Competition = (props: CompetitionProps) => {
+
+  const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    setEnabled(props.enabled ?? true);
+  }, [props.enabled])
 
   const history = useHistory();
 
@@ -196,12 +204,16 @@ const Competition = (props: CompetitionProps) => {
             style={{
               display: 'flex',
               flexDirection: 'column',
-              width: "600px",
+              width: "700px",
+              overflow: "auto",
+              maxHeight: "500px",
+              border: "1px solid #C0C0C0",
+              padding: "10px"
             }}
           >
 
             <h1>
-              New Competition
+              {props.title ?? "New Competition"}
             </h1>
 
             <FormGroup
@@ -212,6 +224,7 @@ const Competition = (props: CompetitionProps) => {
               labelInfo={true && '(required)'}
             >
               <InputGroup
+                readOnly={!enabled}
                 fill={true}
                 large={true}
                 placeholder="Enter your title"
@@ -229,6 +242,10 @@ const Competition = (props: CompetitionProps) => {
               labelInfo={true && '(required)'}
             >
               <TextArea
+                style={{
+                  height: "300px"
+                }}
+                readOnly={!enabled}
                 fill={true}
                 large={true}
                 placeholder="Enter your description"
@@ -246,71 +263,98 @@ const Competition = (props: CompetitionProps) => {
                 marginBottom: '20px',
               }}
             >
-              <FormGroup
-                disabled={true}
-                inline={false}
-                labelFor="text-input"
-                label={'Test Start'}
-                labelInfo={'(required)'}
-              >
-                <Button
-                  rightIcon="calendar"
-                  text={compForm.startDate ? compForm.startDate.toString() : 'No test start date'}
-                  onClick={() => onStartDateOpen()}
-                  outlined={true}
-                  fill={true}
-                />
-              </FormGroup>
-
-              <FormGroup
-                disabled={true}
-                inline={false}
-                labelFor="text-input"
-                label={'Test End'}
-                labelInfo={'(required)'}
-              >
-                <Button
-                  rightIcon="calendar"
-                  text={compForm.endDate ? compForm.endDate.toString() : 'No test end date'}
-                  onClick={() => onEndDateOpen()}
-                  outlined={true}
-                  fill={true}
-                />
-              </FormGroup>
-
-              <FormGroup
-                disabled={true}
-                inline={false}
-                labelFor="text-input"
-                label={'Competition End'}
-                labelInfo={'(required)'}
-              >
-                <Button
-                  rightIcon="calendar"
-                  text={
-                    compForm.compEndDate
-                      ? compForm.compEndDate.toString()
-                      : 'No competition end date'
-                  }
-                  onClick={() => onCompEndDateOpen()}
-                  outlined={true}
-                  fill={true}
-                />
-              </FormGroup>
 
               <div
-                className="centered"
+                style={{
+                  display: "flex",
+                }}
               >
-                <Button
-                    rightIcon="tick-circle"
-                    intent="success"
-                    text={props.compForm ? "Save" : "Create"}
-                    type="submit"
-                    large={true}
-                    outlined={false}
-                    onClick={handleSubmit}
+                <FormGroup
+                  disabled={true}
+                  inline={false}
+                  labelFor="text-input"
+                  label={'Test Start'}
+                  labelInfo={'(required)'}
+                >
+                  <Button
+                    disabled={!enabled}
+                    rightIcon="calendar"
+                    text={compForm.startDate ? compForm.startDate.toString() : 'No test start date'}
+                    onClick={() => onStartDateOpen()}
+                    outlined={true}
+                    fill={true}
                   />
+                </FormGroup>
               </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start"
+                }}
+              >
+                <FormGroup
+                  disabled={true}
+                  inline={false}
+                  labelFor="text-input"
+                  label={'Test End'}
+                  labelInfo={'(required)'}
+                >
+                  <Button
+                    disabled={!enabled}
+                    rightIcon="calendar"
+                    text={compForm.endDate ? compForm.endDate.toString() : 'No test end date'}
+                    onClick={() => onEndDateOpen()}
+                    outlined={true}
+                    fill={true}
+                  />
+                </FormGroup>
+              </div>
+              
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start"
+                }}
+              >
+                <FormGroup
+                  disabled={true}
+                  inline={false}
+                  labelFor="text-input"
+                  label={'Competition End'}
+                  labelInfo={'(required)'}
+                >
+                  <Button
+                    disabled={!enabled}
+                    rightIcon="calendar"
+                    text={
+                      compForm.compEndDate
+                        ? compForm.compEndDate.toString()
+                        : 'No competition end date'
+                    }
+                    onClick={() => onCompEndDateOpen()}
+                    outlined={true}
+                    fill={true}
+                  />
+                </FormGroup>
+              </div>
+                
+                {
+                  enabled && 
+                  <div
+                    className="centered"
+                  >
+                    <Button
+                        rightIcon="tick-circle"
+                        intent="success"
+                        text={props.compForm ? "Save" : "Create"}
+                        type="submit"
+                        large={true}
+                        outlined={false}
+                        onClick={handleSubmit}
+                      />
+                  </div>
+                }
             </div>
           </div>
         </form>

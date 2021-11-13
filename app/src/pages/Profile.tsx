@@ -439,7 +439,10 @@ const Profile = () => {
                                             Description
                                         </H5>
                                         <TextArea
-                                            growVertically={true}
+                                            growVertically={false}
+                                            style={{
+                                                height: "300px"
+                                            }}
                                             large={true}
                                             fill={true}
                                             readOnly={true}
