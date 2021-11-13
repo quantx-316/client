@@ -137,15 +137,44 @@ class compService {
 
     static getAlgoSubmittedComps(
         algo_id: number, 
+        page: number, 
+        size: number, 
+        attr: string, 
+        dir: string,
+        search_by: string, 
+        search_query: string, 
+        search_exclusive: boolean,
     ) {
-        let url = compURL + "submitted/?algo_id=" + algo_id; 
+        let url = compURL + "submitted/"
+        url = padPageSearchSortURL(
+            url, 
+            page, size, 
+            attr, dir, 
+            search_by, search_query, search_exclusive,
+        )
+        url = url + "&algo_id=" + algo_id;
+        
         return requests.authGet(url);
     }
     
     static getBackSubmittedComps(
         backtest_id: number, 
+        page: number, 
+        size: number, 
+        attr: string, 
+        dir: string,
+        search_by: string, 
+        search_query: string, 
+        search_exclusive: boolean,
     ) {
-        let url = compURL + "submitted/?backtest_id=" + backtest_id;
+        let url = compURL + "submitted/"
+        url = padPageSearchSortURL(
+            url, 
+            page, size, 
+            attr, dir, 
+            search_by, search_query, search_exclusive,
+        )
+        url = url + "&backtest_id=" + backtest_id;
         return requests.authGet(url);
     }
 

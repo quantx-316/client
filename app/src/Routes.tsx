@@ -175,6 +175,7 @@ const Routes: React.FC = () => {
             </Base>
           )}
         />
+        
         <ProtectedRoute 
           path="/competition/:comp_id"
           exact 

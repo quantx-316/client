@@ -164,7 +164,7 @@ const HomeHeader = (props: HomeHeaderProps) => {
                         }}
                     >
                         <H4>
-                            -
+                            
                         </H4>
                     </div>
                     <span
@@ -172,7 +172,6 @@ const HomeHeader = (props: HomeHeaderProps) => {
                             fontSize: "10px"
                         }}
                     >
-                        Total {props.compParticipated ? "Participated" : "Created"}
                     </span>
                 </div>
                 <div

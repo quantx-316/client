@@ -38,6 +38,11 @@ const CompPage = () => {
         }
     }, [comp_id])
 
+    useEffect(() => {
+        console.log("COMPETITION");
+        console.log(competition);
+    }, [competition])
+
     return (
         <Competition 
             //@ts-ignore 

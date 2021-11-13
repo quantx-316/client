@@ -89,7 +89,7 @@ const Searching = (props: SearchingProps) => {
 
                 <Popover2
                     interactionKind="hover"
-                    placement="right"
+                    placement="top"
                     popoverClassName={Classes.POPOVER2_CONTENT_SIZING}
                     autoFocus={false}
                     enforceFocus={false}

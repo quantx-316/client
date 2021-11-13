@@ -264,9 +264,27 @@ export const getUsersSubmittedComps = (
 
 }
 
-export const getAlgoSubmittedComps = (algoID: number, createCallBack?: any, createFailCallBack?: any) => (dispatch: any) => {
+export const getAlgoSubmittedComps = (
+    algoID: number, 
+    page: number, 
+    size: number, 
+    attr: string, 
+    dir: string,
+    search_by: string, 
+    search_query: string, 
+    search_exclusive: boolean,
+    createCallBack?: any, createFailCallBack?: any) => (dispatch: any) => {
 
-    return compService.getAlgoSubmittedComps(algoID).then(
+    return compService.getAlgoSubmittedComps(
+        algoID,
+        page, 
+        size, 
+        attr, 
+        dir,
+        search_by, 
+        search_query, 
+        search_exclusive,
+    ).then(
         (res) => {
             if (createCallBack) {
                 createCallBack(res.data);
@@ -283,9 +301,27 @@ export const getAlgoSubmittedComps = (algoID: number, createCallBack?: any, crea
 }
 
 
-export const getBackSubmittedComps = (backID: number, createCallBack?: any, createFailCallBack?: any) => (dispatch: any) => {
+export const getBackSubmittedComps = (
+    backID: number, 
+    page: number, 
+    size: number, 
+    attr: string, 
+    dir: string,
+    search_by: string, 
+    search_query: string, 
+    search_exclusive: boolean,
+    createCallBack?: any, createFailCallBack?: any) => (dispatch: any) => {
 
-    return compService.getBackSubmittedComps(backID).then(
+    return compService.getBackSubmittedComps(
+        backID,
+        page, 
+        size, 
+        attr, 
+        dir,
+        search_by, 
+        search_query, 
+        search_exclusive,
+    ).then(
         (res) => {
             if (createCallBack) {
                 createCallBack(res.data);

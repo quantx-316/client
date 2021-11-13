@@ -16,6 +16,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import { Classes as Popover2Classes, Popover2 } from "@blueprintjs/popover2";
 import { dispatchErrorMsg } from '../features/utils/notifs';
+import UserComps from '../components/UserComps';
 
 const Profile = () => {
 
@@ -203,7 +204,25 @@ const Profile = () => {
     const [viewPublicScore, setViewPublicScore] = useState(false);
 
 
+    const [viewComps, setViewComps] = useState(false);
 
+    const onViewPubScoreClick = () => {
+        if (viewComps) {
+            setViewComps(false);
+            setViewPublicScore(true);
+        } else {
+            setViewPublicScore(viewPub => !viewPub);
+        }
+    }
+
+    const onViewCompClick = () => {
+        if (viewPublicScore) {
+            setViewPublicScore(false);
+            setViewComps(true);
+        } else {
+            setViewComps(viewComp => !viewComp);
+        }
+    }
 
     return (
         <div
@@ -247,54 +266,81 @@ const Profile = () => {
                                         alignContent: "center",
                                         gap: "10px"
                                     }}                                
-                                >
-                                    <div
-                                        className="centered"
-                                    >
-                                        {
-                                            //@ts-ignore 
-                                            user.email && 
-                                            (
-                                                editing ? 
-                                                <Button
-                                                    className={Classes.BUTTON}
-                                                    icon={"saved"}
-                                                    onClick={() => onSaveClick()}
-                                                >
-                                                </Button>
-
-                                                :
-
-                                                <Button
-                                                    className={Classes.BUTTON}
-                                                    icon={"edit"}
-                                                    onClick={() => setEditing(true)}
-                                                >
-                                                </Button>
-                                            )
-
-                                        }
-                                    </div>
+                                >   
 
                                     <div
-                                        className="centered"
+                                        style={{
+                                            gap: "10px",
+                                            display: "flex"
+                                        }}
                                     >
-
-                                        <Popover2
-                                            interactionKind="hover" 
-                                            autoFocus={false}
-                                            popoverClassName={Popover2Classes.POPOVER2_CONTENT_SIZING} 
-                                            enforceFocus={false}
-                                            placement="right" 
-                                            content={viewPublicScore ? "Close" : "View Public Scores"}
+                                        <div
+                                            className="centered"
                                         >
-                                            <Button
-                                                className={Classes.BUTTON}
-                                                icon={viewPublicScore ? "chevron-left" : "chevron-right"}
-                                                onClick={() => setViewPublicScore(viewPublicScore => !viewPublicScore)}
+                                            {
+                                                //@ts-ignore 
+                                                user.email && 
+                                                (
+                                                    editing ? 
+                                                    <Button
+                                                        className={Classes.BUTTON}
+                                                        icon={"saved"}
+                                                        onClick={() => onSaveClick()}
+                                                    >
+                                                    </Button>
+
+                                                    :
+
+                                                    <Button
+                                                        className={Classes.BUTTON}
+                                                        icon={"edit"}
+                                                        onClick={() => setEditing(true)}
+                                                    >
+                                                    </Button>
+                                                )
+
+                                            }
+                                        </div>
+                                        <div
+                                            className="centered"
+                                        >
+                                            <Popover2
+                                                interactionKind="hover" 
+                                                autoFocus={false}
+                                                popoverClassName={Popover2Classes.POPOVER2_CONTENT_SIZING} 
+                                                enforceFocus={false}
+                                                placement="top" 
+                                                content={viewPublicScore ? "Close" : "View Public Scores"}
                                             >
-                                            </Button>
-                                        </Popover2>
+                                                <Button
+                                                    className={Classes.BUTTON}
+                                                    icon={"chart"}
+                                                    onClick={() => onViewPubScoreClick()}
+                                                >
+                                                </Button>
+                                            </Popover2>
+                                        </div>
+
+                                        <div
+                                            className="centered"
+                                        >
+                                            <Popover2
+                                                interactionKind="hover" 
+                                                autoFocus={false}
+                                                popoverClassName={Popover2Classes.POPOVER2_CONTENT_SIZING} 
+                                                enforceFocus={false}
+                                                placement="top" 
+                                                content={viewComps ? "Close" : "View Competitions"}
+                                            >
+                                                <Button
+                                                    className={Classes.BUTTON}
+                                                    icon={"social-media"}
+                                                    onClick={() => onViewCompClick()}
+                                                >
+                                                </Button>
+                                            </Popover2>
+                                        </div>
+
 
                                     </div>
                                 </div>
@@ -374,6 +420,15 @@ const Profile = () => {
                     onSearchSubmit={refreshAllPublicAlgos}
 
                  />
+            }
+
+            {
+                !editing && viewComps && username && 
+                <UserComps 
+                    username={username}
+                    title="Participated"
+                    info="Competitions this user participated in"
+                />
             }
 
             {

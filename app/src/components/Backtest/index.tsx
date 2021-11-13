@@ -21,6 +21,7 @@ import {
     addBacktest,
     removeBacktest,
 } from '../../features/actions/starred';
+import UserComps from '../UserComps';
 
 import * as test_data from './test.json';
 import * as test_err_data from './test_error.json';
@@ -119,6 +120,11 @@ const BacktestComp = (props: BacktestProps) => {
                     <Tab id="code" title="Code Snapshot" panel = {<BacktestEditor backtest={props.backtest} />} />
                     <Tab id="perf" title="Performance" 
                         panel = {<BacktestPerformance backtest={props.backtest} />} />
+                    <Tab id="back-sub" title="Competitions" 
+                        panel={<BacktestSubmittedPanel 
+                                backtestID={props.backtest && props.backtest.id ? props.backtest.id : -1}
+                            />}
+                    />
                 </Tabs>
             }
            
@@ -126,5 +132,26 @@ const BacktestComp = (props: BacktestProps) => {
     )
 
 }
+
+type BacktestSubmittedPanelProps = {
+    backtestID?: number, 
+}
+
+const BacktestSubmittedPanel = ({backtestID}: BacktestSubmittedPanelProps) => {
+
+    return (
+        <div
+            className="full centered-top-col"
+        >
+            <UserComps 
+                selectedBackID={backtestID}
+                title="Participated"
+                info="Competitions this backtest was submitted to"
+            />
+        </div>
+    )
+
+}
+
 
 export default BacktestComp;

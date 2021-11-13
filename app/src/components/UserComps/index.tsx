@@ -18,6 +18,7 @@ import {
     getFinishedComps,
     deleteCompetition, 
     getUserOwnedComps,
+    getBackSubmittedComps,
 } from '../../features/actions/comps';
 import {getPagination} from '../../features/utils/pages';
 
@@ -49,10 +50,11 @@ type UserCompsProps = {
     username?: string, // 4 separate searching conditions 
     owner?: string, 
     selectedAlgoID?: number, 
+    selectedBackID?: number, 
     finished?: boolean, 
 }
 
-const UserComps = ({title, info, username, owner, selectedAlgoID, finished}: UserCompsProps) => {
+const UserComps = ({title, info, username, owner, selectedAlgoID, selectedBackID, finished}: UserCompsProps) => {
 
     const history = useHistory();
 
@@ -251,9 +253,22 @@ const UserComps = ({title, info, username, owner, selectedAlgoID, finished}: Use
                     callBack,  
                 )
             )
-        } else if (selectedAlgoID !== null && selectedAlgoID) {
+            //@ts-ignore 
+        } else if (selectedBackID !== null && selectedBackID >= 0) {
+            redDispatch(
+                getBackSubmittedComps(
+                    //@ts-ignore 
+                    selectedBackID,
+                    page, size, 
+                    realAttr, dir, 
+                    realSearchAttr, search_query, exclusive,
+                    callBack, 
+                )
+            )
+            //@ts-ignore
+        } else if (selectedAlgoID !== null && selectedAlgoID >= 0) {
             // might not want to do this 
-        } else if (finished !== null && finished) {
+        } else if (finished !== null) {
             const func = finished ? getFinishedComps : getPendingComps;
 
             redDispatch(
@@ -540,16 +555,22 @@ const UserComps = ({title, info, username, owner, selectedAlgoID, finished}: Use
                                             {hoveringInfo.owner ?? "N/A"}
                                         </p>
                                         <p> 
-                                            <b>Start: </b>
+                                            <b>Start (Stock): </b>
                                             {/* @ts-ignore */}
                                             
                                             {dateStrToDate(hoveringInfo.test_start).toString()}
                                         </p>
                                         <p>
-                                            <b>End: </b>
+                                            <b>End (Stock): </b>
                                             {/* @ts-ignore */}
                                             
                                             {dateStrToDate(hoveringInfo.test_end).toString()}
+                                        </p>
+                                        <p>
+                                            <b>Ends: </b>
+                                            {/* @ts-ignore */}
+                                            
+                                            {dateStrToDate(hoveringInfo.end_time).toString()}
                                         </p>
                                         <p>
                                             <b>Created: </b>
