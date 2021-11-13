@@ -23,9 +23,14 @@ const NewCompetitionPage = () => {
         }
     }, [])
 
+    //@ts-ignore 
+    const updating = location && location.state && location.state.compForm; 
+
     return (
         <NewComp 
             compForm={compForm}
+            //@ts-ignore 
+            title={updating ? "Edit Competition" : null}
         />
     )
 

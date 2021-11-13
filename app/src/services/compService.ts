@@ -96,9 +96,22 @@ class compService {
     }
 
     static getCompEntries(
-        comp_id: number 
+        comp_id: number,
+        page: number, 
+        size: number, 
+        attr: string, 
+        dir: string,
+        search_by: string, 
+        search_query: string, 
+        search_exclusive: boolean,
     ) {
         let url = compURL + comp_id + "/entries/";
+        url = padPageSearchSortURL(
+            url, 
+            page, size, 
+            attr, dir, 
+            search_by, search_query, search_exclusive,
+        )
         return requests.authGet(url);
     }
 

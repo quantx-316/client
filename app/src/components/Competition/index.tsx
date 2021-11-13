@@ -16,7 +16,7 @@ import {dateStrToDate} from '../../features/utils/time';
 import { Classes, Popover2 } from "@blueprintjs/popover2";
 import {fetchUserById} from '../../features/actions/users';
 import {truncateUsername} from '../../features/utils/text';
-
+import CompSubmissions from './CompSubmissions';
 import {
     addCompetition, 
     removeCompetition, 
@@ -158,7 +158,11 @@ const Competition = (props: CompProps) => {
 
                     } />
                     <Tab id="submissions" title="Submissions" // your submission vs other submissions
-                        panel = {<div />} />
+                        panel = {
+                            <CompSubmissions 
+                                compID={props.competition && props.competition.id ? props.competition.id : -1}
+                            />
+                        } />
                 </Tabs>
             }
            

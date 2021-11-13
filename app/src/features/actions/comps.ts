@@ -193,9 +193,27 @@ export const getEligibleBacktests = (
 
 }
 
-export const getCompetitionEntries = (compID: number, createCallBack?: any, createFailCallBack?: any) => (dispatch: any) => {
+export const getCompetitionEntries = (
+    compID: number, 
+    page: number, 
+    size: number, 
+    attr: string, 
+    dir: string,
+    search_by: string, 
+    search_query: string, 
+    search_exclusive: boolean,
+    createCallBack?: any, createFailCallBack?: any) => (dispatch: any) => {
 
-    return compService.getCompEntries(compID).then(
+    return compService.getCompEntries(
+        compID,
+        page, 
+        size, 
+        attr, 
+        dir,
+        search_by, 
+        search_query, 
+        search_exclusive,
+    ).then(
         (res) => {
             if (createCallBack) {
                 createCallBack(res.data);

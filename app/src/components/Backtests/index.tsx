@@ -49,6 +49,7 @@ type BacktestProps = {
     page: number, 
     onPageChange: any, 
     pageAfterDelete?: any, // if not provided, no delete
+    onViewClick?: any, // if not provided, default view 
     pagination: any, 
     attrsMapping: any, 
     attr: any, 
@@ -56,6 +57,7 @@ type BacktestProps = {
     dir: any, 
     onDirChange: any, 
     onRefresh?: any, 
+    showUser?: boolean, 
 
     searchAttrsMapping: any, 
     searchAttr: any, 
@@ -70,6 +72,8 @@ type BacktestProps = {
 const Backtest = ({backtests, ...props}: BacktestProps) => {
 
     const history = useHistory();
+
+    const showUser = props.showUser ?? false;
 
     const [hoveringInfo, setHoveringInfo] = useState(null);
     const [selectedInfo, setSelectedInfo] = useState(null);
@@ -124,7 +128,10 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
                     {
                         ...obj, 
                         icon: "chart",
-                        label: dateStrToDate(obj.created).toString(),
+                        label: (showUser ? 
+                                obj.owner
+                            :
+                            dateStrToDate(obj.created).toString()),
                         //@ts-ignore
                         secondaryLabel: (obj.result == null ? 
                             <b className="nice-red">Executing</b>
@@ -394,6 +401,14 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
                                             
                                             {dateStrToDate(hoveringInfo.created).toString()}
                                         </p>
+                                        {
+                                            showUser && 
+                                            <p>
+                                                <b>Owner: </b>
+                                                {/* @ts-ignore */}
+                                                {hoveringInfo.owner}
+                                            </p>
+                                        }
                                     </>
                                 )
                             }
@@ -442,7 +457,11 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
                         <Button
                             className={Classes.BUTTON}
                             icon={"eye-open"}
-                            onClick={() => onViewClick()}
+                            onClick={() => {
+                                props.onViewClick ?
+                                props.onViewClick(selectedInfo) : 
+                                onViewClick()
+                            }}
                         >
                             View
                         </Button>
