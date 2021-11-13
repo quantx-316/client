@@ -65,7 +65,7 @@ const AnalysisPanel = () => {
                         }}
                     >
                         <b>DISCLAIMER: </b>
-                        The range of times per stock and the symbols available 
+                        The range of times per symbol and the symbols available 
                         are not representative of the symbols and range of times 
                         available for your algorithm. See 'profiles' for available 
                         symbols. Time ranges are automatically retrieved from the database 
