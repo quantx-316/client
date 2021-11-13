@@ -22,6 +22,7 @@ export interface SettingsState {
     pendingCompStarred: boolean, 
     homeTab: HomeTabState, 
     socialTabUsersShow: boolean, 
+    starredTabCompsShow: boolean, 
     backtestDefaultTab: string, 
     compDefaultTab: string,
 }
@@ -29,6 +30,7 @@ export interface SettingsState {
 export type SettingsActions = (
     UpdateSettings | UpdateAlgosPub | UpdatePendingBackStarred | UpdatePendingCompStarred
     | UpdateCompParticipation | UpdateCompShow | UpdateUsersShow | UpdateDefaultBacktestTab | UpdateDefaultCompTab
+    | UpdateStarredCompShow
 )
 interface UpdateSettings {
     type: typeof UPDATE_SETTINGS, 
@@ -75,6 +77,11 @@ interface UpdateDefaultCompTab {
     payload: string, 
 }
 
+interface UpdateStarredCompShow {
+    type: typeof UPDATE_STARRED_COMP_SHOW,
+    payload: boolean, 
+}
+
 export const UPDATE_SETTINGS = 'UPDATE_SETTINGS';
 export const UPDATE_ALGOS_PUBLIC = 'UPDATE_ALGOS_PUBLIC';
 export const UPDATE_PENDING_BACK_STARRED = 'UPDATE_PENDING_BACK_STARRED';
@@ -84,3 +91,4 @@ export const UPDATE_COMP_SHOW = 'UPDATE_COMP_SHOW';
 export const UPDATE_USERS_SHOW = 'UPDATE_USERS_SHOW';
 export const UPDATE_DEFAULT_BACKTEST_TAB = 'UPDATE_DEFAULT_BACKTEST_TAB';
 export const UPDATE_DEFAULT_COMP_TAB = 'UPDATE_DEFAULT_COMP_TAB';
+export const UPDATE_STARRED_COMP_SHOW = 'UPDATE_STARRED_COMP_SHOW';

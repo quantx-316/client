@@ -8,6 +8,7 @@ import {
     UPDATE_DEFAULT_BACKTEST_TAB,
     UPDATE_USERS_SHOW,
     UPDATE_DEFAULT_COMP_TAB,
+    UPDATE_STARRED_COMP_SHOW,
     SettingsState
 } from '../types/settings';
 
@@ -74,5 +75,12 @@ export const updateDefaultCompTab = (tab: string) => (dispatch: any) => {
     dispatch({
         type: UPDATE_DEFAULT_COMP_TAB,
         payload: tab 
+    })
+}
+
+export const showStarredComp = (show: boolean) => (dispatch: any) => {
+    dispatch({
+        type: UPDATE_STARRED_COMP_SHOW,
+        payload: show 
     })
 }

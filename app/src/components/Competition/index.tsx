@@ -16,45 +16,39 @@ import { Classes, Popover2 } from "@blueprintjs/popover2";
 import {fetchUserById} from '../../features/actions/users';
 
 import {
-    addBacktest,
-    removeBacktest,
+    addCompetition, 
+    removeCompetition, 
 } from '../../features/actions/starred';
 
 const moment = require('moment');
 
 type CompProps = {
-    competiition?: Comp
+    competition?: Comp
 }
 
 const Competition = (props: CompProps) => {
 
     //@ts-ignore 
-    const backtests = useSelector(state => state.starred.backtests);
+    const comps = useSelector(state => state.starred.competitions);
 
     const dispatch = useDispatch();
 
     //@ts-ignore 
-    const starred = backtests.hasOwnProperty(props.backtest ? props.backtest.id : -1);
+    const starred = comps.hasOwnProperty(props.competition ? props.competition.id : -1);
 
     const onStarClick = () => {
-        // if (!props.backtest) return; 
+        if (!props.competition) return; 
 
-        // if (starred) {
-        //     dispatch(removeBacktest(props.backtest.id));
-        // } else {
-        //     dispatch(addBacktest(props.backtest));
-        // }
+        console.log("star");
+        console.log(starred);
+        console.log(props.competition.id);
+
+        if (starred) {
+            dispatch(removeCompetition(props.competition.id));
+        } else {
+            dispatch(addCompetition(props.competition));
+        }
     }
-
-    const [owner, setOwner] = useState(null);
-
-    // useEffect(() => {
-
-    //     if (props.backtest && props.backtest.owner) {
-    //         dispatch(fetchUserById(props.backtest.owner, setOwner));
-    //     }
-
-    // }, [props.backtest])
 
     return (
         <div
@@ -72,7 +66,7 @@ const Competition = (props: CompProps) => {
                 <div
                     className='centered'
                 >
-                    <h1>Backtest</h1>
+                    <h1>Competition</h1>
                 </div>
 
                 <div

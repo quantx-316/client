@@ -10,6 +10,7 @@ import {
     UPDATE_DEFAULT_BACKTEST_TAB,
     UPDATE_USERS_SHOW,
     UPDATE_DEFAULT_COMP_TAB,
+    UPDATE_STARRED_COMP_SHOW,
 } from '../types/settings';
 
 let initialState: SettingsState = {
@@ -21,6 +22,7 @@ let initialState: SettingsState = {
         competitionParticipationShow: true, 
     },
     socialTabUsersShow: true, 
+    starredTabCompsShow: false, 
     backtestDefaultTab: "Code",
     compDefaultTab: "",
 }
@@ -54,6 +56,17 @@ const saveNewState = (newState: SettingsState) => {
 export default function settingsReducer(state = initialState, action : SettingsActions): SettingsState {
 
     switch(action.type) {
+
+        case UPDATE_STARRED_COMP_SHOW:
+
+            const newState10 = {
+                ...state, 
+                starredTabCompsShow: action.payload, 
+            }
+
+            saveNewState(newState10);
+
+            return newState10; 
 
         case UPDATE_DEFAULT_COMP_TAB: 
 

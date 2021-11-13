@@ -11,6 +11,8 @@ import {
   } from '@blueprintjs/core';
 import ListBacktests from './ListBacktests';
 import ListComps from './ListComps';
+import {dateStrToDate} from '../../features/utils/time';
+import {showStarredComp} from '../../features/actions/settings';
 
 const ListStarred = () => {
 
@@ -23,6 +25,15 @@ const ListStarred = () => {
     const backtests = useSelector(state => state.starred.backtests);
     //@ts-ignore 
     const competitions = useSelector(state => state.starred.competitions);
+
+    //@ts-ignore 
+    const starredCompTabShow = useSelector(state => state.settings.starredTabCompsShow);
+
+    const onTabChange = (newTabID: string) => {
+        dispatch(
+            showStarredComp(newTabID === "star-comp")
+        )
+    }   
 
     const [highBacktestLst, setHighBacktestLst] = useState([]);
     const [restBacktestLst, setRestBacktestLst] = useState([]);
@@ -55,9 +66,17 @@ const ListStarred = () => {
             setRestCompLst([]);
         } else {
             const compLst = Object.values(competitions);
+
             //@ts-ignore
-            setHighCompLst([]);
-            setRestCompLst([]);        
+            const high = compLst.filter(comp => dateStrToDate(comp.end_time) > new Date());
+
+            //@ts-ignore 
+            const rest = compLst.filter(comp => dateStrToDate(comp.end_time) <= new Date());
+
+            //@ts-ignore 
+            setHighCompLst(high);
+            //@ts-ignore 
+            setRestCompLst(rest);     
         }
     }
 
@@ -109,6 +128,8 @@ const ListStarred = () => {
                 <Tabs
                     className="centered-top-col full"
                     renderActiveTabPanelOnly={true}
+                    onChange={onTabChange}
+                    selectedTabId={starredCompTabShow ? "star-comp" : "star-back"}
                 >
 
                     <Tab

@@ -122,7 +122,7 @@ export default function starredReducer(state = initialState, action: StarredActi
                 }
             }
 
-            delete newState4.backtests[action.payload];
+            delete newState4.competitions[action.payload];
 
             saveNewState(newState4);
 
