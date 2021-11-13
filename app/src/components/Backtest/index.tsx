@@ -40,6 +40,8 @@ const BacktestComp = (props: BacktestProps) => {
 
     const dispatch = useDispatch();
 
+    const history = useHistory();
+
     //@ts-ignore 
     const starred = backtests.hasOwnProperty(props.backtest ? props.backtest.id : -1);
 
@@ -108,7 +110,17 @@ const BacktestComp = (props: BacktestProps) => {
                 <p><b>Submitted:</b> {props.backtest && props.backtest.created ? dateStrToDate(props.backtest.created).toString() : ""}</p>
 
                 {/* @ts-ignore */}
-                <p><b>By:</b> {owner && owner.username ? truncateUsername(owner.username) : "N/A"}</p>
+                <p><b>By: </b> {owner && owner.username ? 
+
+                        <a
+                            //@ts-ignore 
+                            onClick={() => history.push("/profile/" + owner.username)}
+                        >
+                            {/* @ts-ignore */}
+                            {truncateUsername(owner.username)}
+                        </a> : "N/A"}
+                        
+                </p>
             </div>
             
 

@@ -14,6 +14,7 @@ import { Comp } from '../../features/types/comp';
 import {dateStrToDate} from '../../features/utils/time';
 import { Classes, Popover2 } from "@blueprintjs/popover2";
 import {fetchUserById} from '../../features/actions/users';
+import {truncateUsername} from '../../features/utils/text';
 
 import {
     addCompetition, 
@@ -31,6 +32,8 @@ const Competition = (props: CompProps) => {
     //@ts-ignore 
     const comps = useSelector(state => state.starred.competitions);
 
+    const history = useHistory();
+
     const dispatch = useDispatch();
 
     //@ts-ignore 
@@ -39,16 +42,16 @@ const Competition = (props: CompProps) => {
     const onStarClick = () => {
         if (!props.competition) return; 
 
-        console.log("star");
-        console.log(starred);
-        console.log(props.competition.id);
-
         if (starred) {
             dispatch(removeCompetition(props.competition.id));
         } else {
             dispatch(addCompetition(props.competition));
         }
     }
+
+    useEffect(() => {
+        console.log(props.competition);
+    }, [])
 
     return (
         <div
@@ -59,43 +62,68 @@ const Competition = (props: CompProps) => {
         >
             <div
                 style={{
-                    display: 'flex',
-                    gap: '10px'
+                    display: "flex",
+                    flexDirection: "column",
                 }}
             >
                 <div
-                    className='centered'
+                    style={{
+                        display: 'flex',
+                        gap: '10px'
+                    }}
                 >
-                    <h1>Competition</h1>
+                    <div
+                        className='centered'
+                    >
+                        <h1>Competition</h1>
+                    </div>
+
+                    <div
+                        className='centered'
+                    >
+                        <Popover2 
+                            interactionKind="hover" 
+                            popoverClassName={Classes.POPOVER2_CONTENT_SIZING} 
+                            autoFocus={false}
+                            enforceFocus={false}
+                            content={starred ? "Unstar" : "Star"}
+                        >
+                            <Button 
+                                minimal={true}
+                                large={true}
+                                intent="primary"
+                                icon={starred ? "star" : "star-empty"}
+                                onClick={() => onStarClick()}
+                            />
+                        </Popover2>
+                    </div>
+
                 </div>
 
                 <div
-                    className='centered'
+                    style={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                    }}
                 >
-                    <Popover2 
-                        interactionKind="hover" 
-                        popoverClassName={Classes.POPOVER2_CONTENT_SIZING} 
-                        autoFocus={false}
-                        enforceFocus={false}
-                        content={starred ? "Unstar" : "Star"}
-                    >
-                        <Button 
-                            minimal={true}
-                            large={true}
-                            intent="primary"
-                            icon={starred ? "star" : "star-empty"}
-                            onClick={() => onStarClick()}
-                        />
-                    </Popover2>
+                    {/* @ts-ignore */}
+                    <p><b>By: </b> 
+                        {props.competition && props.competition.owner 
+                        ? 
+                        <a
+                            onClick={
+                                //@ts-ignore 
+                                () => history.push("/profile/" + props.competition.owner)
+                            }
+                        >
+                            {/* @ts-ignore */}
+                            {truncateUsername(props.competition.owner)}
+                        </a>
+                        
+                        : "N/A"}
+                    </p>
                 </div>
 
-            </div>
-
-            <div>
-                {/* <p><b>Submitted:</b> {props.backtest && props.backtest.created ? dateStrToDate(props.backtest.created).toString() : ""}</p> */}
-
-                {/* @ts-ignore */}
-                {/* <p><b>By:</b> {owner && owner.username ? owner.username : "N/A"}</p> */}
             </div>
             
 
@@ -104,9 +132,10 @@ const Competition = (props: CompProps) => {
                 <Tabs
                     className="centered-top-col-lite full"
                     renderActiveTabPanelOnly={true}
+                    defaultSelectedTabId={"overview"}
                 >
-                    <Tab id="code" title="Code Snapshot" panel = {<div />} />
-                    <Tab id="perf" title="Performance" 
+                    <Tab id="overview" title="Overview" panel = {<div />} />
+                    <Tab id="submissions" title="Submissions" // your submission vs other submissions
                         panel = {<div />} />
                 </Tabs>
             }
