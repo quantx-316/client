@@ -8,6 +8,7 @@ import {
     getUserEntryToComp,
 } from '../../features/actions/comps';
 import {getPagination} from '../../features/utils/pages';
+import EligibleBacktests from './EligibleBacktests';
 
 type CompSubmissionsProp = {
     compID: number, 
@@ -172,6 +173,14 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
         }
     }, [])
 
+    const [submitModalOpen, setSubmitModalOpen] = useState(false);
+    const handleModalClose = () => {
+        setSubmitModalOpen(false);
+    }
+    const handleModalOpen = () => {
+        setSubmitModalOpen(true);
+    }
+
     return (
 
         <div
@@ -216,7 +225,7 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
                                 className={Classes.BUTTON}
                                 icon={"key-enter"}
                                 intent={"success"}
-                                onClick={() => {}}
+                                onClick={() => handleModalOpen()}
                             >
                                 New
                             </Button>
@@ -311,6 +320,13 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
                 />
 
             </div>
+
+            <EligibleBacktests 
+                compID={props.compID}
+                title="Select a backtest"
+                isOpen={submitModalOpen}
+                handleClose={handleModalClose}
+            />
 
         </div>
 

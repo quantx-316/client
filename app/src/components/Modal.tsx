@@ -5,6 +5,7 @@ export type ModalProps = {
     isOpen: boolean,
     handleClose: any,
     title: string,
+    style?: any, 
 }
 
 const Modal: React.FC<ModalProps> = ({isOpen, handleClose, title, children, ...props}) => {
@@ -25,6 +26,7 @@ const Modal: React.FC<ModalProps> = ({isOpen, handleClose, title, children, ...p
                 display: "flex",
                 justifyContent: "center",
                 alignContent: 'center',
+                ...props.style,
             }}
         >
             {children}

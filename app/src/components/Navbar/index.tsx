@@ -40,6 +40,8 @@ const ComposedNavbar: React.FC = () => {
     }
   }
 
+  const [stockOpen, setStockOpen] = useState(false);
+
   return (
     <Navbar className="bp3-dark">
       <Navbar.Group align={Alignment.LEFT}>  
