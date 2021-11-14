@@ -12,9 +12,11 @@ import { dateStrToDate } from '../../features/utils/time';
 import {getPagination} from '../../features/utils/pages';
 import EligibleBacktests from './EligibleBacktests';
 import { dispatchErrorMsg } from '../../features/utils/notifs';
+import {addCompetition} from '../../features/actions/starred';
 
 type CompSubmissionsProp = {
     compID: number, 
+    competition: any, 
 }
 
 const CompSubmissions = (props: CompSubmissionsProp) => {
@@ -26,6 +28,9 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
 
     //@ts-ignore 
     const user = useSelector(state=>state.auth.user);
+
+    //@ts-ignore 
+    const pendingCompStarred = useSelector(state=>state.settings.pendingCompStarred);
 
     const [backtests, setBacktests] = useState([]);
 
@@ -190,6 +195,11 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
     const onCallBack = (data: any) => {
         setUserSub(data);
         ezFetchSubmissions();
+
+        if (pendingCompStarred) {
+            dispatch(addCompetition(props.competition))
+        }
+
         handleModalClose();
     }
 
@@ -224,7 +234,10 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
             <div
                 className="centered"
             >
-                <Card
+                {
+                    user && props.competition && props.competition.owner !== user.username &&
+
+                    <Card
                     style={{
                         minWidth: "550px",
                         display: "flex",
@@ -319,6 +332,7 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
                     </div>
 
                 </Card>
+                }
             </div>
         
             <div

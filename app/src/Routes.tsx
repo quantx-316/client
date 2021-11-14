@@ -22,8 +22,10 @@ import Backtest from './pages/Backtest';
 import Competition from './pages/Competition';
 import NewCompetition from './pages/NewCompetition';
 import {getBacktestByID} from './features/actions/backtest';
-import {addBacktest, removeBacktest} from './features/actions/starred';
+import {getCompetition} from './features/actions/comps';
+import {addBacktest, removeBacktest, addCompetition, removeCompetition} from './features/actions/starred';
 import {selectAlgo} from './features/actions/algos';
+import { dateStrToDate } from './features/utils/time';
 
 const Routes: React.FC = () => {  
 
@@ -52,16 +54,21 @@ const Routes: React.FC = () => {
     }
   }
 
-  const processComps = () => {
+  const processComps = (avoid_id?: number) => {
 
     if (!competitions) {
       setCompsToPing([]);
     } else {
       const compLst = Object.values(competitions);
-      // //@ts-ignore 
-      // const high = compLst.filter(backtest => backtest.result == null)
+
       //@ts-ignore 
-      setCompsToPing([]);
+      let high = compLst.filter(comp => dateStrToDate(comp.end_time) > new Date());
+
+      //@ts-ignore 
+      high = high.filter(comp => comp.id !== avoid_id);
+
+      //@ts-ignore 
+      setCompsToPing(high);
     }
   }
 
@@ -90,11 +97,32 @@ const Routes: React.FC = () => {
 
   }
 
+  const getCompCallback = (data: any) => {
+    if (data && data.end_time) {
+      const endTime = dateStrToDate(data.end_time);
+      if (new Date() >= endTime) {
+        dispatchSuccessMsg(dispatch, "Starred competition is finished.");
+        dispatch(addCompetition(data));
+        processComps(data.id);
+      }
+    }
+  }
+
+  const failCompCallback = (compID: number) => {
+    dispatch(removeCompetition(compID));
+    dispatchErrorMsg(dispatch, "Starred competition deleted");
+  }
+
   const pingCompetitions = () => {
 
     console.log("PINGING COMPETITIONS");
     if (compToPing && compToPing.length > 0) {
       console.log("pinging competitions");
+
+      compToPing.forEach(comp => {
+        //@ts-ignore 
+        dispatch(getCompetition(comp.id, getCompCallback, () => failCompCallback(comp.id)))
+      })
     }
   }
 
@@ -113,6 +141,7 @@ const Routes: React.FC = () => {
   useEffect(() => {
 
     if (compToPing && compToPing.length > 0) {
+      // 1000 * 60 * 10
       const intervalId = setInterval(() => pingCompetitions(), 1000 * 60 * 10) // 1000 * 60 = 1 min, * 10 = 10 min
       return function cleanup() {
         clearInterval(intervalId);

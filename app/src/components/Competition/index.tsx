@@ -161,6 +161,7 @@ const Competition = (props: CompProps) => {
                         panel = {
                             <CompSubmissions 
                                 compID={props.competition && props.competition.id ? props.competition.id : -1}
+                                competition={props.competition}
                             />
                         } />
                 </Tabs>
