@@ -21,6 +21,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Backtest from './pages/Backtest';
 import Competition from './pages/Competition';
 import NewCompetition from './pages/NewCompetition';
+import Entry from './pages/Entry';
 import {getBacktestByID} from './features/actions/backtest';
 import {getCompetition} from './features/actions/comps';
 import {addBacktest, removeBacktest, addCompetition, removeCompetition} from './features/actions/starred';
@@ -213,6 +214,17 @@ const Routes: React.FC = () => {
           render={routeProps => (
             <Base>
               <NewCompetition {...routeProps} />
+            </Base>
+          )}
+        />
+        <ProtectedRoute 
+          path="/competition/:comp_id/entry/:username"
+          exact 
+          isAuthenticated={isLoggedIn}
+          //@ts-ignore 
+          render={routeProps => (
+            <Base>
+              <Entry {...routeProps} />
             </Base>
           )}
         />

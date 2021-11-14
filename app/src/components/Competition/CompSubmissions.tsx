@@ -166,7 +166,14 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
     }
 
     const onViewClick = (selectedInfo: any) => {
-        console.log(selectedInfo);
+        if (props.compID >= 0 && selectedInfo && selectedInfo.owner) {
+            history.push({
+                pathname: "/competition/" + props.compID + "/entry/" + selectedInfo.owner,
+                state: {
+                    entry: selectedInfo,
+                }
+            })
+        }
     }
 
 

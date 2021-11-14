@@ -24,9 +24,6 @@ import {
 } from '../../features/actions/starred';
 import UserComps from '../UserComps';
 
-import * as test_data from './test.json';
-import * as test_err_data from './test_error.json';
-
 const moment = require('moment');
 
 type BacktestProps = {
