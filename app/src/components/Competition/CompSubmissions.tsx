@@ -81,7 +81,7 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
             newExcl,
         )
     }
-    const [attr, setAttr] = useState("Created");
+    const [attr, setAttr] = useState("Score");
     const convertAttr = (attr: string) => {
         //@ts-ignore
         return attrsMapping[attr];

@@ -1,5 +1,5 @@
 export function truncateWithEllipses(text: string, max: number) {
-    return text.substr(0,max-1)+(text.length>max?'...':''); 
+    return text.substr(0,max)+(text.length>max?'...':''); 
 }
 
 export function truncateTitle(text: string) {
