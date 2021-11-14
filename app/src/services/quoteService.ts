@@ -1,5 +1,5 @@
 import requests from '../features/utils/requests';
-import {quotesTimeURL, quotesIntervalsURL} from '../constants'; 
+import {quotesTimeURL, quotesIntervalsURL, quotesSymbolsURL} from '../constants'; 
 
 class quoteService {
 
@@ -9,6 +9,10 @@ class quoteService {
 
     static getIntervals() {
         return requests.authGet(quotesIntervalsURL);
+    }
+
+    static getStocks() {
+        return requests.authGet(quotesSymbolsURL);
     }
 
 }

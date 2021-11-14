@@ -58,3 +58,28 @@ export const fetchQuoteIntervals = (dispatch: any, intervalsCallBack: any) => {
     )
 
 } 
+
+
+export const fetchQuoteSymbols = (callBack: any) => (dispatch: any) => {
+
+    return quoteService.getStocks().then(
+        (res) => {
+
+            const data = res.data;
+
+            callBack(data);
+
+            return Promise.resolve(data);
+        },
+        (error) => {
+            const msg = getErrorMsg(error);
+
+            console.log(msg);
+
+            dispatchErrorMsg(dispatch, "Failed to fetch quote symbols");
+
+            return Promise.reject();
+        }
+    )
+
+} 
