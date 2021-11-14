@@ -224,8 +224,8 @@ const AnalysisPanel = () => {
                         The range of times per symbol and the symbols available 
                         are not representative of the symbols and range of times 
                         available for your algorithm. See 'profiles' for available 
-                        symbols. Time ranges are automatically retrieved from the database 
-                        when running backtests. 
+                        symbols. Available time ranges are automatically retrieved from the database 
+                        and limited for you when running backtests. 
                     </p>
                 </div>
             </div>
