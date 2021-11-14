@@ -8,9 +8,11 @@ import {
 } from '../../features/actions/comps';
 import {getPagination} from '../../features/utils/pages';
 import Modal, {ModalProps} from '../Modal';
+import { dispatchErrorMsg } from '../../features/utils/notifs';
 
 type EligileBacktestsProps = {
     compID: number, 
+    onSubmitClick: any, 
 } & ModalProps;
 
 const EligibleBacktests = (props: EligileBacktestsProps) => {
@@ -138,7 +140,7 @@ const EligibleBacktests = (props: EligileBacktestsProps) => {
         exclusive: boolean,
     ) => {
 
-        if (props.compID > 0) {
+        if (props.compID >= 0) {
             dispatch(getEligibleBacktests(
                 props.compID, 
                 page, 
@@ -175,6 +177,7 @@ const EligibleBacktests = (props: EligileBacktestsProps) => {
                     info={"Your eligible submissions"}
                     page={page}
                     onPageChange={onPageChange}
+                    onSubmitClick={props.onSubmitClick}
                     pagination={pagination}
                     attrsMapping={attrsMapping}
                     attr={attr}

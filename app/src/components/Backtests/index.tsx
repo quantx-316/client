@@ -50,6 +50,7 @@ type BacktestProps = {
     onPageChange: any, 
     pageAfterDelete?: any, // if not provided, no delete
     onViewClick?: any, // if not provided, default view 
+    onSubmitClick?: any, 
     pagination: any, 
     attrsMapping: any, 
     attr: any, 
@@ -465,6 +466,17 @@ const Backtest = ({backtests, ...props}: BacktestProps) => {
                         >
                             View
                         </Button>
+
+                        {
+                            props.onSubmitClick && 
+                            <Button
+                                className={Classes.BUTTON}
+                                icon={"key-enter"}
+                                onClick={() => props.onSubmitClick(selectedInfo)}
+                            >
+                                Submit
+                            </Button>
+                        }
 
                         {
                             props.pageAfterDelete && 

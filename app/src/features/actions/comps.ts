@@ -396,3 +396,31 @@ export const getUserOwnedComps = (
 
 }
 
+export const submitBacktest = (
+    compID: number, 
+    backtestID: number, 
+    callBack?: any, 
+    failCallback?: any, 
+) => (dispatch: any) => {
+
+    return compService.submitBacktest(
+        compID, backtestID
+    ).then(
+        (res) => {
+            if (callBack) {
+                callBack(res.data);
+            }
+
+            dispatchSuccessMsg(dispatch, "Successfully submitted backtest");
+
+        },
+        (err) => {
+            if (failCallback) {
+                failCallback();
+            }
+            genericErrorHandler(err, dispatch);
+        }
+    )
+
+}
+

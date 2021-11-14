@@ -6,9 +6,12 @@ import Backtests from '../../components/Backtests';
 import {
     getCompetitionEntries,
     getUserEntryToComp,
+    submitBacktest,
 } from '../../features/actions/comps';
+import { dateStrToDate } from '../../features/utils/time';
 import {getPagination} from '../../features/utils/pages';
 import EligibleBacktests from './EligibleBacktests';
+import { dispatchErrorMsg } from '../../features/utils/notifs';
 
 type CompSubmissionsProp = {
     compID: number, 
@@ -45,8 +48,9 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
     }
     const searchAttrsMapping = {
         "Code": "code_snapshot",
+        "Username": "username",
     }
-    const [searchAttr, setSearchAttr] = useState("Code");
+    const [searchAttr, setSearchAttr] = useState("Username");
     const convertSearchAttr = (searchAttr: string) => {
         //@ts-ignore 
         return searchAttrsMapping[searchAttr];
@@ -112,6 +116,7 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
     }
 
     const ezFetchSubmissions = () => {
+
         fetchSubmissions(
             page, 
             size,
@@ -139,7 +144,7 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
         exclusive: boolean,
     ) => {
 
-        if (props.compID > 0) {
+        if (props.compID >= 0) {
             dispatch(getCompetitionEntries(
                 props.compID, 
                 page, 
@@ -156,9 +161,10 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
     }
 
     const onViewClick = (selectedInfo: any) => {
-        console.log("on view click");
         console.log(selectedInfo);
     }
+
+
 
     const [userSub, setUserSub] = useState(null);
 
@@ -179,6 +185,32 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
     }
     const handleModalOpen = () => {
         setSubmitModalOpen(true);
+    }
+
+    const onCallBack = (data: any) => {
+        setUserSub(data);
+        ezFetchSubmissions();
+        handleModalClose();
+    }
+
+    const onSubmitClick = (selectedInfo: any) => {
+        if (props.compID < 0) {
+            dispatchErrorMsg(dispatch, "Invalid comp id, try again later, reload, or report if persists");
+            return 
+        }
+        if (!selectedInfo || selectedInfo.id < 0 || selectedInfo.score < 0) {
+            dispatchErrorMsg(dispatch, "Invalid selected information");
+            return 
+        }
+
+        dispatch(
+            submitBacktest(
+                props.compID, 
+                selectedInfo.id,
+                onCallBack,
+            )
+        )
+
     }
 
     return (
@@ -326,6 +358,7 @@ const CompSubmissions = (props: CompSubmissionsProp) => {
                 title="Select a backtest"
                 isOpen={submitModalOpen}
                 handleClose={handleModalClose}
+                onSubmitClick={onSubmitClick}
             />
 
         </div>
