@@ -261,6 +261,10 @@ type SummaryPanelProps = {
 
 const SummaryPanel = ({graphData, graphOptions, rawData} : SummaryPanelProps) => {
 
+    let roiPercent = rawData.roi * 100;
+    let roiValue = rawData.final_value - 100000;
+
+
     return (
         <div
             className="full"
@@ -275,14 +279,14 @@ const SummaryPanel = ({graphData, graphOptions, rawData} : SummaryPanelProps) =>
                     className="centered"
                 >
                     <p>
-                        <b>Return On Investment:</b> {rawData.roi}
+                        <b>Return On Investment:</b> {roiPercent.toFixed(2)}% (${(+(roiValue.toFixed(2))).toLocaleString()})
                     </p>
                 </div>
                 <div
                     className="centered"
                 >
                     <p>
-                        <b>Final Portfolio Value:</b> {rawData.final_value}
+                        <b>Final Portfolio Value:</b> ${rawData.final_value.toLocaleString()}
                     </p>
                 </div>
             </div>
