@@ -267,6 +267,7 @@ const LeaderboardPanel = () => {
                                         loading && 
                                         <div
                                             className="full centered"
+                                            style={{paddingTop: "30px"}}
                                         >
                                             <div
                                                 className="centered"
