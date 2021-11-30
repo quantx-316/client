@@ -86,7 +86,7 @@ const Landing = () => {
         </div>
         <section className={classes.algoSection}>
           <div className={classes.rowGrid}>
-            <div className={classes.col1}>
+            <div className={classes.col1} data-aos="fade" data-aos-delay="500">
               <img src="EditorIcon.png" alt="" className={classes.editorIcon}/>
               <h3 className={classes.algoTitle}>
                 Code Algorithms In A Browser Based IDE, with Free Financial Data
@@ -96,7 +96,7 @@ const Landing = () => {
                 programming languages to run your backtest to analyze your strategy.
               </p>
             </div>
-            <div className={classes.col2}>
+            <div className={classes.col2} data-aos="fade" data-aos-delay="500">
               <img src="EditorScreen.png" alt="" className={classes.img} />
             </div>
           </div>
