@@ -331,7 +331,7 @@ export const Home: React.FC = () => {
         <div
             className="full centered-top-col"
             style={{
-                padding: "20px"
+                padding: "40px"
             }}
         >
             <div

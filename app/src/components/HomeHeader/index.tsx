@@ -109,7 +109,7 @@ const HomeHeader = (props: HomeHeaderProps) => {
                     </div>
                     <span
                         style={{
-                            fontSize: "10px"
+                            fontSize: "12px"
                         }}
                     >
                         Total Created
@@ -220,7 +220,7 @@ const HomeHeader = (props: HomeHeaderProps) => {
                     </div>
                     <span
                         style={{
-                            fontSize: "10px"
+                            fontSize: "12px"
                         }}
                     >
                         For Chosen Algorithm 

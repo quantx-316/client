@@ -3,6 +3,7 @@
     "@blueprintjs/popover2": "^0.12.5",
     "@types/axios": "^0.14.0",
     "@types/lodash-es": "^4.17.5",
+    "animate.css": "^4.1.1",
     "axios": "^0.23.0",
     "lodash-es": "^4.17.21",
     "react-validation": "^3.0.7",
