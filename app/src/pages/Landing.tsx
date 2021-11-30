@@ -34,13 +34,12 @@ const Landing = () => {
               </div>
             </h1>
           </div>
-          <div>
+          <div data-aos="fade" data-aos-delay="1000">
             <a
               href="#/auth"
               type="button"
               className={classes.button}
-              data-aos="fade"
-              data-aos-delay="1000"
+
             >
               Sign Up
             </a>
@@ -190,12 +189,18 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
-    // fontFamily: 'Norpeth-DemiBold',
     fontWeight: 'bold',
+    boxShadow: "5px 5px 0 white, -5px -5px 0 white, -5px 5px 0 white, 5px -5px 0 white",
+    transition: "all 500ms ease-in-out",
     '&:hover': {
       textDecoration: 'none',
       color: '#fff',
+      boxShadow: "20px 5px 0 white, -20px -5px 0 white",
+      
     },
+    '&:focus': {
+      outline: 'none'
+    }
   },
 
   mainContainer: {
