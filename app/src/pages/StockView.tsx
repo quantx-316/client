@@ -24,6 +24,7 @@ import { AdvancedRealTimeChart, CompanyProfile, TechnicalAnalysis } from "react-
 const StockView: React.FC = () => {
 
     return (
+        <div className="full centered-top-col" style={{marginTop: '20px'}}>
         <Tabs
             className="centered-top-col-lite full"
             defaultSelectedTabId={"analysis"}
@@ -36,6 +37,7 @@ const StockView: React.FC = () => {
                 panel = {<ProfilesPanel />} 
             />
         </Tabs>
+        </div>
     )
 
 }
@@ -203,7 +205,7 @@ const AnalysisPanel = () => {
         <div
             className="centered-col"
             style={{
-                padding: "10px"
+                padding: "0 10px 10px 10px"
             }}
         >
             <div
@@ -217,7 +219,8 @@ const AnalysisPanel = () => {
                 >
                     <p
                         style={{
-                            fontSize: "12px"
+                            fontSize: "12px",
+                            marginBottom: '23px'
                         }}
                     >
                         <b>DISCLAIMER: </b>
